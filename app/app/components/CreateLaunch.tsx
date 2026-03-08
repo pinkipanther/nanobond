@@ -10,6 +10,8 @@ import { CONTRACTS, FACTORY_ABI } from "../lib/contracts";
 export default function CreateLaunch() {
     const { isConnected, chainId } = useAccount();
     const { switchChain } = useSwitchChain();
+    const [mounted, setMounted] = useState(false);
+    
     const [formData, setFormData] = useState({
         name: "",
         symbol: "",
@@ -22,6 +24,10 @@ export default function CreateLaunch() {
 
     const [step, setStep] = useState(1);
     const [deployError, setDeployError] = useState<string | null>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const updateField = (field: string, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
@@ -68,6 +74,7 @@ export default function CreateLaunch() {
             address: CONTRACTS.FACTORY as `0x${string}`,
             abi: FACTORY_ABI,
             functionName: "createLaunch",
+            chainId: hederaTestnet.id,
             args: [
                 formData.name,
                 formData.symbol,
@@ -222,7 +229,7 @@ export default function CreateLaunch() {
                             </div>
                         </div>
 
-                        {!isConnected ? (
+                        {!mounted || !isConnected ? (
                             <ConnectWalletInline label="Connect Wallet to Deploy" />
                         ) : isWrongChain ? (
                             <button

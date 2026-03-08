@@ -32,6 +32,11 @@ export default function TokenDetail({
     const { isConnected, address: userAddress } = useAccount();
     const [amount, setAmount] = useState("");
     const [txStatus, setTxStatus] = useState<string | null>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const addr = launch.launchContract as `0x${string}`;
 
@@ -120,6 +125,7 @@ export default function TokenDetail({
             abi: LAUNCH_ABI,
             functionName: "contribute",
             value: parseEther(amount),
+            chainId: CHAIN_ID,
         });
         setTxStatus("⏳ Confirming contribution...");
     };
@@ -129,6 +135,7 @@ export default function TokenDetail({
             address: addr,
             abi: LAUNCH_ABI,
             functionName: "claimTokens",
+            chainId: CHAIN_ID,
         });
         setTxStatus("⏳ Claiming tokens...");
     };
@@ -138,6 +145,7 @@ export default function TokenDetail({
             address: addr,
             abi: LAUNCH_ABI,
             functionName: "claimRefund",
+            chainId: CHAIN_ID,
         });
         setTxStatus("⏳ Claiming refund...");
     };
@@ -147,6 +155,7 @@ export default function TokenDetail({
             address: addr,
             abi: LAUNCH_ABI,
             functionName: "finalize",
+            chainId: CHAIN_ID,
         });
         setTxStatus("⏳ Finalizing launch...");
     };
@@ -156,6 +165,7 @@ export default function TokenDetail({
             address: addr,
             abi: LAUNCH_ABI,
             functionName: "withdrawRaisedAmount",
+            chainId: CHAIN_ID,
         });
         setTxStatus("⏳ Withdrawing raised amount...");
     };
@@ -165,6 +175,7 @@ export default function TokenDetail({
             address: addr,
             abi: LAUNCH_ABI,
             functionName: "checkState",
+            chainId: CHAIN_ID,
         });
         setTxStatus("⏳ Checking state...");
     };
@@ -504,7 +515,7 @@ export default function TokenDetail({
                                 )}
                             </div>
 
-                            {!isConnected ? (
+                            {!mounted || !isConnected ? (
                                 <ConnectWalletInline label="Connect Wallet" />
                             ) : (
                                 <button

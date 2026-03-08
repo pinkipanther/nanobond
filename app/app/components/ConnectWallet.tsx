@@ -80,6 +80,11 @@ export function ConnectWalletButton() {
   const [modalOpen, setModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -91,6 +96,14 @@ export function ConnectWalletButton() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  if (!mounted) {
+    return (
+      <button className="wallet-connect-btn-v2" style={{ opacity: 0 }} type="button">
+        <span>Connect Wallet</span>
+      </button>
+    );
+  }
 
   if (isConnected && address) {
     return (
@@ -150,8 +163,13 @@ export function ConnectWalletButton() {
 export function ConnectWalletInline({ label = "Connect Wallet" }: { label?: string }) {
   const { isConnected } = useAccount();
   const [modalOpen, setModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  if (isConnected) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || isConnected) return null;
 
   return (
     <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
@@ -200,7 +218,7 @@ function WalletModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
         <div style={{ marginBottom: 18 }}>
           <div className="wallet-network-pill">Hedera Testnet</div>
           <h3 className="wallet-modal-title">Connect your wallet</h3>
-          <p className="wallet-modal-subtitle">HashPack is prioritized. WalletConnect is enabled for QR-based pairing.</p>
+          <p className="wallet-modal-subtitle">HashPack is prioritized. WalletConnect appears when a project ID is configured.</p>
         </div>
 
         <div style={{ display: "grid", gap: 10 }}>
