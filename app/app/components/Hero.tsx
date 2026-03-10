@@ -121,8 +121,8 @@ export default function Hero() {
                         fontWeight: 500,
                     }}
                 >
-                    Launch, manage, and finalize token bond sales on Hedera with
-                    creator-level treasury control, transparent allocation, and
+                    Launch, manage, and earn yield from token bond sales on Hedera with
+                    auto-staking, epoch-based yield distribution, and
                     instant wallet flows tuned for HashPack.
                 </p>
 
@@ -147,7 +147,7 @@ export default function Hero() {
                         Start a Bond Sale
                     </Link>
                     <Link
-                        href="/launches"
+                        href="/bonds"
                         className="btn-secondary"
                         style={{
                             fontSize: 15,

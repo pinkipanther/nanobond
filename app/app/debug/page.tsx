@@ -2,45 +2,45 @@
 
 import { useReadContract, useReadContracts } from "wagmi";
 import { hederaTestnet } from "wagmi/chains";
-import { CONTRACTS, FACTORY_ABI, LAUNCH_ABI } from "../lib/contracts";
+import { CONTRACTS, FACTORY_ABI, BOND_ABI } from "../lib/contracts";
 import { formatEther } from "viem";
 
 const CHAIN_ID = hederaTestnet.id;
 const factoryAddress = CONTRACTS.FACTORY as `0x${string}`;
 const factoryAbi = FACTORY_ABI as any;
-const launchAbi = LAUNCH_ABI as any;
+const bondAbi = BOND_ABI as any;
 
 export default function DebugPage() {
-    // Test 1: launchCount
+    // Test 1: bondCount
     const { data: countData, error: countError, isLoading: countLoading } = useReadContract({
         address: factoryAddress,
         abi: factoryAbi,
-        functionName: "launchCount",
+        functionName: "bondCount",
         chainId: CHAIN_ID,
     });
 
-    // Test 2: getLaunch(0) if count > 0
+    // Test 2: getBond(0) if count > 0
     const count = countData ? Number(countData) : 0;
-    const { data: launchData, error: launchError } = useReadContract({
+    const { data: bondData, error: bondError } = useReadContract({
         address: factoryAddress,
         abi: factoryAbi,
-        functionName: "getLaunch",
+        functionName: "getBond",
         args: [0n],
         chainId: CHAIN_ID,
         query: { enabled: count > 0 },
     });
 
-    // Test 3: Read launch contract data
-    const launchAddr = (launchData as any)?.launchContract as `0x${string}` | undefined;
+    // Test 3: Read bond contract data
+    const bondAddr = (bondData as any)?.bondContract as `0x${string}` | undefined;
     const { data: detailData, error: detailError } = useReadContracts({
-        contracts: launchAddr ? [
-            { address: launchAddr, abi: launchAbi, functionName: "totalRaised" as const, chainId: CHAIN_ID },
-            { address: launchAddr, abi: launchAbi, functionName: "hardCap" as const, chainId: CHAIN_ID },
-            { address: launchAddr, abi: launchAbi, functionName: "state" as const, chainId: CHAIN_ID },
-            { address: launchAddr, abi: launchAbi, functionName: "getTokenPrice" as const, chainId: CHAIN_ID },
-            { address: launchAddr, abi: launchAbi, functionName: "contributorCount" as const, chainId: CHAIN_ID },
+        contracts: bondAddr ? [
+            { address: bondAddr, abi: bondAbi, functionName: "totalRaised" as const, chainId: CHAIN_ID },
+            { address: bondAddr, abi: bondAbi, functionName: "hardCap" as const, chainId: CHAIN_ID },
+            { address: bondAddr, abi: bondAbi, functionName: "state" as const, chainId: CHAIN_ID },
+            { address: bondAddr, abi: bondAbi, functionName: "totalStaked" as const, chainId: CHAIN_ID },
+            { address: bondAddr, abi: bondAbi, functionName: "contributorCount" as const, chainId: CHAIN_ID },
         ] : [],
-        query: { enabled: !!launchAddr },
+        query: { enabled: !!bondAddr },
     });
 
     const getResult = (idx: number) => {
@@ -69,7 +69,7 @@ export default function DebugPage() {
 
             <div className="glass-card" style={{ padding: 24, marginBottom: 20 }}>
                 <h3 style={{ color: "var(--cyan)", marginBottom: 16, fontFamily: "var(--font-display)" }}>
-                    Test 1: launchCount()
+                    Test 1: bondCount()
                 </h3>
                 <pre style={{ color: "var(--text-secondary)", fontSize: 13, fontFamily: "var(--font-mono)" }}>
                     Loading: {String(countLoading)}{"\n"}
@@ -85,36 +85,36 @@ export default function DebugPage() {
                     fontSize: 14,
                     marginTop: 8,
                 }}>
-                    {countLoading ? "⏳ Loading..." : count > 0 ? `✅ PASS — ${count} launches` : "❌ FAIL — No data"}
+                    {countLoading ? "⏳ Loading..." : count > 0 ? `✅ PASS — ${count} bonds` : "❌ FAIL — No data"}
                 </div>
             </div>
 
             <div className="glass-card" style={{ padding: 24, marginBottom: 20 }}>
                 <h3 style={{ color: "var(--cyan)", marginBottom: 16, fontFamily: "var(--font-display)" }}>
-                    Test 2: getLaunch(0)
+                    Test 2: getBond(0)
                 </h3>
                 <pre style={{ color: "var(--text-secondary)", fontSize: 13, fontFamily: "var(--font-mono)", whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
-                    {launchData ? JSON.stringify(launchData, (_, v) => typeof v === "bigint" ? v.toString() : v, 2) : launchError ? `ERROR: ${launchError.message}` : "Waiting for launchCount..."}
+                    {bondData ? JSON.stringify(bondData, (_, v) => typeof v === "bigint" ? v.toString() : v, 2) : bondError ? `ERROR: ${bondError.message}` : "Waiting for bondCount..."}
                 </pre>
                 <div style={{
                     padding: "8px 16px",
                     borderRadius: 8,
-                    background: launchAddr ? "rgba(106,168,106,0.1)" : "rgba(255,215,0,0.1)",
-                    color: launchAddr ? "var(--acid)" : "var(--gold)",
+                    background: bondAddr ? "rgba(106,168,106,0.1)" : "rgba(255,215,0,0.1)",
+                    color: bondAddr ? "var(--acid)" : "var(--gold)",
                     fontWeight: 700,
                     fontSize: 14,
                     marginTop: 8,
                 }}>
-                    {launchAddr ? `✅ PASS — Launch at ${launchAddr}` : "⏳ Waiting..."}
+                    {bondAddr ? `✅ PASS — Bond at ${bondAddr}` : "⏳ Waiting..."}
                 </div>
             </div>
 
             <div className="glass-card" style={{ padding: 24, marginBottom: 20 }}>
                 <h3 style={{ color: "var(--cyan)", marginBottom: 16, fontFamily: "var(--font-display)" }}>
-                    Test 3: Launch Contract Reads
+                    Test 3: Bond Contract Reads
                 </h3>
-                {!launchAddr ? (
-                    <p style={{ color: "var(--text-dim)" }}>Waiting for launch address...</p>
+                {!bondAddr ? (
+                    <p style={{ color: "var(--text-dim)" }}>Waiting for bond address...</p>
                 ) : (
                     <pre style={{ color: "var(--text-secondary)", fontSize: 13, fontFamily: "var(--font-mono)", whiteSpace: "pre-wrap" }}>
                         totalRaised (raw): {getResult(0)}{"\n"}
@@ -122,7 +122,7 @@ export default function DebugPage() {
                         hardCap (raw): {getResult(1)}{"\n"}
                         hardCap (ETH): {detailData?.[1]?.status === "success" ? formatEther(detailData[1].result as bigint) : "N/A"}{"\n"}
                         state: {getResult(2)}{"\n"}
-                        tokenPrice (raw): {getResult(3)}{"\n"}
+                        totalStaked (raw): {getResult(3)}{"\n"}
                         contributorCount: {getResult(4)}{"\n"}
                         {detailError ? `\nError: ${detailError.message}` : ""}
                     </pre>

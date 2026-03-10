@@ -1,8 +1,11 @@
 "use client";
 
-import CreateLaunch from "../components/CreateLaunch";
+import { useRouter } from "next/navigation";
+import CreateBond from "../components/CreateBond";
 
 export default function CreatePage() {
+    const router = useRouter();
+
     return (
         <div
             style={{
@@ -11,7 +14,10 @@ export default function CreatePage() {
                 padding: "96px 24px 80px",
             }}
         >
-            <CreateLaunch />
+            <CreateBond
+                onClose={() => router.push("/")}
+                onSuccess={() => router.push("/")}
+            />
         </div>
     );
 }

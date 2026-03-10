@@ -1,217 +1,180 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "./NanoBondLaunch.sol";
-import "./NanoBondStaking.sol";
+import "./NanoBond.sol";
 
 /**
  * @title NanoBondFactory
- * @notice Factory contract to deploy new token launches on Hedera
- * @dev Creates launch contracts with bonding curve fundraising + LP creation + staking
+ * @notice Factory for creating NanoBond contracts. Each bond is a standalone
+ *         ERC-20 token with raise → auto-stake → yield mechanics.
  */
 contract NanoBondFactory {
-    // ═══════════════════════════════════════════════════════════════
-    //                          STORAGE
-    // ═══════════════════════════════════════════════════════════════
+    // ════════════════════════════════════════════════
+    //                   STRUCTS
+    // ════════════════════════════════════════════════
 
-    address public owner;
-    address public feeRecipient;
-    uint256 public platformFeeBps = 250; // 2.5%
-    uint256 public launchCount;
-    
-    // SaucerSwap V1 Router V3 on Hedera Testnet (0.0.19264)
-    address public dexRouter = 0x0000000000000000000000000000000000004b40;
-
-    struct LaunchInfo {
-        address launchContract;
-        address stakingContract;
+    struct BondInfo {
+        uint256 id;
         address creator;
+        address bondContract;
         string name;
         string symbol;
-        uint256 createdAt;
+        string description;
+        uint256 yieldRateBps;
         bool active;
     }
 
-    mapping(uint256 => LaunchInfo) public launches;
-    mapping(address => uint256[]) public creatorLaunches;
-    address[] public allLaunches;
+    // ════════════════════════════════════════════════
+    //                    STATE
+    // ════════════════════════════════════════════════
 
-    // ═══════════════════════════════════════════════════════════════
-    //                          EVENTS
-    // ═══════════════════════════════════════════════════════════════
+    address public owner;
+    address public feeRecipient;
+    uint256 public platformFeeBps = 250; // 2.5% default
 
-    event LaunchCreated(
-        uint256 indexed launchId,
-        address indexed launchContract,
-        address indexed stakingContract,
-        address creator,
+    address[] public allBonds;
+    mapping(uint256 => BondInfo) public bondInfos;
+    mapping(address => uint256[]) public creatorBonds;
+
+    // ════════════════════════════════════════════════
+    //                   EVENTS
+    // ════════════════════════════════════════════════
+
+    event BondCreated(
+        uint256 indexed bondId,
+        address indexed creator,
+        address bondContract,
         string name,
         string symbol,
-        uint256 hardCap,
-        uint256 totalSupply
+        uint256 yieldRateBps
     );
 
-    event OwnershipTransferred(address indexed oldOwner, address indexed newOwner);
-    event FeeUpdated(uint256 oldFee, uint256 newFee);
-
-    event DexRouterUpdated(address indexed oldRouter, address indexed newRouter);
-
-    // ═══════════════════════════════════════════════════════════════
-    //                         MODIFIERS
-    // ═══════════════════════════════════════════════════════════════
+    // ════════════════════════════════════════════════
+    //                  MODIFIERS
+    // ════════════════════════════════════════════════
 
     modifier onlyOwner() {
         require(msg.sender == owner, "NanoBondFactory: not owner");
         _;
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //                        CONSTRUCTOR
-    // ═══════════════════════════════════════════════════════════════
+    // ════════════════════════════════════════════════
+    //                CONSTRUCTOR
+    // ════════════════════════════════════════════════
 
     constructor(address _feeRecipient) {
         owner = msg.sender;
         feeRecipient = _feeRecipient;
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //                      CREATE LAUNCH
-    // ═══════════════════════════════════════════════════════════════
+    // ════════════════════════════════════════════════
+    //               CREATE BOND
+    // ════════════════════════════════════════════════
 
     /**
-     * @notice Create a new token launch with staking
-     * @param _name Token name
-     * @param _symbol Token symbol
-     * @param _totalSupply Total supply of the token (in wei)
-     * @param _hardCap Hard cap for the raise in HBAR (in wei)
-     * @param _softCap Soft cap for the raise in HBAR (in wei)
-     * @param _launchDuration Duration of the launch in seconds
-     * @param _lpPercent Percentage of raised funds going to LP (in bps, e.g., 5000 = 50%)
-     * @param _stakingRewardPercent Percentage of total supply allocated to staking rewards (in bps)
-     * @param _stakingDuration Duration for the staking reward period
+     * @notice Create a new NanoBond.
+     * @param _name           Bond token name
+     * @param _symbol         Bond token symbol
+     * @param _description    Bond description (on-chain metadata)
+     * @param _totalSupply    Total token supply (18 decimals)
+     * @param _hardCap        Maximum HBAR to raise (in wei)
+     * @param _softCap        Minimum HBAR to raise (in wei)
+     * @param _raiseDuration  Duration of raise period (seconds)
+     * @param _yieldRateBps   Annual yield rate in basis points (500 = 5%)
+     * @param _epochDuration  Duration of each yield epoch (seconds)
      */
-    function createLaunch(
-        string memory _name,
-        string memory _symbol,
+    function createBond(
+        string calldata _name,
+        string calldata _symbol,
+        string calldata _description,
         uint256 _totalSupply,
         uint256 _hardCap,
         uint256 _softCap,
-        uint256 _launchDuration,
-        uint256 _lpPercent,
-        uint256 _stakingRewardPercent,
-        uint256 _stakingDuration
-    ) external returns (uint256 launchId, address launchAddr, address stakingAddr) {
-        require(_hardCap > 0, "NanoBondFactory: hardCap must be > 0");
-        require(_softCap > 0 && _softCap <= _hardCap, "NanoBondFactory: invalid softCap");
-        require(_totalSupply > 0, "NanoBondFactory: totalSupply must be > 0");
-        require(_lpPercent >= 1000, "NanoBondFactory: lpPercent too low");
-        require(_lpPercent <= 8000, "NanoBondFactory: lpPercent too high");
-        require(_stakingRewardPercent <= 3000, "NanoBondFactory: staking reward too high");
-        require(
-            _lpPercent + _stakingRewardPercent + 500 <= 10000,
-            "NanoBondFactory: total allocation exceeds 100%"
-        );
+        uint256 _raiseDuration,
+        uint256 _yieldRateBps,
+        uint256 _epochDuration
+    ) external returns (uint256 bondId, address bondAddress) {
+        // Validation
+        require(bytes(_name).length > 0, "NanoBondFactory: empty name");
+        require(_totalSupply > 0, "NanoBondFactory: zero supply");
+        require(_hardCap > 0, "NanoBondFactory: zero hard cap");
+        require(_softCap > 0 && _softCap <= _hardCap, "NanoBondFactory: invalid soft cap");
+        require(_raiseDuration > 0, "NanoBondFactory: zero duration");
+        require(_yieldRateBps > 0 && _yieldRateBps <= 50000, "NanoBondFactory: invalid yield rate"); // Max 500% APY
+        require(_epochDuration >= 3600, "NanoBondFactory: epoch too short"); // Min 1 hour
 
-        launchId = launchCount;
-
-        // Deploy staking contract
-        NanoBondStaking staking = new NanoBondStaking(
-            _stakingDuration
-        );
-
-        // Deploy launch contract
-        NanoBondLaunch launch = new NanoBondLaunch(
+        // Deploy bond contract
+        NanoBond bond = new NanoBond(
             _name,
             _symbol,
+            _description,
             _totalSupply,
             _hardCap,
             _softCap,
-            _launchDuration,
-            _lpPercent,
-            _stakingRewardPercent,
+            _raiseDuration,
+            _yieldRateBps,
+            _epochDuration,
             platformFeeBps,
             feeRecipient,
-            address(staking),
-            dexRouter,
             msg.sender
         );
 
-        // Set the token address in staking after launch deploys it
-        stakingAddr = address(staking);
-        launchAddr = address(launch);
+        bondAddress = address(bond);
+        bondId = allBonds.length;
 
-        // Transfer staking ownership to launch contract 
-        staking.transferOwnership(launchAddr);
-
-        launches[launchId] = LaunchInfo({
-            launchContract: launchAddr,
-            stakingContract: stakingAddr,
+        allBonds.push(bondAddress);
+        bondInfos[bondId] = BondInfo({
+            id: bondId,
             creator: msg.sender,
+            bondContract: bondAddress,
             name: _name,
             symbol: _symbol,
-            createdAt: block.timestamp,
+            description: _description,
+            yieldRateBps: _yieldRateBps,
             active: true
         });
 
-        creatorLaunches[msg.sender].push(launchId);
-        allLaunches.push(launchAddr);
-        launchCount++;
+        creatorBonds[msg.sender].push(bondId);
 
-        emit LaunchCreated(
-            launchId,
-            launchAddr,
-            stakingAddr,
-            msg.sender,
-            _name,
-            _symbol,
-            _hardCap,
-            _totalSupply
-        );
+        emit BondCreated(bondId, msg.sender, bondAddress, _name, _symbol, _yieldRateBps);
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //                          VIEWS
-    // ═══════════════════════════════════════════════════════════════
+    // ════════════════════════════════════════════════
+    //                 VIEW FUNCTIONS
+    // ════════════════════════════════════════════════
 
-    function getLaunch(uint256 _launchId) external view returns (LaunchInfo memory) {
-        return launches[_launchId];
+    function bondCount() external view returns (uint256) {
+        return allBonds.length;
     }
 
-    function getCreatorLaunches(address _creator) external view returns (uint256[] memory) {
-        return creatorLaunches[_creator];
+    function getBond(uint256 bondId) external view returns (BondInfo memory) {
+        return bondInfos[bondId];
     }
 
-    function getAllLaunches() external view returns (address[] memory) {
-        return allLaunches;
+    function getCreatorBonds(address _creator) external view returns (uint256[] memory) {
+        return creatorBonds[_creator];
     }
 
-    function getLaunchCount() external view returns (uint256) {
-        return launchCount;
+    function getAllBonds() external view returns (address[] memory) {
+        return allBonds;
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    //                         ADMIN
-    // ═══════════════════════════════════════════════════════════════
+    // ════════════════════════════════════════════════
+    //                 ADMIN
+    // ════════════════════════════════════════════════
 
     function setFeeRecipient(address _feeRecipient) external onlyOwner {
+        require(_feeRecipient != address(0), "NanoBondFactory: zero address");
         feeRecipient = _feeRecipient;
     }
 
     function setPlatformFee(uint256 _feeBps) external onlyOwner {
-        require(_feeBps <= 1000, "NanoBondFactory: fee too high"); // max 10%
-        uint256 old = platformFeeBps;
+        require(_feeBps <= 1000, "NanoBondFactory: fee too high"); // Max 10%
         platformFeeBps = _feeBps;
-        emit FeeUpdated(old, _feeBps);
     }
 
-    function setDexRouter(address _newRouter) external onlyOwner {
-        emit DexRouterUpdated(dexRouter, _newRouter);
-        dexRouter = _newRouter;
-    }
-
-    function transferOwnership(address _newOwner) external onlyOwner {
-        require(_newOwner != address(0), "NanoBondFactory: zero address");
-        emit OwnershipTransferred(owner, _newOwner);
-        owner = _newOwner;
+    function transferOwnership(address newOwner) external onlyOwner {
+        require(newOwner != address(0), "NanoBondFactory: zero address");
+        owner = newOwner;
     }
 }

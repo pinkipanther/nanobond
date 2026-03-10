@@ -10,13 +10,13 @@ export default function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const navItems = [
-        { href: "/launches", label: "Launches" },
+        { href: "/bonds", label: "Bonds" },
         { href: "/create", label: "Create" },
         { href: "/portfolio", label: "Portfolio" },
     ];
 
     const isActive = (href: string) => {
-        if (href === "/launches") return pathname === "/launches" || pathname.startsWith("/launches/");
+        if (href === "/bonds") return pathname === "/bonds" || pathname.startsWith("/bonds/");
         return pathname === href;
     };
 

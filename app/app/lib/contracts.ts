@@ -1,116 +1,175 @@
-import { parseAbi } from 'viem';
+// NanoBond Contract ABIs and Addresses
+// Bond marketplace with auto-staking and yield distribution
 
-// Contract ABIs for NanoBond platform
-// These are simplified ABIs - replace with full ABIs from forge build output
+export const FACTORY_ABI = [
+    // createBond
+    {
+        type: "function",
+        name: "createBond",
+        inputs: [
+            { name: "_name", type: "string" },
+            { name: "_symbol", type: "string" },
+            { name: "_description", type: "string" },
+            { name: "_totalSupply", type: "uint256" },
+            { name: "_hardCap", type: "uint256" },
+            { name: "_softCap", type: "uint256" },
+            { name: "_raiseDuration", type: "uint256" },
+            { name: "_yieldRateBps", type: "uint256" },
+            { name: "_epochDuration", type: "uint256" },
+        ],
+        outputs: [
+            { name: "bondId", type: "uint256" },
+            { name: "bondAddress", type: "address" },
+        ],
+        stateMutability: "nonpayable",
+    },
+    // bondCount
+    {
+        type: "function",
+        name: "bondCount",
+        inputs: [],
+        outputs: [{ name: "", type: "uint256" }],
+        stateMutability: "view",
+    },
+    // allBonds
+    {
+        type: "function",
+        name: "allBonds",
+        inputs: [{ name: "", type: "uint256" }],
+        outputs: [{ name: "", type: "address" }],
+        stateMutability: "view",
+    },
+    // getAllBonds
+    {
+        type: "function",
+        name: "getAllBonds",
+        inputs: [],
+        outputs: [{ name: "", type: "address[]" }],
+        stateMutability: "view",
+    },
+    // getBond
+    {
+        type: "function",
+        name: "getBond",
+        inputs: [{ name: "bondId", type: "uint256" }],
+        outputs: [
+            {
+                name: "",
+                type: "tuple",
+                components: [
+                    { name: "id", type: "uint256" },
+                    { name: "creator", type: "address" },
+                    { name: "bondContract", type: "address" },
+                    { name: "name", type: "string" },
+                    { name: "symbol", type: "string" },
+                    { name: "description", type: "string" },
+                    { name: "yieldRateBps", type: "uint256" },
+                    { name: "active", type: "bool" },
+                ],
+            },
+        ],
+        stateMutability: "view",
+    },
+    // Events
+    {
+        type: "event",
+        name: "BondCreated",
+        inputs: [
+            { name: "bondId", type: "uint256", indexed: true },
+            { name: "creator", type: "address", indexed: true },
+            { name: "bondContract", type: "address", indexed: false },
+            { name: "name", type: "string", indexed: false },
+            { name: "symbol", type: "string", indexed: false },
+            { name: "yieldRateBps", type: "uint256", indexed: false },
+        ],
+    },
+] as const;
 
-export const FACTORY_ABI = parseAbi([
-  "function createLaunch(string _name, string _symbol, uint256 _totalSupply, uint256 _hardCap, uint256 _softCap, uint256 _launchDuration, uint256 _lpPercent, uint256 _stakingRewardPercent, uint256 _stakingDuration) external returns (uint256, address, address)",
-  "function launches(uint256) external view returns (address launchContract, address stakingContract, address creator, string name, string symbol, uint256 createdAt, bool active)",
-  "function launchCount() external view returns (uint256)",
-  "function getLaunch(uint256 _launchId) external view returns ((address launchContract, address stakingContract, address creator, string name, string symbol, uint256 createdAt, bool active))",
-  "function getAllLaunches() external view returns (address[])",
-  "event LaunchCreated(uint256 indexed launchId, address indexed launchContract, address indexed stakingContract, address creator, string name, string symbol, uint256 hardCap, uint256 totalSupply)"
-]);
+export const BOND_ABI = [
+    // ── State reads ──
+    { type: "function", name: "name", inputs: [], outputs: [{ name: "", type: "string" }], stateMutability: "view" },
+    { type: "function", name: "symbol", inputs: [], outputs: [{ name: "", type: "string" }], stateMutability: "view" },
+    { type: "function", name: "description", inputs: [], outputs: [{ name: "", type: "string" }], stateMutability: "view" },
+    { type: "function", name: "token", inputs: [], outputs: [{ name: "", type: "address" }], stateMutability: "view" },
+    { type: "function", name: "creator", inputs: [], outputs: [{ name: "", type: "address" }], stateMutability: "view" },
+    { type: "function", name: "totalSupply", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "hardCap", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "softCap", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "totalRaised", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "raiseEnd", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "state", inputs: [], outputs: [{ name: "", type: "uint8" }], stateMutability: "view" },
+    { type: "function", name: "yieldRateBps", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "epochDuration", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "totalStaked", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "totalYieldMinted", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "contributorCount", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "contributions", inputs: [{ name: "", type: "address" }], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "hasClaimed", inputs: [{ name: "", type: "address" }], outputs: [{ name: "", type: "bool" }], stateMutability: "view" },
+    { type: "function", name: "stakedBalance", inputs: [{ name: "", type: "address" }], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "hbarWithdrawn", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    // ── View helpers ──
+    { type: "function", name: "getProgress", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "getTimeRemaining", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "getNextEpoch", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "pendingYield", inputs: [{ name: "user", type: "address" }], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "withdrawableHbar", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    {
+        type: "function", name: "getBondInfo", inputs: [],
+        outputs: [
+            { name: "_name", type: "string" },
+            { name: "_symbol", type: "string" },
+            { name: "_description", type: "string" },
+            { name: "_totalSupply", type: "uint256" },
+            { name: "_hardCap", type: "uint256" },
+            { name: "_softCap", type: "uint256" },
+            { name: "_totalRaised", type: "uint256" },
+            { name: "_raiseEnd", type: "uint256" },
+            { name: "_state", type: "uint8" },
+            { name: "_contributorCount", type: "uint256" },
+            { name: "_tokenAddress", type: "address" },
+            { name: "_yieldRateBps", type: "uint256" },
+            { name: "_epochDuration", type: "uint256" },
+            { name: "_totalStaked", type: "uint256" },
+            { name: "_totalYieldMinted", type: "uint256" },
+        ],
+        stateMutability: "view",
+    },
+    // ── Write functions ──
+    { type: "function", name: "contribute", inputs: [], outputs: [], stateMutability: "payable" },
+    { type: "function", name: "claimBonds", inputs: [], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "distributeYield", inputs: [], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "claimYield", inputs: [], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "stake", inputs: [{ name: "amount", type: "uint256" }], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "unstake", inputs: [{ name: "amount", type: "uint256" }], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "activate", inputs: [], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "cancel", inputs: [], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "claimRefund", inputs: [], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "checkState", inputs: [], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "withdrawHbar", inputs: [{ name: "amount", type: "uint256" }], outputs: [], stateMutability: "nonpayable" },
+    // ── Events ──
+    { type: "event", name: "Contributed", inputs: [{ name: "contributor", type: "address", indexed: true }, { name: "amount", type: "uint256", indexed: false }, { name: "totalRaised", type: "uint256", indexed: false }] },
+    { type: "event", name: "BondsClaimed", inputs: [{ name: "claimer", type: "address", indexed: true }, { name: "amount", type: "uint256", indexed: false }] },
+    { type: "event", name: "YieldDistributed", inputs: [{ name: "amount", type: "uint256", indexed: false }, { name: "timestamp", type: "uint256", indexed: false }] },
+    { type: "event", name: "YieldClaimed", inputs: [{ name: "claimer", type: "address", indexed: true }, { name: "amount", type: "uint256", indexed: false }] },
+    { type: "event", name: "Staked", inputs: [{ name: "user", type: "address", indexed: true }, { name: "amount", type: "uint256", indexed: false }] },
+    { type: "event", name: "Unstaked", inputs: [{ name: "user", type: "address", indexed: true }, { name: "amount", type: "uint256", indexed: false }] },
+    { type: "event", name: "HbarWithdrawn", inputs: [{ name: "creator", type: "address", indexed: true }, { name: "amount", type: "uint256", indexed: false }] },
+    { type: "event", name: "StateChanged", inputs: [{ name: "oldState", type: "uint8", indexed: false }, { name: "newState", type: "uint8", indexed: false }] },
+] as const;
 
-export const LAUNCH_ABI = parseAbi([
-  "function contribute() external payable",
-  "function finalize() external",
-  "function claimTokens() external",
-  "function claimRefund() external",
-  "function checkState() external",
-  "function cancel() external",
-  "function name() external view returns (string)",
-  "function symbol() external view returns (string)",
-  "function totalSupply() external view returns (uint256)",
-  "function hardCap() external view returns (uint256)",
-  "function softCap() external view returns (uint256)",
-  "function totalRaised() external view returns (uint256)",
-  "function launchEnd() external view returns (uint256)",
-  "function state() external view returns (uint8)",
-  "function contributorCount() external view returns (uint256)",
-  "function contributions(address) external view returns (uint256)",
-  "function hasClaimed(address) external view returns (bool)",
-  "function tokensForSale() external view returns (uint256)",
-  "function tokensForLP() external view returns (uint256)",
-  "function tokensForStaking() external view returns (uint256)",
-  "function getProgress() external view returns (uint256)",
-  "function getTimeRemaining() external view returns (uint256)",
-  "function getTokenPrice() external view returns (uint256)",
-  "function token() external view returns (address)",
-  "function creator() external view returns (address)",
-  "function getLaunchInfo() external view returns (string, string, uint256, uint256, uint256, uint256, uint256, uint8, uint256, address)",
-  "function withdrawLP() external",
-  "function withdrawRaisedAmount() external",
-  "function withdrawPendingHbar() external",
-  "event Contributed(address indexed contributor, uint256 amount, uint256 totalRaised)",
-  "event LaunchFinalized(address indexed lpPair, uint256 lpHbar, uint256 lpTokens)",
-  "event TokensClaimed(address indexed claimer, uint256 amount)",
-  "event RefundClaimed(address indexed claimer, uint256 amount)",
-  "event LaunchCancelled()",
-  "event StateChanged(uint8 oldState, uint8 newState)",
-  "event LPCreationFailed(string reason)",
-  "event RaisedAmountWithdrawn(address indexed admin, uint256 amount, uint8 state)"
-]);
-
-export const STAKING_ABI = parseAbi([
-  "function stake(uint256 _amount) external",
-  "function unstake(uint256 _amount) external",
-  "function claimReward() external",
-  "function exit() external",
-  "function earned(address _account) external view returns (uint256)",
-  "function stakedBalance(address) external view returns (uint256)",
-  "function totalStaked() external view returns (uint256)",
-  "function totalRewards() external view returns (uint256)",
-  "function rewardRate() external view returns (uint256)",
-  "function stakingEnd() external view returns (uint256)",
-  "function totalStakers() external view returns (uint256)",
-  "function getAPR() external view returns (uint256)",
-  "function getStakingInfo() external view returns (address, uint256, uint256, uint256, uint256, uint256, bool)",
-  "function getUserInfo(address _user) external view returns (uint256, uint256, bool)",
-  "function initialized() external view returns (bool)",
-  "event Staked(address indexed user, uint256 amount)",
-  "event Unstaked(address indexed user, uint256 amount)",
-  "event RewardClaimed(address indexed user, uint256 reward)"
-]);
-
-export const ERC20_ABI = parseAbi([
-  "function name() view returns (string)",
-  "function symbol() view returns (string)",
-  "function decimals() view returns (uint8)",
-  "function totalSupply() view returns (uint256)",
-  "function balanceOf(address) view returns (uint256)",
-  "function approve(address spender, uint256 amount) returns (bool)",
-  "function allowance(address owner, address spender) view returns (uint256)",
-  "function transfer(address to, uint256 amount) returns (bool)"
-]);
+// ERC-20 ABI for bond token interactions
+export const ERC20_ABI = [
+    { type: "function", name: "balanceOf", inputs: [{ name: "account", type: "address" }], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "approve", inputs: [{ name: "spender", type: "address" }, { name: "amount", type: "uint256" }], outputs: [{ name: "", type: "bool" }], stateMutability: "nonpayable" },
+    { type: "function", name: "allowance", inputs: [{ name: "owner", type: "address" }, { name: "spender", type: "address" }], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "symbol", inputs: [], outputs: [{ name: "", type: "string" }], stateMutability: "view" },
+    { type: "function", name: "decimals", inputs: [], outputs: [{ name: "", type: "uint8" }], stateMutability: "view" },
+] as const;
 
 // Replace with your deployed addresses
 export const CONTRACTS = {
-  FACTORY: "0x5fD07eF11E9613910bBf5d6Fd6d5523e4ef21DFD", // Hedera testnet deployment
-  DEX_ROUTER: "0x0000000000000000000000000000000000004b40", // SaucerSwap router
+    FACTORY: "0xd17E784711b56D1eb16B60516f95DDEc6aE19505", // Deploy and update
 };
 
-// Hedera Network Config
-export const HEDERA_CHAIN = {
-  chainId: "0x128", // 296 = Hedera Testnet
-  chainName: "Hedera Testnet",
-  rpcUrls: ["https://testnet.hashio.io/api"],
-  nativeCurrency: {
-    name: "HBAR",
-    symbol: "HBAR",
-    decimals: 18,
-  },
-  blockExplorerUrls: ["https://hashscan.io/testnet"],
-};
-
-export const HEDERA_MAINNET = {
-  chainId: "0x127", // 295 = Hedera Mainnet
-  chainName: "Hedera Mainnet",
-  rpcUrls: ["https://mainnet.hashio.io/api"],
-  nativeCurrency: {
-    name: "HBAR",
-    symbol: "HBAR",
-    decimals: 18,
-  },
-  blockExplorerUrls: ["https://hashscan.io/mainnet"],
-};
+// Hedera testnet chain ID
+export const HEDERA_TESTNET_CHAIN_ID = 296;

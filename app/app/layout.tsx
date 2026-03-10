@@ -84,8 +84,8 @@ export default function RootLayout({
     <html lang="en">
       <body className="noise-overlay grid-bg">
         <FirebaseAnalytics />
-        <EmailPopup />
         <WalletProvider>
+          <EmailPopup />
           <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
             <Navbar />
             <main style={{ flex: 1 }}>{children}</main>

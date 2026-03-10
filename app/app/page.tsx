@@ -3,30 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import Hero from "./components/Hero";
-import LaunchCard from "./components/LaunchCard";
-import type { LaunchCardData } from "./components/LaunchCard";
-import { useLaunches } from "./lib/hooks";
+import BondCard from "./components/BondCard";
+import { useBonds } from "./lib/hooks";
 
 export default function Home() {
-  const [filter, setFilter] = useState<"all" | "live" | "ended">("all");
-  const { launches, isLoading, count } = useLaunches();
+  const [filter, setFilter] = useState<"all" | "raising" | "active">("all");
+  const { bonds, isLoading, count } = useBonds();
 
-  const launchCards: LaunchCardData[] = launches.map((l) => ({
-    id: l.id,
-    name: l.name,
-    symbol: l.symbol,
-    totalRaised: l.totalRaised,
-    hardCap: l.hardCap,
-    softCap: l.softCap,
-    contributors: l.contributors,
-    timeRemaining: l.timeRemaining,
-    state: l.state,
-    tokenPrice: l.tokenPrice,
-  }));
-
-  const filteredLaunches = launchCards.filter((l) => {
-    if (filter === "live") return l.state === 0;
-    if (filter === "ended") return l.state === 2 || l.state === 1;
+  const filteredBonds = bonds.filter((b) => {
+    if (filter === "raising") return b.state === 0;
+    if (filter === "active") return b.state === 1;
     return true;
   });
 
@@ -41,7 +27,7 @@ export default function Home() {
           padding: "0 24px 80px",
         }}
       >
-        <section id="launches">
+        <section id="bonds">
           <div
             style={{
               display: "flex",
@@ -62,7 +48,7 @@ export default function Home() {
                   color: "var(--text-primary)",
                 }}
               >
-                Trending Launches
+                Bond Marketplace
               </h2>
               <p
                 style={{
@@ -72,18 +58,18 @@ export default function Home() {
                 }}
               >
                 {isLoading
-                  ? "Loading launches from chain..."
+                  ? "Loading bonds from chain..."
                   : count > 0
-                    ? `${count} project${count !== 1 ? "s" : ""} launched on Hedera`
-                    : "No launches yet — be the first to create one!"}
+                    ? `${count} bond${count !== 1 ? "s" : ""} on Hedera`
+                    : "No bonds yet — be the first to create one!"}
               </p>
             </div>
 
             <div className="tab-group">
               {[
                 { id: "all" as const, label: "All" },
-                { id: "live" as const, label: "Live" },
-                { id: "ended" as const, label: "Ended" },
+                { id: "raising" as const, label: "Raising" },
+                { id: "active" as const, label: "Active" },
               ].map((f) => (
                 <button
                   key={f.id}
@@ -109,7 +95,7 @@ export default function Home() {
                   fontWeight: 600,
                 }}
               >
-                Loading launches from Hedera Testnet...
+                Loading bonds from Hedera Testnet...
               </p>
             </div>
           )}
@@ -122,22 +108,19 @@ export default function Home() {
                 gap: 16,
               }}
             >
-              {filteredLaunches.map((card) => {
-                const live = launches.find((l) => l.id === card.id);
-                return (
-                  <Link
-                    key={card.id}
-                    href={`/launches/${live?.launchContract || ""}`}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <LaunchCard launch={card} />
-                  </Link>
-                );
-              })}
+              {filteredBonds.map((bond) => (
+                <Link
+                  key={bond.id}
+                  href={`/bonds/${bond.bondContract}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <BondCard bond={bond} />
+                </Link>
+              ))}
             </div>
           )}
 
-          {!isLoading && filteredLaunches.length === 0 && (
+          {!isLoading && filteredBonds.length === 0 && (
             <div
               className="glass-card"
               style={{ padding: 60, textAlign: "center" }}
@@ -150,8 +133,8 @@ export default function Home() {
                 }}
               >
                 {count === 0
-                  ? "No launches deployed yet. Create the first one!"
-                  : "No launches found with the selected filter"}
+                  ? "No bonds deployed yet. Create the first one!"
+                  : "No bonds found with the selected filter"}
               </p>
             </div>
           )}
