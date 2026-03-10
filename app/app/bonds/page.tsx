@@ -83,7 +83,7 @@ export default function BondsPage() {
                 <div className="glass-card" style={{ padding: 60, textAlign: "center" }}>
                     <div style={{ fontSize: 48, marginBottom: 16, animation: "float 2s ease-in-out infinite", color: "var(--text-dim)", fontFamily: "var(--font-display)" }}>. . .</div>
                     <p style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)", fontWeight: 600 }}>
-                        Loading bonds from Hedera Testnet...
+                        Loading bonds from Hedera Mainnet...
                     </p>
                 </div>
             )}

@@ -95,7 +95,7 @@ export default function Home() {
                   fontWeight: 600,
                 }}
               >
-                Loading bonds from Hedera Testnet...
+                Loading bonds from Hedera Mainnet...
               </p>
             </div>
           )}

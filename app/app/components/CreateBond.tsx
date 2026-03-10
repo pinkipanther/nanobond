@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAccount, useWriteContract, useSwitchChain } from "wagmi";
 import { parseEther, parseUnits } from "viem";
-import { FACTORY_ABI, CONTRACTS, HEDERA_TESTNET_CHAIN_ID } from "../lib/contracts";
+import { FACTORY_ABI, CONTRACTS, HEDERA_CHAIN_ID } from "../lib/contracts";
 
 interface CreateBondProps {
     onClose: () => void;
@@ -36,8 +36,8 @@ export default function CreateBond({ onClose, onSuccess }: CreateBondProps) {
         if (!address) return;
 
         // Switch chain if needed
-        if (chainId !== HEDERA_TESTNET_CHAIN_ID) {
-            switchChain({ chainId: HEDERA_TESTNET_CHAIN_ID });
+        if (chainId !== HEDERA_CHAIN_ID) {
+            switchChain({ chainId: HEDERA_CHAIN_ID });
             return;
         }
 

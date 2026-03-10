@@ -1,11 +1,11 @@
 "use client";
 
 import { useReadContract, useReadContracts } from "wagmi";
-import { hederaTestnet } from "wagmi/chains";
+import { hedera } from "wagmi/chains";
 import { CONTRACTS, FACTORY_ABI, BOND_ABI } from "../lib/contracts";
 import { formatEther } from "viem";
 
-const CHAIN_ID = hederaTestnet.id;
+const CHAIN_ID = hedera.id;
 const factoryAddress = CONTRACTS.FACTORY as `0x${string}`;
 const factoryAbi = FACTORY_ABI as any;
 const bondAbi = BOND_ABI as any;
@@ -63,7 +63,7 @@ export default function DebugPage() {
                 <pre style={{ color: "var(--text-secondary)", fontSize: 13, fontFamily: "var(--font-mono)" }}>
                     Factory: {factoryAddress}{"\n"}
                     Chain ID: {CHAIN_ID}{"\n"}
-                    RPC: https://testnet.hashio.io/api
+                    RPC: https://mainnet.hashio.io/api
                 </pre>
             </div>
 

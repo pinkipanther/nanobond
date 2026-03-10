@@ -216,7 +216,7 @@ function WalletModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
         <button className="wallet-modal-close" onClick={onClose} type="button">✕</button>
 
         <div style={{ marginBottom: 18 }}>
-          <div className="wallet-network-pill">Hedera Testnet</div>
+          <div className="wallet-network-pill">Hedera Mainnet</div>
           <h3 className="wallet-modal-title">Connect your wallet</h3>
           <p className="wallet-modal-subtitle">HashPack is prioritized. WalletConnect appears when a project ID is configured.</p>
         </div>

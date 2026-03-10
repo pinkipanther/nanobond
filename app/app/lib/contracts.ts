@@ -167,9 +167,10 @@ export const ERC20_ABI = [
 ] as const;
 
 // Replace with your deployed addresses
+// Replace with your deployed addresses
 export const CONTRACTS = {
-    FACTORY: "0xd17E784711b56D1eb16B60516f95DDEc6aE19505", // Deploy and update
+    FACTORY: "0xf421C97B3dA3106Cb678605E211eF66C26182158", // Mainnet Factory
 };
 
-// Hedera testnet chain ID
-export const HEDERA_TESTNET_CHAIN_ID = 296;
+// Hedera mainnet chain ID
+export const HEDERA_CHAIN_ID = 295;

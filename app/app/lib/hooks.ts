@@ -2,14 +2,14 @@
 
 import { useReadContract, useReadContracts, useAccount } from "wagmi";
 import { formatEther, formatUnits } from "viem";
-import { hederaTestnet } from "wagmi/chains";
+import { hedera } from "wagmi/chains";
 import { CONTRACTS, FACTORY_ABI, BOND_ABI } from "./contracts";
 
 // ═══════════════════════════════════════════════════════════════
 //  Every read hook MUST include chainId so wagmi knows which
 //  chain to target even without a connected wallet.
 // ═══════════════════════════════════════════════════════════════
-const CHAIN_ID = hederaTestnet.id; // 296
+const CHAIN_ID = hedera.id; // 295
 
 // Hedera EVM stores msg.value in tinybars (8 decimals)
 // hardCap/softCap are now correctly stored as 8-decimals natively.

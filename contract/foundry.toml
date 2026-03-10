@@ -6,10 +6,10 @@ via_ir = true
 optimizer = true
 optimizer_runs = 200
 
-# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
-
 [rpc_endpoints]
 hedera_testnet = "https://testnet.hashio.io/api"
+hedera_mainnet = "https://mainnet.hashio.io/api"
 
 [etherscan]
 hedera_testnet = { key = "testnet", url = "https://testnet.hashio.io/api" }
+hedera_mainnet = { key = "mainnet", url = "https://mainnet.hashio.io/api" }

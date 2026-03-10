@@ -5,19 +5,19 @@ import { hederaTestnet, hedera } from "wagmi/chains";
 import { injected, walletConnect } from "wagmi/connectors";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
-// Hedera Testnet chain ID for explicit use in hooks
-export const HEDERA_TESTNET_CHAIN_ID = hederaTestnet.id; // 296
+// Hedera chain ID for explicit use in hooks
+export const HEDERA_CHAIN_ID = hedera.id; // 295
 
 const wagmiConfig = createConfig({
-    chains: [hederaTestnet, hedera],
+    chains: [hedera, hederaTestnet],
     multiInjectedProviderDiscovery: true,
     storage: createStorage({
         key: "nanobond-wagmi-v2",
         storage: typeof window !== "undefined" ? window.localStorage : undefined,
     }),
     transports: {
-        [hederaTestnet.id]: http("https://testnet.hashio.io/api"),
         [hedera.id]: http("https://mainnet.hashio.io/api"),
+        [hederaTestnet.id]: http("https://testnet.hashio.io/api"),
     },
     connectors: (() => {
         const isBrowser = typeof window !== "undefined";
