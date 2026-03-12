@@ -113,6 +113,7 @@ export const BOND_ABI = [
     { type: "function", name: "getNextEpoch", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
     { type: "function", name: "pendingYield", inputs: [{ name: "user", type: "address" }], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
     { type: "function", name: "withdrawableHbar", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "getContributors", inputs: [], outputs: [{ name: "", type: "address[]" }], stateMutability: "view" },
     {
         type: "function", name: "getBondInfo", inputs: [],
         outputs: [

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount, useWriteContract, useBalance } from "wagmi";
 import { parseEther, formatEther, parseUnits, formatUnits } from "viem";
 import { BOND_ABI } from "../lib/contracts";
-import { useBondDetail, type BondCardData } from "../lib/hooks";
+import { useBondDetail, useBondContributors, type BondCardData } from "../lib/hooks";
 
 const STATE_LABELS: Record<number, string> = {
     0: "RAISING", 1: "ACTIVE", 2: "MATURED", 3: "FAILED", 4: "CANCELLED",
@@ -17,13 +17,15 @@ interface BondDetailProps {
 
 export default function BondDetail({ bond, onBack }: BondDetailProps) {
     const { address: userAddress } = useAccount();
-    const { writeContract, isPending } = useWriteContract();
+    const { data: balanceData } = useBalance({ address: userAddress });
+    const { writeContract, isPending, error: writeError } = useWriteContract();
     const [contributeAmt, setContributeAmt] = useState("");
     const [unstakeAmt, setUnstakeAmt] = useState("");
     const [withdrawAmt, setWithdrawAmt] = useState("");
 
     const bondAddr = bond.bondContract as `0x${string}`;
     const { data } = useBondDetail(bond.bondContract);
+    const { contributors: bondContributors, isLoading: isLoadingContributors } = useBondContributors(bond.bondContract);
 
     // Parse on-chain data
     const get = (idx: number): bigint => {
@@ -85,20 +87,19 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
             abi: BOND_ABI,
             functionName: "contribute",
             value: parseEther(contributeAmt),
-            gas: BigInt(2_000_000),
         });
     };
 
     const handleClaim = () => {
-        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "claimBonds", gas: BigInt(5_000_000) });
+        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "claimBonds" });
     };
 
     const handleDistribute = () => {
-        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "distributeYield", gas: BigInt(3_000_000) });
+        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "distributeYield" });
     };
 
     const handleClaimYield = () => {
-        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "claimYield", gas: BigInt(3_000_000) });
+        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "claimYield" });
     };
 
     const handleUnstake = () => {
@@ -108,7 +109,6 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
             abi: BOND_ABI,
             functionName: "unstake",
             args: [parseEther(unstakeAmt)],
-            gas: BigInt(2_000_000),
         });
     };
 
@@ -119,24 +119,23 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
             abi: BOND_ABI,
             functionName: "withdrawHbar",
             args: [parseUnits(withdrawAmt, 8)],
-            gas: BigInt(2_000_000),
         });
     };
 
     const handleActivate = () => {
-        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "activate", gas: BigInt(3_000_000) });
+        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "activate" });
     };
 
     const handleCancel = () => {
-        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "cancel", gas: BigInt(2_000_000) });
+        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "cancel" });
     };
 
     const handleRefund = () => {
-        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "claimRefund", gas: BigInt(2_000_000) });
+        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "claimRefund" });
     };
 
     const handleCheckState = () => {
-        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "checkState", gas: BigInt(1_000_000) });
+        writeContract({ address: bondAddr, abi: BOND_ABI, functionName: "checkState" });
     };
 
     const sectionStyle = {
@@ -275,9 +274,12 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                     {/* Contribute (RAISING state) */}
                     {state === 0 && (
                         <div className="glass-card" style={sectionStyle}>
-                            <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, color: "var(--text-primary)", marginBottom: 16 }}>
+                            <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, color: "var(--text-primary)", marginBottom: 8 }}>
                                 Buy Bonds
                             </h3>
+                            <div style={{ fontSize: 12, color: "var(--text-dim)", marginBottom: 12 }}>
+                                Balance: {balanceData ? `${parseFloat(formatEther(balanceData.value)).toFixed(2)} ${balanceData.symbol}` : "0 HBAR"}
+                            </div>
                             <div style={{ display: "flex", gap: 8 }}>
                                 <input
                                     type="number"
@@ -286,14 +288,19 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                                     onChange={(e) => setContributeAmt(e.target.value)}
                                     style={{ flex: 1, padding: "12px 16px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)", color: "var(--text-primary)", fontSize: 14 }}
                                 />
-                                <button className="btn-primary" onClick={handleContribute} disabled={isPending || !contributeAmt}>
-                                    {isPending ? "..." : "Contribute"}
+                                <button className="btn-primary" onClick={handleContribute} disabled={isPending || !contributeAmt || isNaN(Number(contributeAmt)) || (balanceData && !isNaN(Number(contributeAmt)) && parseEther(contributeAmt || "0") > balanceData.value)}>
+                                    {isPending ? "..." : (balanceData && !isNaN(Number(contributeAmt)) && parseEther(contributeAmt || "0") > balanceData.value ? "Insufficient HBAR" : "Contribute")}
                                 </button>
                             </div>
                             {userContribution > 0n && (
                                 <p style={{ fontSize: 12, color: "var(--text-dim)", marginTop: 8 }}>
                                     Your contribution: {parseFloat(formatUnits(userContribution, 8)).toLocaleString()} HBAR
                                 </p>
+                            )}
+                            {writeError && (
+                                <div style={{ fontSize: 12, color: "var(--magenta)", marginTop: 8, padding: 8, background: "rgba(244, 67, 54, 0.1)", borderRadius: 6, wordBreak: "break-word" }}>
+                                    {writeError.message || "Transaction failed."}
+                                </div>
                             )}
                         </div>
                     )}
@@ -416,6 +423,35 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                         </div>
                     )}
                 </div>
+            </div>
+
+            {/* Contributors Section */}
+            <div className="glass-card" style={{ ...sectionStyle, marginTop: 16 }}>
+                <h3 style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--text-primary)", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span>Contributors ({contributors})</span>
+                    {isLoadingContributors && <span style={{ fontSize: 14, color: "var(--text-dim)" }}>Loading...</span>}
+                </h3>
+                {bondContributors.length > 0 ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        {bondContributors.map((c, i) => (
+                            <div key={c.address} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 16px", background: "rgba(255,255,255,0.02)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                                    <div style={{ fontFamily: "var(--font-mono)", fontSize: 14, color: "var(--text-dim)", width: 24 }}>#{i + 1}</div>
+                                    <div style={{ fontFamily: "var(--font-mono)", fontSize: 14, color: "var(--text-primary)" }}>
+                                        {c.address.slice(0, 6)}...{c.address.slice(-4)}
+                                    </div>
+                                </div>
+                                <div style={{ fontFamily: "var(--font-mono)", fontSize: 14, color: "var(--cyan)", fontWeight: 600 }}>
+                                    {parseFloat(formatUnits(c.amount, 8)).toLocaleString()} ℏ
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: 14, color: "var(--text-dim)", textAlign: "center", padding: "24px 0" }}>
+                        {isLoadingContributors ? "Fetching contributors..." : "No contributors yet."}
+                    </p>
+                )}
             </div>
 
             {/* Contract info footer */}

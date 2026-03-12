@@ -217,3 +217,50 @@ export function useBondDetail(bondAddress: string) {
         },
     });
 }
+
+// ═══════════════════════════════════════════════════════════════
+//                   BOND CONTRIBUTORS HOOK
+// ═══════════════════════════════════════════════════════════════
+
+export function useBondContributors(bondAddress: string) {
+    const addr = bondAddress as `0x${string}`;
+
+    const { data: contributorsData, isLoading: isLoadingContributors } = useReadContract({
+        address: addr,
+        abi: bondAbi,
+        functionName: "getContributors",
+        chainId: CHAIN_ID,
+        query: { enabled: !!bondAddress },
+    });
+
+    const contributors = (contributorsData as `0x${string}`[]) || [];
+
+    const contributionCalls = contributors.map((contributor) => ({
+        address: addr,
+        abi: bondAbi,
+        functionName: "contributions",
+        args: [contributor],
+        chainId: CHAIN_ID,
+    }));
+
+    const { data: contributionsData, isLoading: isLoadingAmounts } = useReadContracts({
+        contracts: contributionCalls as any,
+        query: { enabled: contributors.length > 0 },
+    });
+
+    const contributorList = contributors.map((address, index) => {
+        let amount = 0n;
+        if (contributionsData && contributionsData[index] && contributionsData[index].status === "success") {
+            amount = contributionsData[index].result as bigint;
+        }
+        return {
+            address,
+            amount,
+        };
+    }).sort((a, b) => Number(b.amount - a.amount));
+
+    return {
+        contributors: contributorList,
+        isLoading: isLoadingContributors || isLoadingAmounts,
+    };
+}

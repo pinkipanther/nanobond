@@ -3,6 +3,7 @@
 import { WagmiProvider, createConfig, createStorage, http } from "wagmi";
 import { hederaTestnet, hedera } from "wagmi/chains";
 import { injected, walletConnect } from "wagmi/connectors";
+import { dedicatedWalletConnector } from "@magiclabs/wagmi-connector";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 // Hedera chain ID for explicit use in hooks
@@ -22,6 +23,7 @@ const wagmiConfig = createConfig({
     connectors: (() => {
         const isBrowser = typeof window !== "undefined";
         const wcProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
+        const magicApiKey = process.env.NEXT_PUBLIC_MAGIC_API_KEY || "pk_live_0000000000000000"; // Fallback to avoid crash if not set
 
         const walletConnectConnectors = isBrowser && wcProjectId
             ? [
@@ -38,10 +40,29 @@ const wagmiConfig = createConfig({
             ]
             : [];
 
+        const magicConnector = isBrowser
+            ? [
+                dedicatedWalletConnector({
+                    chains: [hedera, hederaTestnet],
+                    options: {
+                        apiKey: magicApiKey,
+                        isDarkMode: true,
+                        magicSdkConfiguration: {
+                            network: {
+                                rpcUrl: "https://hedera.publicnode.com",
+                                chainId: hedera.id,
+                            }
+                        }
+                    },
+                }),
+            ]
+            : [];
+
         return [
             injected({ shimDisconnect: true }),
             ...walletConnectConnectors,
-        ];
+            ...magicConnector,
+        ] as any;
     })(),
 });
 
