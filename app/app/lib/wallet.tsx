@@ -1,6 +1,6 @@
 "use client";
 
-import { WagmiProvider, createConfig, createStorage, http } from "wagmi";
+import { WagmiProvider, createConfig, createStorage, http, fallback } from "wagmi";
 import { hederaTestnet, hedera } from "wagmi/chains";
 import { injected, walletConnect } from "wagmi/connectors";
 import { dedicatedWalletConnector } from "@magiclabs/wagmi-connector";
@@ -17,8 +17,17 @@ const wagmiConfig = createConfig({
         storage: typeof window !== "undefined" ? window.localStorage : undefined,
     }),
     transports: {
-        [hedera.id]: http("https://mainnet.hashio.io/api"),
-        [hederaTestnet.id]: http("https://testnet.hashio.io/api"),
+        [hedera.id]: fallback([
+            ...(process.env.NEXT_PUBLIC_MAINNET_RPC_URL ? [http(process.env.NEXT_PUBLIC_MAINNET_RPC_URL)] : []),
+            http("https://mainnet.hashio.io/api"),
+            http("https://hedera.linkpool.pro"),
+            http("https://295.rpc.thirdweb.com"),
+            http("https://mainnet.hedera.api.hgraph.io/rpc")
+        ]),
+        [hederaTestnet.id]: fallback([
+            ...(process.env.NEXT_PUBLIC_TESTNET_RPC_URL ? [http(process.env.NEXT_PUBLIC_TESTNET_RPC_URL)] : []),
+            http("https://testnet.hashio.io/api")
+        ]),
     },
     connectors: (() => {
         const isBrowser = typeof window !== "undefined";

@@ -118,7 +118,7 @@ export function useBonds() {
         isLoading: detailLoading,
     } = useReadContracts({
         contracts: bondDetailCalls as any,
-        query: { enabled: bondAddresses.length > 0, refetchInterval: 15_000 },
+        query: { enabled: bondAddresses.length > 0 },
     });
 
     // Step 5: Merge
@@ -213,7 +213,6 @@ export function useBondDetail(bondAddress: string) {
         contracts: contracts as any,
         query: {
             enabled: !!bondAddress,
-            refetchInterval: 10_000,
         },
     });
 }

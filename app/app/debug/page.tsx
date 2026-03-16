@@ -63,7 +63,7 @@ export default function DebugPage() {
                 <pre style={{ color: "var(--text-secondary)", fontSize: 13, fontFamily: "var(--font-mono)" }}>
                     Factory: {factoryAddress}{"\n"}
                     Chain ID: {CHAIN_ID}{"\n"}
-                    RPC: https://mainnet.hashio.io/api
+                    RPC: Default Wagmi config
                 </pre>
             </div>
 
