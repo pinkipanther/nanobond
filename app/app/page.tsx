@@ -67,18 +67,55 @@ export default function Home() {
 
             <div className="tab-group">
               {[
-                { id: "all" as const, label: "All" },
-                { id: "raising" as const, label: "Raising" },
-                { id: "active" as const, label: "Active" },
-              ].map((f) => (
-                <button
-                  key={f.id}
-                  className={`tab-item ${filter === f.id ? "active" : ""}`}
-                  onClick={() => setFilter(f.id)}
-                >
-                  {f.label}
-                </button>
-              ))}
+                { id: "all" as const, label: "All", badge: "" },
+                {
+                  id: "raising" as const,
+                  label: "Raising",
+                  badge: "var(--acid)",
+                },
+                {
+                  id: "active" as const,
+                  label: "Active",
+                  badge: "var(--cyan)",
+                },
+              ].map((f) => {
+                const isActive = filter === f.id;
+                return (
+                  <button
+                    key={f.id}
+                    onClick={() => setFilter(f.id)}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "8px 16px",
+                      borderRadius: "999px",
+                      border: `1px solid ${isActive
+                          ? f.badge || "var(--text-secondary)"
+                          : "var(--void-border)"
+                        }`,
+                      background: isActive
+                        ? f.badge ? `${f.badge}15` : "var(--void-surface)"
+                        : "transparent",
+                      color: isActive
+                        ? "var(--text-primary)"
+                        : "var(--text-secondary)",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "12px",
+                      fontWeight: isActive ? 700 : 600,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      boxShadow: isActive && f.badge
+                        ? `0 0 12px ${f.badge}25`
+                        : "none",
+                    }}
+                  >
+                    {f.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -87,7 +124,15 @@ export default function Home() {
               className="glass-card"
               style={{ padding: 60, textAlign: "center" }}
             >
-              <div style={{ fontSize: 48, marginBottom: 16, animation: "float 2s ease-in-out infinite" }}>⏳</div>
+              <div
+                style={{
+                  fontSize: 48,
+                  marginBottom: 16,
+                  animation: "float 2s ease-in-out infinite",
+                }}
+              >
+                ⏳
+              </div>
               <p
                 style={{
                   fontFamily: "var(--font-body)",
