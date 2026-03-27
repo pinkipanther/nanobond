@@ -17,6 +17,8 @@ const TOKEN_DECIMALS = 8;
 const HBAR_DECIMALS = 8;
 const EVM_HBAR_DECIMALS = 18;
 const WEIBARS_PER_TINYBAR = 10n ** 10n;
+const MIRROR_NODE_BASE_URL = "https://mainnet.mirrornode.hedera.com/api/v1";
+const HASHSCAN_BASE_URL = "https://hashscan.io/mainnet";
 const BUY_EVENT = parseAbiItem("event Bought(address indexed buyer, uint256 hbarSpent, uint256 tokensMinted, uint256 price)");
 const SELL_EVENT = parseAbiItem("event Sold(address indexed seller, uint256 tokensBurned, uint256 hbarReturned, uint256 price)");
 
@@ -275,7 +277,7 @@ export default function TradePage() {
 
         async function fetchHolderCount() {
             try {
-                let nextUrl = `https://testnet.mirrornode.hedera.com/api/v1/tokens/${TOKEN_ID}/balances?limit=100`;
+                let nextUrl = `${MIRROR_NODE_BASE_URL}/tokens/${TOKEN_ID}/balances?limit=100`;
                 let count = 0;
                 const collected: { account: string; balance: string }[] = [];
 
@@ -295,7 +297,7 @@ export default function TradePage() {
                             });
                         }
                     }
-                    nextUrl = data.links?.next ? `https://testnet.mirrornode.hedera.com${data.links.next}` : "";
+                    nextUrl = data.links?.next ? `https://mainnet.mirrornode.hedera.com${data.links.next}` : "";
                 }
 
                 if (!cancelled) {
@@ -369,7 +371,7 @@ export default function TradePage() {
 
         async function fetchVolumes() {
             try {
-                let nextUrl = `https://testnet.mirrornode.hedera.com/api/v1/contracts/${CONTRACT_ADDRESS}/results/logs?order=asc&limit=100`;
+                let nextUrl = `${MIRROR_NODE_BASE_URL}/contracts/${CONTRACT_ADDRESS}/results/logs?order=asc&limit=100`;
                 let totalBuy = 0n;
                 let totalSell = 0n;
 
@@ -398,7 +400,7 @@ export default function TradePage() {
                         }
                     }
 
-                    nextUrl = data.links?.next ? `https://testnet.mirrornode.hedera.com${data.links.next}` : "";
+                    nextUrl = data.links?.next ? `https://mainnet.mirrornode.hedera.com${data.links.next}` : "";
                 }
 
                 if (!cancelled) {
@@ -772,7 +774,7 @@ export default function TradePage() {
                         {txHash && (
                             <div style={{ marginTop: 16, textAlign: "center", fontSize: 12 }}>
                                 <a 
-                                    href={`https://hashscan.io/testnet/transaction/${txHash}`} 
+                                    href={`${HASHSCAN_BASE_URL}/transaction/${txHash}`} 
                                     target="_blank" 
                                     rel="noreferrer"
                                     style={{ color: "var(--cyan)", textDecoration: "none" }}
