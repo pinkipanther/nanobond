@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { decodeEventLog, parseAbiItem, parseEther, parseUnits, formatUnits } from "viem";
+import type { Hex } from "viem";
 import { hedera } from "wagmi/chains";
 import { CURVE_ABI, ERC20_ABI, HTS_ABI } from "../lib/contracts";
-import { createChart, ColorType } from "lightweight-charts";
+import { createChart, ColorType, type LineData, type UTCTimestamp } from "lightweight-charts";
 import { useBalance } from "wagmi";
 
 const CONTRACT_ADDRESS = "0x7E0C5dB12dE03A323F152670249d1ede879e0360";
@@ -226,13 +227,16 @@ export default function TradePage() {
         const futurePoints = 20;
         const startSupply = Math.max(0, liveSupply - increment * (pastPoints - 1));
         const startTime = Math.floor(Date.now() / 1000) - (pastPoints * 3600);
-        const liveData: { time: number; value: number }[] = [];
-        const projectionData: { time: number; value: number }[] = [];
+        const liveData: LineData<UTCTimestamp>[] = [];
+        const projectionData: LineData<UTCTimestamp>[] = [];
 
         for (let i = 0; i < pastPoints + futurePoints; i++) {
             const supplyPoint = startSupply + increment * i;
             const point = computeMarketCapAtSupply(supplyPoint, bPrice, sSize, gRate);
-            const chartPoint = { time: startTime + (i * 3600), value: point.marketCapHbar };
+            const chartPoint: LineData<UTCTimestamp> = {
+                time: (startTime + (i * 3600)) as UTCTimestamp,
+                value: point.marketCapHbar,
+            };
 
             if (supplyPoint <= liveSupply || i === 0) {
                 liveData.push(chartPoint);
@@ -378,10 +382,13 @@ export default function TradePage() {
 
                     for (const log of logs) {
                         try {
+                            const topics = (log.topics ?? []) as Hex[];
+                            if (topics.length === 0) continue;
+
                             const decoded = decodeEventLog({
                                 abi: [BUY_EVENT, SELL_EVENT],
                                 data: log.data as `0x${string}`,
-                                topics: (log.topics ?? []) as `0x${string}`[],
+                                topics: topics as [Hex, ...Hex[]],
                             });
 
                             if (decoded.eventName === "Bought") totalBuy += decoded.args.hbarSpent as bigint;
