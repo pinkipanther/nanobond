@@ -1,0 +1,4 @@
+forge-std/=lib/forge-std/src/
+hedera-system/=lib/hedera-smart-contracts/contracts/system-contracts/
+hedera-token-service/=lib/hedera-smart-contracts/contracts/system-contracts/hedera-token-service/
+hedera-smart-contracts/=lib/hedera-smart-contracts/

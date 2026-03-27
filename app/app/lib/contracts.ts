@@ -165,6 +165,30 @@ export const ERC20_ABI = [
     { type: "function", name: "allowance", inputs: [{ name: "owner", type: "address" }, { name: "spender", type: "address" }], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
     { type: "function", name: "symbol", inputs: [], outputs: [{ name: "", type: "string" }], stateMutability: "view" },
     { type: "function", name: "decimals", inputs: [], outputs: [{ name: "", type: "uint8" }], stateMutability: "view" },
+    { type: "function", name: "associate", inputs: [], outputs: [{ name: "responseCode", type: "int256" }], stateMutability: "nonpayable" },
+] as const;
+
+export const HTS_ABI = [
+    { type: "function", name: "associateToken", inputs: [{ name: "account", type: "address" }, { name: "token", type: "address" }], outputs: [{ name: "responseCode", type: "int64" }], stateMutability: "nonpayable" },
+] as const;
+
+export const CURVE_ABI = [
+    { type: "function", name: "owner", inputs: [], outputs: [{ name: "", type: "address" }], stateMutability: "view" },
+    { type: "function", name: "currentPrice", inputs: [{ name: "supply", type: "uint256" }], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "previewBuy", inputs: [{ name: "hbarAmount", type: "uint256" }], outputs: [{ name: "tokensToMint", type: "uint256" }, { name: "price", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "previewSell", inputs: [{ name: "amount", type: "uint256" }], outputs: [{ name: "hbarToReturn", type: "uint256" }, { name: "price", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "buy", inputs: [], outputs: [], stateMutability: "payable" },
+    { type: "function", name: "sell", inputs: [{ name: "amount", type: "uint256" }], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "withdrawRaised", inputs: [{ name: "to", type: "address" }, { name: "amount", type: "uint256" }], outputs: [], stateMutability: "nonpayable" },
+    { type: "function", name: "internalTotalSupply", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "totalRaisedHbar", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "basePrice", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "growthRateBP", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "stepSize", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "targetHbarToRaise", inputs: [], outputs: [{ name: "", type: "uint256" }], stateMutability: "view" },
+    { type: "function", name: "curveActive", inputs: [], outputs: [{ name: "", type: "bool" }], stateMutability: "view" },
+    { type: "function", name: "token", inputs: [], outputs: [{ name: "", type: "address" }], stateMutability: "view" },
+    { type: "function", name: "decimals", inputs: [], outputs: [{ name: "", type: "uint8" }], stateMutability: "view" },
 ] as const;
 
 // Replace with your deployed addresses

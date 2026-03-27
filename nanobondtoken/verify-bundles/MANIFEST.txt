@@ -1,0 +1,8 @@
+HashScan Verify Upload Guide
+============================
+Detected System: Foundry
+
+- NanobondExponentialCurve
+  File: verify-bundles/NanobondExponentialCurve/metadata.json
+  Address: <set env NANOBONDEXPONENTIALCURVE_ADDRESS>
+

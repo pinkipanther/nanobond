@@ -11,6 +11,7 @@ export default function Navbar() {
 
     const navItems = [
         { href: "/bonds", label: "Bonds" },
+        { href: "/trade", label: "Trade" },
         { href: "/create", label: "Create" },
         { href: "/portfolio", label: "Portfolio" },
         { href: "/analytics", label: "Analytics" },

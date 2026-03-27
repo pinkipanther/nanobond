@@ -1,0 +1,14 @@
+{
+  "lib/forge-std": {
+    "tag": {
+      "name": "v1.15.0",
+      "rev": "0844d7e1fc5e60d77b68e469bff60265f236c398"
+    }
+  },
+  "lib/hedera-smart-contracts": {
+    "tag": {
+      "name": "v0.11.0",
+      "rev": "53f33110d70b0527da813dfb8aaf79281b280091"
+    }
+  }
+}
