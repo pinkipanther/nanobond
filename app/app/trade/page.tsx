@@ -3,15 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { decodeEventLog, parseAbiItem, parseEther, parseUnits, formatUnits } from "viem";
-import { hederaTestnet } from "wagmi/chains";
+import { hedera } from "wagmi/chains";
 import { CURVE_ABI, ERC20_ABI, HTS_ABI } from "../lib/contracts";
 import { createChart, ColorType } from "lightweight-charts";
 import { useBalance } from "wagmi";
 
-const CONTRACT_ADDRESS = "0xee1F75b0537f8A3140d78E2F4Fd23500f48797A1";
-const TOKEN_ADDRESS = "0x0000000000000000000000000000000000801EA6";
-const TOKEN_ID = "0.0.8396454";
-const CHAIN_ID = hederaTestnet.id;
+const CONTRACT_ADDRESS = "0x7E0C5dB12dE03A323F152670249d1ede879e0360";
+const TOKEN_ADDRESS = "0x00000000000000000000000000000000009ED323";
+const TOKEN_ID = "0.0.10433315";
+const CHAIN_ID = hedera.id;
 const TOKEN_DECIMALS = 8;
 const HBAR_DECIMALS = 8;
 const EVM_HBAR_DECIMALS = 18;
