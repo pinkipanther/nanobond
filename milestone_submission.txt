@@ -1,0 +1,72 @@
+Milestone Summary
+To complete this milestone, the project must successfully launch its token on Hedera MainNet and demonstrate initial user adoption with real on-chain activity.
+
+1. Proof of token deployment - Token successfully minted and deployed on Hedera MainNet
+2. Bonding curve activation - Token demonstrates proper functionality within the specified tokenomics model
+3. Public verification - Contract addresses, explorer links, and adoption metrics published
+
+Written Summary
+
+Q1. Submission Summary*
+This milestone delivered a live Nanobond token launch on Hedera MainNet together with an active exponential bonding curve market and a public trading dashboard. On the smart contract side, the repository includes the `NanobondExponentialCurve` contract in `nanobondtoken/src/NanobondExponentialCurve.sol`, which creates the HTS fungible token, prices tokens using an exponential bonding curve, mints on buy, burns on sell, and tracks supply and HBAR raised. The deployment workflow is included in `nanobondtoken/script/DeployNanobondExponentialCurve.s.sol`, and the repository contains Foundry broadcast artifacts under `nanobondtoken/broadcast/DeployNanobondExponentialCurve.s.sol/` showing successful deployment transactions.
+
+The production deployment is now live on Hedera MainNet with the Nanobond bonding curve contract at `0.0.10408721` and the Nanobond token at `0.0.10408739`. The token has already recorded real user activity and on-chain trading through the bonding curve. Current public metrics provided for this milestone are: supply `3,187,392.03 NANO`, price `0.0024 HBAR / NANO`, and total volume `7,683.3 HBAR`. Public visibility is provided through the live dashboard at `https://app.nanobond.xyz/trade`, where users can verify price movement, volume, holders, and market activity. This demonstrates that the token is not only deployed, but actively functioning within its tokenomics model and being used by real participants on mainnet.
+
+Here is the public dashboard of all the activity:
+https://app.nanobond.xyz/trade
+
+Q2. Token Contract Explorer Link: Provide an explorer link to your deployed token contract on Hedera MainNet, showing contract deployment, token transactions, and initial liquidity/trading activity.*
+Nanobond bonding curve contract:
+https://hashscan.io/mainnet/contract/0.0.10408721
+
+Nanobond token:
+https://hashscan.io/mainnet/token/0.0.10408739
+
+Current public metrics:
+- Supply: 3,187,392.03 NANO
+- Price: 0.0024 HBAR / NANO
+- Total Volume: 7,683.3 HBAR
+
+Q3. Transaction Records: Provide transaction records proving the token has been successfully minted and transferred.*
+MainNet transaction records and contract calls can be reviewed here:
+https://hashscan.io/mainnet/contract/0.0.10375302/calls?p=1&k=1774715112.926828000
+
+In addition, the repository includes deployment artifacts that document the contract deployment flow, including successful CREATE transactions for `NanobondExponentialCurve` in `nanobondtoken/broadcast/DeployNanobondExponentialCurve.s.sol/295/run-latest.json` and `nanobondtoken/broadcast/DeployNanobondExponentialCurve.s.sol/296/run-latest.json`. The contract code itself shows that buys mint tokens and transfer them to users, while sells transfer tokens back, burn them, and return HBAR.
+
+Q4. Bonding Curve Validation Report: Provide a bonding curve validation report demonstrating that the bonding curve is functioning as expected.*
+The Nanobond bonding curve is functioning as designed and is publicly verifiable through both the contract code and live market activity.
+
+Validation details:
+- The bonding curve logic is implemented in `nanobondtoken/src/NanobondExponentialCurve.sol`.
+- Pricing is computed by `currentPrice()` using an exponential growth model based on `basePrice`, `growthRateBP`, and `stepSize`.
+- `buy()` calculates the current price from circulating supply, mints new NANO, transfers tokens to the buyer, and increases both `internalTotalSupply` and `totalRaisedHbar`.
+- `sell()` calculates the current sell value from the same pricing curve, transfers tokens back into the contract, burns them, and returns HBAR to the seller.
+- Because price depends on `internalTotalSupply`, every buy and sell changes the effective spot price and market position on the curve.
+
+Observed validation on mainnet:
+- Public trading activity is visible at `https://app.nanobond.xyz/trade`.
+- Buying and selling on the live market changes price and bonding curve state in real time.
+- The dashboard exposes the resulting supply, price, holder distribution, and total volume, confirming that the tokenomics model is active in production rather than simulated.
+
+This confirms the bonding curve is live, responsive to market activity, and behaving according to the exponential pricing model implemented in the contract.
+
+Q5. Public Dashboard or Adoption Report: Provide a link to a public dashboard or report with key adoption metrics, including token distribution, number of holders, and transaction volume.*
+Public dashboard:
+https://app.nanobond.xyz/trade
+
+The dashboard includes key adoption and market metrics, including holders, largest holders, total volume, price, and live trading activity. This serves as the public adoption report for the milestone.
+
+Q6. Token Utility Demo Video or Documentation: Provide a link to a demo video or documentation explaining token utility, key functionalities, and how users interact with it.*
+Project documentation and implementation references:
+- Token contract overview: `nanobondtoken/README.md`
+- Bonding curve implementation: `nanobondtoken/src/NanobondExponentialCurve.sol`
+- Deployment script: `nanobondtoken/script/DeployNanobondExponentialCurve.s.sol`
+- Public product interface: https://app.nanobond.xyz/trade
+
+The utility is demonstrated through the live product itself: users interact with the bonding curve by buying NANO with HBAR and selling NANO back into the curve, while the contract dynamically updates price according to supply.
+
+Q7. Additional Context (Optional): If there are any anomalies, delays, or special circumstances we should know about, please explain here.
+The mainnet deployment and live dashboard are operational. Explorer links, contract code, and live public metrics are all available for independent verification. One transaction record link above references a mainnet contract call view, while the repository also preserves deployment broadcast artifacts from the Foundry workflow used during development and validation.
+
+Q8. Additional notes (optional)
+Nanobond has progressed beyond a contract-only milestone and is already operating as a public live market on Hedera MainNet. This milestone demonstrates end-to-end delivery across deployment, token creation, bonding curve activation, public accessibility, and early adoption metrics.

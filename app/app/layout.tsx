@@ -82,7 +82,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className="noise-overlay grid-bg">
+			<body className="grid-bg" style={{ background: "#0b0f0e" }}>
 				<FirebaseAnalytics />
 				<WalletProvider>
 					{/* <EmailPopup /> */}
@@ -91,6 +91,7 @@ export default function RootLayout({
 							display: "flex",
 							flexDirection: "column",
 							minHeight: "100vh",
+							background: "#0b0f0e",
 						}}
 					>
 						<Navbar />

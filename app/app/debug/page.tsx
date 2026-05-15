@@ -79,7 +79,7 @@ export default function DebugPage() {
                 <div style={{
                     padding: "8px 16px",
                     borderRadius: 8,
-                    background: count > 0 ? "rgba(106,168,106,0.1)" : "rgba(193,85,126,0.1)",
+                    background: count > 0 ? "rgba(63,185,80,0.12)" : "rgba(224,71,104,0.12)",
                     color: count > 0 ? "var(--acid)" : "var(--magenta)",
                     fontWeight: 700,
                     fontSize: 14,
@@ -99,7 +99,7 @@ export default function DebugPage() {
                 <div style={{
                     padding: "8px 16px",
                     borderRadius: 8,
-                    background: bondAddr ? "rgba(106,168,106,0.1)" : "rgba(255,215,0,0.1)",
+                    background: bondAddr ? "rgba(63,185,80,0.12)" : "rgba(205,138,50,0.12)",
                     color: bondAddr ? "var(--acid)" : "var(--gold)",
                     fontWeight: 700,
                     fontSize: 14,
@@ -130,7 +130,7 @@ export default function DebugPage() {
                 <div style={{
                     padding: "8px 16px",
                     borderRadius: 8,
-                    background: detailData?.[0]?.status === "success" ? "rgba(106,168,106,0.1)" : "rgba(255,215,0,0.1)",
+                    background: detailData?.[0]?.status === "success" ? "rgba(63,185,80,0.12)" : "rgba(205,138,50,0.12)",
                     color: detailData?.[0]?.status === "success" ? "var(--acid)" : "var(--gold)",
                     fontWeight: 700,
                     fontSize: 14,

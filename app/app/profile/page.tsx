@@ -122,7 +122,7 @@ export default function ProfilePage() {
                     <button 
                         className="btn-secondary" 
                         onClick={() => disconnect()}
-                        style={{ color: "var(--magenta)", borderColor: "rgba(244, 67, 54, 0.3)" }}
+                        style={{ color: "var(--magenta)", borderColor: "rgba(224, 71, 104, 0.3)" }}
                     >
                         Disconnect Wallet
                     </button>
@@ -144,7 +144,7 @@ export default function ProfilePage() {
                             className="btn-primary" 
                             onClick={handleShowSettings}
                             disabled={isLoading}
-                            style={{ background: "#6851ff", color: "white" }}
+                            style={{ background: "#6851ff", color: "#0b0f0e" }}
                         >
                             {isLoading ? "Loading..." : "Account Settings"}
                         </button>

@@ -12,6 +12,7 @@ export default function Navbar() {
     const navItems = [
         { href: "/bonds", label: "Bonds" },
         { href: "/trade", label: "Trade" },
+        { href: "/pro", label: "Pro" },
         { href: "/create", label: "Create" },
         { href: "/portfolio", label: "Portfolio" },
         { href: "/analytics", label: "Analytics" },
@@ -31,9 +32,9 @@ export default function Navbar() {
                 left: 0,
                 right: 0,
                 zIndex: 1000,
-                background: "rgba(250, 250, 248, 0.72)",
+                background: "rgba(11, 15, 14, 0.85)",
                 backdropFilter: "blur(18px)",
-                borderBottom: "1px solid rgba(24, 33, 45, 0.08)",
+                borderBottom: "1px solid #22332f",
             }}
         >
             <div
@@ -79,8 +80,8 @@ export default function Navbar() {
                         gap: 8,
                         padding: 6,
                         borderRadius: 999,
-                        background: "rgba(255,255,255,0.72)",
-                        border: "1px solid rgba(24,33,45,0.08)",
+                        background: "rgba(17, 25, 22, 0.72)",
+                        border: "1px solid #22332f",
                     }}
                     className="hidden md:flex"
                 >
@@ -123,7 +124,7 @@ export default function Navbar() {
                         className="md:hidden"
                         onClick={() => setMobileOpen(!mobileOpen)}
                         style={{
-                            background: "var(--void-surface)",
+                            background: "var(--void-light)",
                             border: "1px solid var(--void-border)",
                             borderRadius: 12,
                             color: "var(--text-primary)",
@@ -147,7 +148,7 @@ export default function Navbar() {
                         flexDirection: "column",
                         gap: 6,
                         borderTop: "1px solid var(--void-border)",
-                        background: "rgba(255,255,255,0.9)",
+                        background: "rgba(17, 25, 22, 0.98)",
                     }}
                 >
                     {navItems.map((item) => (

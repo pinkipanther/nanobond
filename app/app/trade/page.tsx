@@ -232,12 +232,12 @@ export default function TradePage() {
         const chart = createChart(chartContainerRef.current, {
             layout: {
                 background: { type: ColorType.Solid, color: "transparent" },
-                textColor: "#44535f",
+                textColor: "#8a9a95",
                 fontFamily: "Manrope, sans-serif",
             },
             grid: {
-                vertLines: { color: "rgba(21, 32, 40, 0.06)" },
-                horzLines: { color: "rgba(21, 32, 40, 0.08)" },
+                vertLines: { color: "rgba(34, 51, 47, 0.4)" },
+                horzLines: { color: "rgba(34, 51, 47, 0.5)" },
             },
             width: chartContainerRef.current.clientWidth,
             height: 420,
@@ -1008,7 +1008,7 @@ export default function TradePage() {
                                 flexWrap: "wrap",
                                 marginBottom: 18,
                                 padding: "12px 14px",
-                                background: "rgba(255,255,255,0.55)",
+                                background: "rgba(17,25,22,0.55)",
                                 border: "1px solid rgba(21,32,40,0.06)",
                                 borderRadius: 14,
                             }}
@@ -1122,10 +1122,10 @@ export default function TradePage() {
                                 width: "100%",
                                 height: 420,
                                 background:
-                                    "linear-gradient(180deg, rgba(255,255,255,0.88) 0%, rgba(237,241,234,0.88) 100%)",
+                                    "linear-gradient(180deg, rgba(17,25,22,0.88) 0%, rgba(11,15,14,0.88) 100%)",
                                 borderRadius: 18,
                                 overflow: "hidden",
-                                border: "1px solid rgba(21,32,40,0.06)",
+                                border: "1px solid #22332f",
                             }}
                             ref={chartContainerRef}
                         />
@@ -1404,7 +1404,7 @@ export default function TradePage() {
                                     style={{
                                         padding: 18,
                                         background:
-                                            "linear-gradient(180deg, rgba(255,255,255,0.86) 0%, rgba(237,241,234,0.86) 100%)",
+                                            "linear-gradient(180deg, rgba(17,25,22,0.86) 0%, rgba(11,15,14,0.86) 100%)",
                                         borderRadius: 14,
                                         marginBottom: 24,
                                         border: "1px solid var(--void-border)",
