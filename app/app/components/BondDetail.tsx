@@ -167,7 +167,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                 <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
                     <div style={{
                         background: "linear-gradient(135deg, #3fb950, #2ea043)",
-                        color: "#0b0f0e", fontSize: 18, fontWeight: 800,
+                        color: "#080c14", fontSize: 18, fontWeight: 800,
                         padding: "8px 20px", borderRadius: 10,
                         fontFamily: "var(--font-display)",
                     }}>
@@ -205,7 +205,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                         <div style={{ height: 8, borderRadius: 4, background: "rgba(34,51,47,0.5)", marginBottom: 8 }}>
                             <div style={{
                                 width: `${Math.min(100, progress)}%`, height: "100%", borderRadius: 4,
-                                background: "linear-gradient(90deg, #1696b8, #0fa483)",
+                                background: "linear-gradient(90deg, #6366f1, #10b981)",
                             }} />
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--text-secondary)" }}>
@@ -286,7 +286,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                                     placeholder="HBAR amount"
                                     value={contributeAmt}
                                     onChange={(e) => setContributeAmt(e.target.value)}
-                                    style={{ flex: 1, padding: "12px 16px", borderRadius: 8, border: "1px solid #22332f", background: "var(--void-surface)", color: "var(--text-primary)", fontSize: 14 }}
+                                    style={{ flex: 1, padding: "12px 16px", borderRadius: 8, border: "1px solid #1e2d45", background: "var(--void-surface)", color: "var(--text-primary)", fontSize: 14 }}
                                 />
                                 <button className="btn-primary" onClick={handleContribute} disabled={isPending || !contributeAmt || isNaN(Number(contributeAmt)) || (balanceData && !isNaN(Number(contributeAmt)) && parseEther(contributeAmt || "0") > balanceData.value)}>
                                     {isPending ? "..." : (balanceData && !isNaN(Number(contributeAmt)) && parseEther(contributeAmt || "0") > balanceData.value ? "Insufficient HBAR" : "Contribute")}
@@ -353,7 +353,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                                     placeholder="Amount to unstake"
                                     value={unstakeAmt}
                                     onChange={(e) => setUnstakeAmt(e.target.value)}
-                                            style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid #22332f", background: "var(--void-surface)", color: "var(--text-primary)", fontSize: 13 }}
+                                            style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid #1e2d45", background: "var(--void-surface)", color: "var(--text-primary)", fontSize: 13 }}
                                 />
                                 <button className="btn-secondary" onClick={handleUnstake} disabled={isPending || !unstakeAmt}>
                                     Unstake
@@ -379,8 +379,8 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
 
                     {/* Creator Admin Panel */}
                     {isCreator && (
-                        <div className="glass-card" style={{ ...sectionStyle, borderLeft: "3px solid #1696b8" }}>
-                            <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, color: "#1696b8", marginBottom: 16 }}>
+                        <div className="glass-card" style={{ ...sectionStyle, borderLeft: "3px solid #6366f1" }}>
+                            <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, color: "#6366f1", marginBottom: 16 }}>
                                 Admin Panel
                             </h3>
 
@@ -412,7 +412,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                                             placeholder="HBAR amount"
                                             value={withdrawAmt}
                                             onChange={(e) => setWithdrawAmt(e.target.value)}
-                                    style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid #22332f", background: "var(--void-surface)", color: "var(--text-primary)", fontSize: 13 }}
+                                    style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid #1e2d45", background: "var(--void-surface)", color: "var(--text-primary)", fontSize: 13 }}
                                         />
                                         <button className="btn-primary" onClick={handleWithdrawHbar} disabled={isPending || !withdrawAmt}>
                                             Withdraw

@@ -15,20 +15,20 @@ export default function ProLayout({
             style={{
                 paddingTop: 76,
                 minHeight: "100vh",
-                background: "#0b0f0e",
+                background: "#080c14",
                 display: "flex",
                 flexDirection: "column",
                 color: "#e8f0ee",
                 /* Override CSS variables for dark pro mode */
-                ["--void" as any]: "#0b0f0e",
-                ["--void-light" as any]: "#111916",
-                ["--void-surface" as any]: "#16201e",
-                ["--void-elevated" as any]: "#1a2825",
-                ["--void-border" as any]: "#22332f",
+                ["--void" as any]: "#080c14",
+                ["--void-light" as any]: "#0e1420",
+                ["--void-surface" as any]: "#131a28",
+                ["--void-elevated" as any]: "#192133",
+                ["--void-border" as any]: "#1e2d45",
                 ["--text-primary" as any]: "#e8f0ee",
                 ["--text-secondary" as any]: "#8a9a95",
                 ["--text-dim" as any]: "#556b65",
-                ["--inverted" as any]: "#0b0f0e",
+                ["--inverted" as any]: "#080c14",
             }}
         >
             {children}

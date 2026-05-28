@@ -45,7 +45,7 @@ export default function BondCard({ bond }: { bond: BondCardData }) {
                 left: 0,
                 right: 0,
                 height: "4px",
-                background: bond.state === 0 ? "linear-gradient(90deg, #1696b8, #0fa483)" : bond.state === 1 ? "linear-gradient(90deg, #0fa483, #1696b8)" : "var(--void-border)",
+                background: bond.state === 0 ? "linear-gradient(90deg, #6366f1, #10b981)" : bond.state === 1 ? "linear-gradient(90deg, #10b981, #6366f1)" : "var(--void-border)",
             }} />
 
             {/* Header: Title and Status */}
@@ -151,7 +151,7 @@ export default function BondCard({ bond }: { bond: BondCardData }) {
                             width: `${progress}%`,
                             height: "100%",
                             borderRadius: "3px",
-                            background: "linear-gradient(90deg, #1696b8, #0fa483)",
+                            background: "linear-gradient(90deg, #6366f1, #10b981)",
                             transition: "width 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
                         }} />
                     </div>

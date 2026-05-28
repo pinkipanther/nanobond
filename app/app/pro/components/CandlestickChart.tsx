@@ -26,8 +26,8 @@ export default function CandlestickChart({ candles }: CandlestickChartProps) {
                 fontFamily: "JetBrains Mono, monospace",
             },
             grid: {
-                vertLines: { color: "rgba(34, 51, 47, 0.4)" },
-                horzLines: { color: "rgba(34, 51, 47, 0.5)" },
+                vertLines: { color: "rgba(30, 45, 69, 0.4)" },
+                horzLines: { color: "rgba(30, 45, 69, 0.5)" },
             },
             width: containerRef.current.clientWidth,
             height: containerRef.current.clientHeight,

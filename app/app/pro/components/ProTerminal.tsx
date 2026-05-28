@@ -38,7 +38,7 @@ export default function ProTerminal({ bonds }: ProTerminalProps) {
                 flex: 1,
                 minHeight: 0,
                 height: "calc(100vh - 76px)",
-                background: "#0b0f0e",
+                background: "#080c14",
             }}
         >
             {/* Market Stats - full width top bar */}

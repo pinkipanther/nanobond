@@ -1,0 +1,1036 @@
+{
+  "compiler": {
+    "version": "0.8.24+commit.e11b9ed9"
+  },
+  "language": "Solidity",
+  "output": {
+    "abi": [
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "_name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_symbol",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_totalSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_hardCap",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_softCap",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_raiseDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_yieldRateBps",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_epochDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_platformFeeBps",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "_feeRecipient",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "_creator",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "totalRaised",
+            "type": "uint256",
+            "indexed": false
+          },
+          {
+            "internalType": "uint256",
+            "name": "contributors",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "BondActivated",
+        "anonymous": false
+      },
+      {
+        "inputs": [],
+        "type": "event",
+        "name": "BondCancelled",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "claimer",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "BondsClaimed",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "contributor",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256",
+            "indexed": false
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalRaised",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "Contributed",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "creator",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "HbarWithdrawn",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "claimer",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "RefundClaimed",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "Staked",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "enum NanoBond.BondState",
+            "name": "oldState",
+            "type": "uint8",
+            "indexed": false
+          },
+          {
+            "internalType": "enum NanoBond.BondState",
+            "name": "newState",
+            "type": "uint8",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "StateChanged",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "Unstaked",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "claimer",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "YieldClaimed",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256",
+            "indexed": false
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "YieldDistributed",
+        "anonymous": false
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "accRewardsPerShare",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "activate"
+      },
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "cancel"
+      },
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "checkState"
+      },
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "claimBonds"
+      },
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "claimRefund"
+      },
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "claimYield"
+      },
+      {
+        "inputs": [],
+        "stateMutability": "payable",
+        "type": "function",
+        "name": "contribute"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "contributions",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "contributorCount",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "creator",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "description",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "distributeYield"
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "epochDuration",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "feeRecipient",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "getBondInfo",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "_name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_symbol",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_totalSupply",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_hardCap",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_softCap",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_totalRaised",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_raiseEnd",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum NanoBond.BondState",
+            "name": "_state",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_contributorCount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "_tokenAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_yieldRateBps",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_epochDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_totalStaked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_totalYieldMinted",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "getContributors",
+        "outputs": [
+          {
+            "internalType": "address[]",
+            "name": "",
+            "type": "address[]"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "getNextEpoch",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "getProgress",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "getTimeRemaining",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "hardCap",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "hasClaimed",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "hbarWithdrawn",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "lastYieldTime",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "name",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "pendingYield",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "platformFeeBps",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "raiseDuration",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "raiseEnd",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "rewardDebt",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "softCap",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "stake"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "stakedBalance",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "state",
+        "outputs": [
+          {
+            "internalType": "enum NanoBond.BondState",
+            "name": "",
+            "type": "uint8"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "symbol",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "token",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "tokensForBonders",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "tokensForCreator",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "totalRaised",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "totalStaked",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "totalSupply",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "totalYieldMinted",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "unstake"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "withdrawHbar"
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "withdrawableHbar",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "yieldRateBps",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "payable",
+        "type": "receive"
+      }
+    ],
+    "devdoc": {
+      "kind": "dev",
+      "methods": {
+        "distributeYield()": {
+          "details": "Anyone can call this. Yield is minted proportionally to stakers."
+        }
+      },
+      "version": 1
+    },
+    "userdoc": {
+      "kind": "user",
+      "methods": {
+        "activate()": {
+          "notice": "Activate the bond (creator can call after soft cap is met + deadline passed)."
+        },
+        "cancel()": {
+          "notice": "Creator cancels the bond during raise phase."
+        },
+        "checkState()": {
+          "notice": "Check if raise period has ended and update state accordingly."
+        },
+        "claimBonds()": {
+          "notice": "Claim bond tokens after raise succeeds. Tokens are auto-staked."
+        },
+        "claimRefund()": {
+          "notice": "Claim HBAR refund if bond failed or was cancelled."
+        },
+        "claimYield()": {
+          "notice": "Claim accumulated yield rewards."
+        },
+        "contribute()": {
+          "notice": "Contribute HBAR to purchase bonds."
+        },
+        "distributeYield()": {
+          "notice": "Distribute yield for completed epochs."
+        },
+        "pendingYield(address)": {
+          "notice": "View pending yield for a user."
+        },
+        "stake(uint256)": {
+          "notice": "Stake bond tokens to earn yield."
+        },
+        "unstake(uint256)": {
+          "notice": "Unstake bond tokens. Accumulated yield is preserved."
+        },
+        "withdrawHbar(uint256)": {
+          "notice": "Creator withdraws raised HBAR for project funding."
+        },
+        "withdrawableHbar()": {
+          "notice": "View how much HBAR the creator can still withdraw."
+        }
+      },
+      "version": 1
+    }
+  },
+  "settings": {
+    "remappings": [
+      "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+      "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+      "forge-std/=lib/forge-std/src/",
+      "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+      "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+    ],
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "metadata": {
+      "bytecodeHash": "ipfs"
+    },
+    "compilationTarget": {
+      "src/NanoBond.sol": "NanoBond"
+    },
+    "evmVersion": "cancun",
+    "libraries": {},
+    "viaIR": true
+  },
+  "sources": {
+    "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol": {
+      "keccak256": "0x1b88b3fb3d85ba5496d7d5f396f83ee1fddcdd6762059ff65992655b67920998",
+      "license": "MIT",
+      "content": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v5.5.0) (interfaces/draft-IERC6093.sol)\n\npragma solidity >=0.8.4;\n\n/**\n * @dev Standard ERC-20 Errors\n * Interface of the https://eips.ethereum.org/EIPS/eip-6093[ERC-6093] custom errors for ERC-20 tokens.\n */\ninterface IERC20Errors {\n    /**\n     * @dev Indicates an error related to the current `balance` of a `sender`. Used in transfers.\n     * @param sender Address whose tokens are being transferred.\n     * @param balance Current balance for the interacting account.\n     * @param needed Minimum amount required to perform a transfer.\n     */\n    error ERC20InsufficientBalance(address sender, uint256 balance, uint256 needed);\n\n    /**\n     * @dev Indicates a failure with the token `sender`. Used in transfers.\n     * @param sender Address whose tokens are being transferred.\n     */\n    error ERC20InvalidSender(address sender);\n\n    /**\n     * @dev Indicates a failure with the token `receiver`. Used in transfers.\n     * @param receiver Address to which tokens are being transferred.\n     */\n    error ERC20InvalidReceiver(address receiver);\n\n    /**\n     * @dev Indicates a failure with the `spender`’s `allowance`. Used in transfers.\n     * @param spender Address that may be allowed to operate on tokens without being their owner.\n     * @param allowance Amount of tokens a `spender` is allowed to operate with.\n     * @param needed Minimum amount required to perform a transfer.\n     */\n    error ERC20InsufficientAllowance(address spender, uint256 allowance, uint256 needed);\n\n    /**\n     * @dev Indicates a failure with the `approver` of a token to be approved. Used in approvals.\n     * @param approver Address initiating an approval operation.\n     */\n    error ERC20InvalidApprover(address approver);\n\n    /**\n     * @dev Indicates a failure with the `spender` to be approved. Used in approvals.\n     * @param spender Address that may be allowed to operate on tokens without being their owner.\n     */\n    error ERC20InvalidSpender(address spender);\n}\n\n/**\n * @dev Standard ERC-721 Errors\n * Interface of the https://eips.ethereum.org/EIPS/eip-6093[ERC-6093] custom errors for ERC-721 tokens.\n */\ninterface IERC721Errors {\n    /**\n     * @dev Indicates that an address can't be an owner. For example, `address(0)` is a forbidden owner in ERC-721.\n     * Used in balance queries.\n     * @param owner Address of the current owner of a token.\n     */\n    error ERC721InvalidOwner(address owner);\n\n    /**\n     * @dev Indicates a `tokenId` whose `owner` is the zero address.\n     * @param tokenId Identifier number of a token.\n     */\n    error ERC721NonexistentToken(uint256 tokenId);\n\n    /**\n     * @dev Indicates an error related to the ownership over a particular token. Used in transfers.\n     * @param sender Address whose tokens are being transferred.\n     * @param tokenId Identifier number of a token.\n     * @param owner Address of the current owner of a token.\n     */\n    error ERC721IncorrectOwner(address sender, uint256 tokenId, address owner);\n\n    /**\n     * @dev Indicates a failure with the token `sender`. Used in transfers.\n     * @param sender Address whose tokens are being transferred.\n     */\n    error ERC721InvalidSender(address sender);\n\n    /**\n     * @dev Indicates a failure with the token `receiver`. Used in transfers.\n     * @param receiver Address to which tokens are being transferred.\n     */\n    error ERC721InvalidReceiver(address receiver);\n\n    /**\n     * @dev Indicates a failure with the `operator`’s approval. Used in transfers.\n     * @param operator Address that may be allowed to operate on tokens without being their owner.\n     * @param tokenId Identifier number of a token.\n     */\n    error ERC721InsufficientApproval(address operator, uint256 tokenId);\n\n    /**\n     * @dev Indicates a failure with the `approver` of a token to be approved. Used in approvals.\n     * @param approver Address initiating an approval operation.\n     */\n    error ERC721InvalidApprover(address approver);\n\n    /**\n     * @dev Indicates a failure with the `operator` to be approved. Used in approvals.\n     * @param operator Address that may be allowed to operate on tokens without being their owner.\n     */\n    error ERC721InvalidOperator(address operator);\n}\n\n/**\n * @dev Standard ERC-1155 Errors\n * Interface of the https://eips.ethereum.org/EIPS/eip-6093[ERC-6093] custom errors for ERC-1155 tokens.\n */\ninterface IERC1155Errors {\n    /**\n     * @dev Indicates an error related to the current `balance` of a `sender`. Used in transfers.\n     * @param sender Address whose tokens are being transferred.\n     * @param balance Current balance for the interacting account.\n     * @param needed Minimum amount required to perform a transfer.\n     * @param tokenId Identifier number of a token.\n     */\n    error ERC1155InsufficientBalance(address sender, uint256 balance, uint256 needed, uint256 tokenId);\n\n    /**\n     * @dev Indicates a failure with the token `sender`. Used in transfers.\n     * @param sender Address whose tokens are being transferred.\n     */\n    error ERC1155InvalidSender(address sender);\n\n    /**\n     * @dev Indicates a failure with the token `receiver`. Used in transfers.\n     * @param receiver Address to which tokens are being transferred.\n     */\n    error ERC1155InvalidReceiver(address receiver);\n\n    /**\n     * @dev Indicates a failure with the `operator`’s approval. Used in transfers.\n     * @param operator Address that may be allowed to operate on tokens without being their owner.\n     * @param owner Address of the current owner of a token.\n     */\n    error ERC1155MissingApprovalForAll(address operator, address owner);\n\n    /**\n     * @dev Indicates a failure with the `approver` of a token to be approved. Used in approvals.\n     * @param approver Address initiating an approval operation.\n     */\n    error ERC1155InvalidApprover(address approver);\n\n    /**\n     * @dev Indicates a failure with the `operator` to be approved. Used in approvals.\n     * @param operator Address that may be allowed to operate on tokens without being their owner.\n     */\n    error ERC1155InvalidOperator(address operator);\n\n    /**\n     * @dev Indicates an array length mismatch between ids and values in a safeBatchTransferFrom operation.\n     * Used in batch transfers.\n     * @param idsLength Length of the array of token identifiers\n     * @param valuesLength Length of the array of token amounts\n     */\n    error ERC1155InvalidArrayLength(uint256 idsLength, uint256 valuesLength);\n}\n"
+    },
+    "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol": {
+      "keccak256": "0x669464167428061ee0f8618b73b3ee90aff8405683e7ddde8cd77dadaa1afe29",
+      "license": "MIT",
+      "content": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v5.5.0) (token/ERC20/ERC20.sol)\n\npragma solidity ^0.8.20;\n\nimport {IERC20} from \"./IERC20.sol\";\nimport {IERC20Metadata} from \"./extensions/IERC20Metadata.sol\";\nimport {Context} from \"../../utils/Context.sol\";\nimport {IERC20Errors} from \"../../interfaces/draft-IERC6093.sol\";\n\n/**\n * @dev Implementation of the {IERC20} interface.\n *\n * This implementation is agnostic to the way tokens are created. This means\n * that a supply mechanism has to be added in a derived contract using {_mint}.\n *\n * TIP: For a detailed writeup see our guide\n * https://forum.openzeppelin.com/t/how-to-implement-erc20-supply-mechanisms/226[How\n * to implement supply mechanisms].\n *\n * The default value of {decimals} is 18. To change this, you should override\n * this function so it returns a different value.\n *\n * We have followed general OpenZeppelin Contracts guidelines: functions revert\n * instead returning `false` on failure. This behavior is nonetheless\n * conventional and does not conflict with the expectations of ERC-20\n * applications.\n */\nabstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {\n    mapping(address account => uint256) private _balances;\n\n    mapping(address account => mapping(address spender => uint256)) private _allowances;\n\n    uint256 private _totalSupply;\n\n    string private _name;\n    string private _symbol;\n\n    /**\n     * @dev Sets the values for {name} and {symbol}.\n     *\n     * Both values are immutable: they can only be set once during construction.\n     */\n    constructor(string memory name_, string memory symbol_) {\n        _name = name_;\n        _symbol = symbol_;\n    }\n\n    /**\n     * @dev Returns the name of the token.\n     */\n    function name() public view virtual returns (string memory) {\n        return _name;\n    }\n\n    /**\n     * @dev Returns the symbol of the token, usually a shorter version of the\n     * name.\n     */\n    function symbol() public view virtual returns (string memory) {\n        return _symbol;\n    }\n\n    /**\n     * @dev Returns the number of decimals used to get its user representation.\n     * For example, if `decimals` equals `2`, a balance of `505` tokens should\n     * be displayed to a user as `5.05` (`505 / 10 ** 2`).\n     *\n     * Tokens usually opt for a value of 18, imitating the relationship between\n     * Ether and Wei. This is the default value returned by this function, unless\n     * it's overridden.\n     *\n     * NOTE: This information is only used for _display_ purposes: it in\n     * no way affects any of the arithmetic of the contract, including\n     * {IERC20-balanceOf} and {IERC20-transfer}.\n     */\n    function decimals() public view virtual returns (uint8) {\n        return 18;\n    }\n\n    /// @inheritdoc IERC20\n    function totalSupply() public view virtual returns (uint256) {\n        return _totalSupply;\n    }\n\n    /// @inheritdoc IERC20\n    function balanceOf(address account) public view virtual returns (uint256) {\n        return _balances[account];\n    }\n\n    /**\n     * @dev See {IERC20-transfer}.\n     *\n     * Requirements:\n     *\n     * - `to` cannot be the zero address.\n     * - the caller must have a balance of at least `value`.\n     */\n    function transfer(address to, uint256 value) public virtual returns (bool) {\n        address owner = _msgSender();\n        _transfer(owner, to, value);\n        return true;\n    }\n\n    /// @inheritdoc IERC20\n    function allowance(address owner, address spender) public view virtual returns (uint256) {\n        return _allowances[owner][spender];\n    }\n\n    /**\n     * @dev See {IERC20-approve}.\n     *\n     * NOTE: If `value` is the maximum `uint256`, the allowance is not updated on\n     * `transferFrom`. This is semantically equivalent to an infinite approval.\n     *\n     * Requirements:\n     *\n     * - `spender` cannot be the zero address.\n     */\n    function approve(address spender, uint256 value) public virtual returns (bool) {\n        address owner = _msgSender();\n        _approve(owner, spender, value);\n        return true;\n    }\n\n    /**\n     * @dev See {IERC20-transferFrom}.\n     *\n     * Skips emitting an {Approval} event indicating an allowance update. This is not\n     * required by the ERC. See {xref-ERC20-_approve-address-address-uint256-bool-}[_approve].\n     *\n     * NOTE: Does not update the allowance if the current allowance\n     * is the maximum `uint256`.\n     *\n     * Requirements:\n     *\n     * - `from` and `to` cannot be the zero address.\n     * - `from` must have a balance of at least `value`.\n     * - the caller must have allowance for ``from``'s tokens of at least\n     * `value`.\n     */\n    function transferFrom(address from, address to, uint256 value) public virtual returns (bool) {\n        address spender = _msgSender();\n        _spendAllowance(from, spender, value);\n        _transfer(from, to, value);\n        return true;\n    }\n\n    /**\n     * @dev Moves a `value` amount of tokens from `from` to `to`.\n     *\n     * This internal function is equivalent to {transfer}, and can be used to\n     * e.g. implement automatic token fees, slashing mechanisms, etc.\n     *\n     * Emits a {Transfer} event.\n     *\n     * NOTE: This function is not virtual, {_update} should be overridden instead.\n     */\n    function _transfer(address from, address to, uint256 value) internal {\n        if (from == address(0)) {\n            revert ERC20InvalidSender(address(0));\n        }\n        if (to == address(0)) {\n            revert ERC20InvalidReceiver(address(0));\n        }\n        _update(from, to, value);\n    }\n\n    /**\n     * @dev Transfers a `value` amount of tokens from `from` to `to`, or alternatively mints (or burns) if `from`\n     * (or `to`) is the zero address. All customizations to transfers, mints, and burns should be done by overriding\n     * this function.\n     *\n     * Emits a {Transfer} event.\n     */\n    function _update(address from, address to, uint256 value) internal virtual {\n        if (from == address(0)) {\n            // Overflow check required: The rest of the code assumes that totalSupply never overflows\n            _totalSupply += value;\n        } else {\n            uint256 fromBalance = _balances[from];\n            if (fromBalance < value) {\n                revert ERC20InsufficientBalance(from, fromBalance, value);\n            }\n            unchecked {\n                // Overflow not possible: value <= fromBalance <= totalSupply.\n                _balances[from] = fromBalance - value;\n            }\n        }\n\n        if (to == address(0)) {\n            unchecked {\n                // Overflow not possible: value <= totalSupply or value <= fromBalance <= totalSupply.\n                _totalSupply -= value;\n            }\n        } else {\n            unchecked {\n                // Overflow not possible: balance + value is at most totalSupply, which we know fits into a uint256.\n                _balances[to] += value;\n            }\n        }\n\n        emit Transfer(from, to, value);\n    }\n\n    /**\n     * @dev Creates a `value` amount of tokens and assigns them to `account`, by transferring it from address(0).\n     * Relies on the `_update` mechanism\n     *\n     * Emits a {Transfer} event with `from` set to the zero address.\n     *\n     * NOTE: This function is not virtual, {_update} should be overridden instead.\n     */\n    function _mint(address account, uint256 value) internal {\n        if (account == address(0)) {\n            revert ERC20InvalidReceiver(address(0));\n        }\n        _update(address(0), account, value);\n    }\n\n    /**\n     * @dev Destroys a `value` amount of tokens from `account`, lowering the total supply.\n     * Relies on the `_update` mechanism.\n     *\n     * Emits a {Transfer} event with `to` set to the zero address.\n     *\n     * NOTE: This function is not virtual, {_update} should be overridden instead\n     */\n    function _burn(address account, uint256 value) internal {\n        if (account == address(0)) {\n            revert ERC20InvalidSender(address(0));\n        }\n        _update(account, address(0), value);\n    }\n\n    /**\n     * @dev Sets `value` as the allowance of `spender` over the `owner`'s tokens.\n     *\n     * This internal function is equivalent to `approve`, and can be used to\n     * e.g. set automatic allowances for certain subsystems, etc.\n     *\n     * Emits an {Approval} event.\n     *\n     * Requirements:\n     *\n     * - `owner` cannot be the zero address.\n     * - `spender` cannot be the zero address.\n     *\n     * Overrides to this logic should be done to the variant with an additional `bool emitEvent` argument.\n     */\n    function _approve(address owner, address spender, uint256 value) internal {\n        _approve(owner, spender, value, true);\n    }\n\n    /**\n     * @dev Variant of {_approve} with an optional flag to enable or disable the {Approval} event.\n     *\n     * By default (when calling {_approve}) the flag is set to true. On the other hand, approval changes made by\n     * `_spendAllowance` during the `transferFrom` operation sets the flag to false. This saves gas by not emitting any\n     * `Approval` event during `transferFrom` operations.\n     *\n     * Anyone who wishes to continue emitting `Approval` events on the `transferFrom` operation can force the flag to\n     * true using the following override:\n     *\n     * ```solidity\n     * function _approve(address owner, address spender, uint256 value, bool) internal virtual override {\n     *     super._approve(owner, spender, value, true);\n     * }\n     * ```\n     *\n     * Requirements are the same as {_approve}.\n     */\n    function _approve(address owner, address spender, uint256 value, bool emitEvent) internal virtual {\n        if (owner == address(0)) {\n            revert ERC20InvalidApprover(address(0));\n        }\n        if (spender == address(0)) {\n            revert ERC20InvalidSpender(address(0));\n        }\n        _allowances[owner][spender] = value;\n        if (emitEvent) {\n            emit Approval(owner, spender, value);\n        }\n    }\n\n    /**\n     * @dev Updates `owner`'s allowance for `spender` based on spent `value`.\n     *\n     * Does not update the allowance value in case of infinite allowance.\n     * Revert if not enough allowance is available.\n     *\n     * Does not emit an {Approval} event.\n     */\n    function _spendAllowance(address owner, address spender, uint256 value) internal virtual {\n        uint256 currentAllowance = allowance(owner, spender);\n        if (currentAllowance < type(uint256).max) {\n            if (currentAllowance < value) {\n                revert ERC20InsufficientAllowance(spender, currentAllowance, value);\n            }\n            unchecked {\n                _approve(owner, spender, currentAllowance - value, false);\n            }\n        }\n    }\n}\n"
+    },
+    "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol": {
+      "keccak256": "0x74ed01eb66b923d0d0cfe3be84604ac04b76482a55f9dd655e1ef4d367f95bc2",
+      "license": "MIT",
+      "content": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v5.4.0) (token/ERC20/IERC20.sol)\n\npragma solidity >=0.4.16;\n\n/**\n * @dev Interface of the ERC-20 standard as defined in the ERC.\n */\ninterface IERC20 {\n    /**\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\n     * another (`to`).\n     *\n     * Note that `value` may be zero.\n     */\n    event Transfer(address indexed from, address indexed to, uint256 value);\n\n    /**\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\n     * a call to {approve}. `value` is the new allowance.\n     */\n    event Approval(address indexed owner, address indexed spender, uint256 value);\n\n    /**\n     * @dev Returns the value of tokens in existence.\n     */\n    function totalSupply() external view returns (uint256);\n\n    /**\n     * @dev Returns the value of tokens owned by `account`.\n     */\n    function balanceOf(address account) external view returns (uint256);\n\n    /**\n     * @dev Moves a `value` amount of tokens from the caller's account to `to`.\n     *\n     * Returns a boolean value indicating whether the operation succeeded.\n     *\n     * Emits a {Transfer} event.\n     */\n    function transfer(address to, uint256 value) external returns (bool);\n\n    /**\n     * @dev Returns the remaining number of tokens that `spender` will be\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\n     * zero by default.\n     *\n     * This value changes when {approve} or {transferFrom} are called.\n     */\n    function allowance(address owner, address spender) external view returns (uint256);\n\n    /**\n     * @dev Sets a `value` amount of tokens as the allowance of `spender` over the\n     * caller's tokens.\n     *\n     * Returns a boolean value indicating whether the operation succeeded.\n     *\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\n     * that someone may use both the old and the new allowance by unfortunate\n     * transaction ordering. One possible solution to mitigate this race\n     * condition is to first reduce the spender's allowance to 0 and set the\n     * desired value afterwards:\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\n     *\n     * Emits an {Approval} event.\n     */\n    function approve(address spender, uint256 value) external returns (bool);\n\n    /**\n     * @dev Moves a `value` amount of tokens from `from` to `to` using the\n     * allowance mechanism. `value` is then deducted from the caller's\n     * allowance.\n     *\n     * Returns a boolean value indicating whether the operation succeeded.\n     *\n     * Emits a {Transfer} event.\n     */\n    function transferFrom(address from, address to, uint256 value) external returns (bool);\n}\n"
+    },
+    "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+      "keccak256": "0xd6fa4088198f04eef10c5bce8a2f4d60554b7ec4b987f684393c01bf79b94d9f",
+      "license": "MIT",
+      "content": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v5.4.0) (token/ERC20/extensions/IERC20Metadata.sol)\n\npragma solidity >=0.6.2;\n\nimport {IERC20} from \"../IERC20.sol\";\n\n/**\n * @dev Interface for the optional metadata functions from the ERC-20 standard.\n */\ninterface IERC20Metadata is IERC20 {\n    /**\n     * @dev Returns the name of the token.\n     */\n    function name() external view returns (string memory);\n\n    /**\n     * @dev Returns the symbol of the token.\n     */\n    function symbol() external view returns (string memory);\n\n    /**\n     * @dev Returns the decimals places of the token.\n     */\n    function decimals() external view returns (uint8);\n}\n"
+    },
+    "lib/openzeppelin-contracts/contracts/utils/Context.sol": {
+      "keccak256": "0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2",
+      "license": "MIT",
+      "content": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)\n\npragma solidity ^0.8.20;\n\n/**\n * @dev Provides information about the current execution context, including the\n * sender of the transaction and its data. While these are generally available\n * via msg.sender and msg.data, they should not be accessed in such a direct\n * manner, since when dealing with meta-transactions the account sending and\n * paying for execution may not be the actual sender (as far as an application\n * is concerned).\n *\n * This contract is only required for intermediate, library-like contracts.\n */\nabstract contract Context {\n    function _msgSender() internal view virtual returns (address) {\n        return msg.sender;\n    }\n\n    function _msgData() internal view virtual returns (bytes calldata) {\n        return msg.data;\n    }\n\n    function _contextSuffixLength() internal view virtual returns (uint256) {\n        return 0;\n    }\n}\n"
+    },
+    "src/BondToken.sol": {
+      "keccak256": "0x4d9160988d374c2e5affcce90d882be607fc67c40a60705dd6dfbf4cdfab8c51",
+      "license": "MIT",
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\nimport \"../lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol\";\n\n/**\n * @title BondToken\n * @notice Simple ERC-20 token with controlled minting for NanoBond yield distribution.\n * @dev Only the bond contract (minter) can mint new tokens for yield.\n */\ncontract BondToken is ERC20 {\n    address public immutable minter;\n\n    constructor(\n        string memory _name,\n        string memory _symbol,\n        address _minter,\n        uint256 _initialSupply\n    ) ERC20(_name, _symbol) {\n        minter = _minter;\n        _mint(_minter, _initialSupply);\n    }\n\n    function mint(address to, uint256 amount) external {\n        require(msg.sender == minter, \"BondToken: not minter\");\n        _mint(to, amount);\n    }\n}\n"
+    },
+    "src/NanoBond.sol": {
+      "keccak256": "0xf8e3d1ce26a60554472cddf54192d5b48cc44b05f27f463326867cf01776dc5c",
+      "license": "MIT",
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\nimport \"../lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol\";\nimport \"./BondToken.sol\";\n\n/**\n * @title NanoBond\n * @notice A bond contract that raises HBAR, auto-stakes contributors,\n *         and distributes yield (new bond tokens) every epoch.\n *\n * Flow:\n *   1. RAISING  — Users contribute HBAR. Creator sets yield rate, description, etc.\n *   2. ACTIVE   — Raise succeeded. Contributors claim bonds (auto-staked).\n *                  Creator withdraws HBAR. Yield distributed every epoch.\n *   3. MATURED  — (optional) Bond has matured, no more yield.\n *   4. FAILED   — Soft cap not met after deadline. Refunds available.\n *   5. CANCELLED — Creator cancelled during raise. Refunds available.\n */\ncontract NanoBond {\n    // ════════════════════════════════════════════════\n    //                    ENUMS\n    // ════════════════════════════════════════════════\n\n    enum BondState { RAISING, ACTIVE, MATURED, FAILED, CANCELLED }\n\n    // ════════════════════════════════════════════════\n    //                BOND METADATA\n    // ════════════════════════════════════════════════\n\n    string public name;\n    string public symbol;\n    string public description;\n    address public token;           // BondToken ERC-20\n\n    // ════════════════════════════════════════════════\n    //               RAISE PARAMETERS\n    // ════════════════════════════════════════════════\n\n    uint256 public totalSupply;     // Total token supply\n    uint256 public hardCap;         // Max HBAR to raise (in wei)\n    uint256 public softCap;         // Min HBAR to raise (in wei)\n    uint256 public raiseEnd;        // Timestamp when raise ends\n    uint256 public raiseDuration;   // Duration of raise in seconds\n    uint256 public totalRaised;     // HBAR raised so far\n\n    // ════════════════════════════════════════════════\n    //              YIELD PARAMETERS\n    // ════════════════════════════════════════════════\n\n    uint256 public yieldRateBps;    // Annual yield in basis points (500 = 5%)\n    uint256 public epochDuration;   // Seconds between yield distributions\n    uint256 public lastYieldTime;   // Last time yield was distributed\n    uint256 public totalYieldMinted; // Total yield tokens minted to date\n\n    // ════════════════════════════════════════════════\n    //                  STAKING\n    // ════════════════════════════════════════════════\n\n    uint256 public totalStaked;\n    uint256 public accRewardsPerShare; // Accumulated rewards per staked token (×1e18)\n\n    mapping(address => uint256) public stakedBalance;\n    mapping(address => uint256) public rewardDebt;\n\n    // ════════════════════════════════════════════════\n    //               RAISE TRACKING\n    // ════════════════════════════════════════════════\n\n    mapping(address => uint256) public contributions;\n    mapping(address => bool) public hasClaimed;\n    address[] internal _contributors;\n    uint256 public contributorCount;\n\n    // ════════════════════════════════════════════════\n    //              TOKEN ALLOCATIONS\n    // ════════════════════════════════════════════════\n\n    uint256 public tokensForBonders;  // 95% — distributed to contributors\n    uint256 public tokensForCreator;  // 5%  — sent to creator on activation\n\n    // ════════════════════════════════════════════════\n    //                   STATE\n    // ════════════════════════════════════════════════\n\n    BondState public state;\n    address public creator;\n    address public feeRecipient;\n    uint256 public platformFeeBps;\n    uint256 public hbarWithdrawn;    // HBAR withdrawn by creator\n\n    // ════════════════════════════════════════════════\n    //                  REENTRANCY\n    // ════════════════════════════════════════════════\n\n    bool private _locked;\n\n    // ════════════════════════════════════════════════\n    //                   EVENTS\n    // ════════════════════════════════════════════════\n\n    event Contributed(address indexed contributor, uint256 amount, uint256 totalRaised);\n    event BondsClaimed(address indexed claimer, uint256 amount);\n    event BondActivated(uint256 totalRaised, uint256 contributors);\n    event YieldDistributed(uint256 amount, uint256 timestamp);\n    event YieldClaimed(address indexed claimer, uint256 amount);\n    event Staked(address indexed user, uint256 amount);\n    event Unstaked(address indexed user, uint256 amount);\n    event HbarWithdrawn(address indexed creator, uint256 amount);\n    event StateChanged(BondState oldState, BondState newState);\n    event RefundClaimed(address indexed claimer, uint256 amount);\n    event BondCancelled();\n\n    // ════════════════════════════════════════════════\n    //                  MODIFIERS\n    // ════════════════════════════════════════════════\n\n    modifier onlyCreator() {\n        require(msg.sender == creator, \"NanoBond: not creator\");\n        _;\n    }\n\n    modifier inState(BondState _state) {\n        require(state == _state, \"NanoBond: invalid state\");\n        _;\n    }\n\n    modifier nonReentrant() {\n        require(!_locked, \"NanoBond: reentrant call\");\n        _locked = true;\n        _;\n        _locked = false;\n    }\n\n    // ════════════════════════════════════════════════\n    //                 CONSTRUCTOR\n    // ════════════════════════════════════════════════\n\n    constructor(\n        string memory _name,\n        string memory _symbol,\n        string memory _description,\n        uint256 _totalSupply,\n        uint256 _hardCap,\n        uint256 _softCap,\n        uint256 _raiseDuration,\n        uint256 _yieldRateBps,\n        uint256 _epochDuration,\n        uint256 _platformFeeBps,\n        address _feeRecipient,\n        address _creator\n    ) {\n        name = _name;\n        symbol = _symbol;\n        description = _description;\n        totalSupply = _totalSupply;\n        hardCap = _hardCap;\n        softCap = _softCap;\n        raiseDuration = _raiseDuration;\n        raiseEnd = block.timestamp + _raiseDuration;\n        yieldRateBps = _yieldRateBps;\n        epochDuration = _epochDuration;\n        platformFeeBps = _platformFeeBps;\n        feeRecipient = _feeRecipient;\n        creator = _creator;\n\n        // Deploy ERC-20 bond token — minted entirely to this contract\n        BondToken bondToken = new BondToken(_name, _symbol, address(this), _totalSupply);\n        token = address(bondToken);\n\n        // Allocations: 95% to bonders, 5% to creator\n        tokensForCreator = (_totalSupply * 500) / 10000;\n        tokensForBonders = _totalSupply - tokensForCreator;\n\n        state = BondState.RAISING;\n    }\n\n    // ════════════════════════════════════════════════\n    //               RAISE PHASE\n    // ════════════════════════════════════════════════\n\n    /**\n     * @notice Contribute HBAR to purchase bonds.\n     */\n    function contribute() external payable inState(BondState.RAISING) {\n        require(block.timestamp < raiseEnd, \"NanoBond: raise ended\");\n        require(msg.value > 0, \"NanoBond: zero contribution\");\n        require(totalRaised + msg.value <= hardCap, \"NanoBond: exceeds hard cap\");\n\n        if (contributions[msg.sender] == 0) {\n            _contributors.push(msg.sender);\n            contributorCount++;\n        }\n\n        contributions[msg.sender] += msg.value;\n        totalRaised += msg.value;\n\n        emit Contributed(msg.sender, msg.value, totalRaised);\n\n        // Auto-succeed at hard cap\n        if (totalRaised >= hardCap) {\n            _changeState(BondState.ACTIVE);\n            lastYieldTime = block.timestamp;\n        }\n    }\n\n    /**\n     * @notice Check if raise period has ended and update state accordingly.\n     */\n    function checkState() external {\n        if (state != BondState.RAISING) return;\n        if (block.timestamp < raiseEnd) return;\n\n        if (totalRaised >= softCap) {\n            _changeState(BondState.ACTIVE);\n            lastYieldTime = block.timestamp;\n        } else {\n            _changeState(BondState.FAILED);\n        }\n    }\n\n    /**\n     * @notice Activate the bond (creator can call after soft cap is met + deadline passed).\n     */\n    function activate() external onlyCreator inState(BondState.RAISING) {\n        require(totalRaised >= softCap, \"NanoBond: soft cap not met\");\n        _changeState(BondState.ACTIVE);\n        lastYieldTime = block.timestamp;\n\n        // Send platform fee\n        uint256 platformFee = (totalRaised * platformFeeBps) / 10000;\n        if (platformFee > 0 && feeRecipient != address(0)) {\n            (bool sent, ) = payable(feeRecipient).call{value: platformFee}(\"\");\n            require(sent, \"NanoBond: fee transfer failed\");\n        }\n\n        // Send creator tokens\n        IERC20(token).transfer(creator, tokensForCreator);\n\n        emit BondActivated(totalRaised, contributorCount);\n    }\n\n    // ════════════════════════════════════════════════\n    //              CLAIM BONDS (AUTO-STAKE)\n    // ════════════════════════════════════════════════\n\n    /**\n     * @notice Claim bond tokens after raise succeeds. Tokens are auto-staked.\n     */\n    function claimBonds() external inState(BondState.ACTIVE) nonReentrant {\n        require(contributions[msg.sender] > 0, \"NanoBond: no contribution\");\n        require(!hasClaimed[msg.sender], \"NanoBond: already claimed\");\n\n        hasClaimed[msg.sender] = true;\n\n        uint256 userShare = (contributions[msg.sender] * tokensForBonders) / totalRaised;\n        require(userShare > 0, \"NanoBond: zero share\");\n\n        // Update pending rewards before changing stake\n        _updateRewards(msg.sender);\n\n        // Auto-stake: tokens stay in contract, balance tracked\n        stakedBalance[msg.sender] += userShare;\n        totalStaked += userShare;\n        rewardDebt[msg.sender] = (stakedBalance[msg.sender] * accRewardsPerShare) / 1e18;\n\n        emit BondsClaimed(msg.sender, userShare);\n        emit Staked(msg.sender, userShare);\n    }\n\n    // ════════════════════════════════════════════════\n    //              YIELD DISTRIBUTION\n    // ════════════════════════════════════════════════\n\n    /**\n     * @notice Distribute yield for completed epochs.\n     * @dev Anyone can call this. Yield is minted proportionally to stakers.\n     */\n    function distributeYield() external {\n        require(state == BondState.ACTIVE, \"NanoBond: not active\");\n        require(totalStaked > 0, \"NanoBond: no stakers\");\n\n        uint256 elapsed = block.timestamp - lastYieldTime;\n        require(elapsed >= epochDuration, \"NanoBond: epoch not complete\");\n\n        // Calculate how many full epochs have passed\n        uint256 epochs = elapsed / epochDuration;\n        uint256 effectiveElapsed = epochs * epochDuration;\n\n        // Yield = totalStaked × yieldRateBps × effectiveElapsed / (365 days × 10000)\n        uint256 yieldAmount = (totalStaked * yieldRateBps * effectiveElapsed) / (365 days * 10000);\n\n        if (yieldAmount > 0) {\n            // Mint new tokens as yield\n            BondToken(token).mint(address(this), yieldAmount);\n            totalYieldMinted += yieldAmount;\n\n            // Update accumulator\n            accRewardsPerShare += (yieldAmount * 1e18) / totalStaked;\n        }\n\n        lastYieldTime += effectiveElapsed;\n\n        emit YieldDistributed(yieldAmount, block.timestamp);\n    }\n\n    // ════════════════════════════════════════════════\n    //                  STAKING\n    // ════════════════════════════════════════════════\n\n    /**\n     * @notice Stake bond tokens to earn yield.\n     */\n    function stake(uint256 amount) external inState(BondState.ACTIVE) nonReentrant {\n        require(amount > 0, \"NanoBond: zero amount\");\n\n        _updateRewards(msg.sender);\n\n        // Transfer tokens from user to contract\n        IERC20(token).transferFrom(msg.sender, address(this), amount);\n\n        stakedBalance[msg.sender] += amount;\n        totalStaked += amount;\n        rewardDebt[msg.sender] = (stakedBalance[msg.sender] * accRewardsPerShare) / 1e18;\n\n        emit Staked(msg.sender, amount);\n    }\n\n    /**\n     * @notice Unstake bond tokens. Accumulated yield is preserved.\n     */\n    function unstake(uint256 amount) external nonReentrant {\n        require(stakedBalance[msg.sender] >= amount, \"NanoBond: insufficient stake\");\n        require(amount > 0, \"NanoBond: zero amount\");\n\n        _updateRewards(msg.sender);\n\n        stakedBalance[msg.sender] -= amount;\n        totalStaked -= amount;\n        rewardDebt[msg.sender] = (stakedBalance[msg.sender] * accRewardsPerShare) / 1e18;\n\n        IERC20(token).transfer(msg.sender, amount);\n\n        emit Unstaked(msg.sender, amount);\n    }\n\n    /**\n     * @notice Claim accumulated yield rewards.\n     */\n    function claimYield() external nonReentrant {\n        _updateRewards(msg.sender);\n\n        uint256 reward = _pendingRewards(msg.sender);\n        require(reward > 0, \"NanoBond: no yield to claim\");\n\n        rewardDebt[msg.sender] = (stakedBalance[msg.sender] * accRewardsPerShare) / 1e18;\n\n        IERC20(token).transfer(msg.sender, reward);\n\n        emit YieldClaimed(msg.sender, reward);\n    }\n\n    /**\n     * @notice View pending yield for a user.\n     */\n    function pendingYield(address user) external view returns (uint256) {\n        if (stakedBalance[user] == 0) return 0;\n\n        uint256 currentAccRewards = accRewardsPerShare;\n\n        // Simulate next distribution if applicable\n        if (state == BondState.ACTIVE && totalStaked > 0) {\n            uint256 elapsed = block.timestamp - lastYieldTime;\n            if (elapsed >= epochDuration) {\n                uint256 epochs = elapsed / epochDuration;\n                uint256 effectiveElapsed = epochs * epochDuration;\n                uint256 yieldAmount = (totalStaked * yieldRateBps * effectiveElapsed) / (365 days * 10000);\n                currentAccRewards += (yieldAmount * 1e18) / totalStaked;\n            }\n        }\n\n        return (stakedBalance[user] * currentAccRewards) / 1e18 - rewardDebt[user];\n    }\n\n    // ════════════════════════════════════════════════\n    //              ADMIN FUNCTIONS\n    // ════════════════════════════════════════════════\n\n    /**\n     * @notice Creator withdraws raised HBAR for project funding.\n     */\n    function withdrawHbar(uint256 amount) external onlyCreator inState(BondState.ACTIVE) nonReentrant {\n        // Reserve platform fee portion\n        uint256 platformFee = (totalRaised * platformFeeBps) / 10000;\n        uint256 withdrawable = totalRaised - platformFee - hbarWithdrawn;\n        require(amount <= withdrawable, \"NanoBond: exceeds withdrawable\");\n        require(amount > 0, \"NanoBond: zero amount\");\n\n        hbarWithdrawn += amount;\n\n        (bool sent, ) = payable(creator).call{value: amount}(\"\");\n        require(sent, \"NanoBond: transfer failed\");\n\n        emit HbarWithdrawn(creator, amount);\n    }\n\n    /**\n     * @notice View how much HBAR the creator can still withdraw.\n     */\n    function withdrawableHbar() external view returns (uint256) {\n        if (state != BondState.ACTIVE) return 0;\n        uint256 platformFee = (totalRaised * platformFeeBps) / 10000;\n        uint256 available = totalRaised - platformFee - hbarWithdrawn;\n        // Cap at actual contract balance\n        uint256 balance = address(this).balance;\n        return available < balance ? available : balance;\n    }\n\n    // ════════════════════════════════════════════════\n    //           CANCEL / REFUND / FAILED\n    // ════════════════════════════════════════════════\n\n    /**\n     * @notice Creator cancels the bond during raise phase.\n     */\n    function cancel() external onlyCreator inState(BondState.RAISING) {\n        _changeState(BondState.CANCELLED);\n        emit BondCancelled();\n    }\n\n    /**\n     * @notice Claim HBAR refund if bond failed or was cancelled.\n     */\n    function claimRefund() external nonReentrant {\n        require(\n            state == BondState.FAILED || state == BondState.CANCELLED,\n            \"NanoBond: not refundable\"\n        );\n        uint256 amount = contributions[msg.sender];\n        require(amount > 0, \"NanoBond: no contribution\");\n\n        contributions[msg.sender] = 0;\n\n        (bool sent, ) = payable(msg.sender).call{value: amount}(\"\");\n        require(sent, \"NanoBond: refund failed\");\n\n        emit RefundClaimed(msg.sender, amount);\n    }\n\n    // ════════════════════════════════════════════════\n    //               VIEW FUNCTIONS\n    // ════════════════════════════════════════════════\n\n    function getContributors() external view returns (address[] memory) {\n        return _contributors;\n    }\n\n    function getProgress() external view returns (uint256) {\n        if (hardCap == 0) return 0;\n        return (totalRaised * 10000) / hardCap;\n    }\n\n    function getTimeRemaining() external view returns (uint256) {\n        if (block.timestamp >= raiseEnd) return 0;\n        return raiseEnd - block.timestamp;\n    }\n\n    function getNextEpoch() external view returns (uint256) {\n        if (state != BondState.ACTIVE) return 0;\n        uint256 nextEpoch = lastYieldTime + epochDuration;\n        if (block.timestamp >= nextEpoch) return 0; // Ready now\n        return nextEpoch - block.timestamp;\n    }\n\n    function getBondInfo() external view returns (\n        string memory _name,\n        string memory _symbol,\n        string memory _description,\n        uint256 _totalSupply,\n        uint256 _hardCap,\n        uint256 _softCap,\n        uint256 _totalRaised,\n        uint256 _raiseEnd,\n        BondState _state,\n        uint256 _contributorCount,\n        address _tokenAddress,\n        uint256 _yieldRateBps,\n        uint256 _epochDuration,\n        uint256 _totalStaked,\n        uint256 _totalYieldMinted\n    ) {\n        return (\n            name, symbol, description, totalSupply,\n            hardCap, softCap, totalRaised, raiseEnd,\n            state, contributorCount, token,\n            yieldRateBps, epochDuration,\n            totalStaked, totalYieldMinted\n        );\n    }\n\n    // ════════════════════════════════════════════════\n    //              INTERNAL HELPERS\n    // ════════════════════════════════════════════════\n\n    function _changeState(BondState newState) internal {\n        BondState oldState = state;\n        state = newState;\n        emit StateChanged(oldState, newState);\n    }\n\n    function _updateRewards(address user) internal {\n        // Nothing to update if not staked\n        if (stakedBalance[user] == 0) return;\n        uint256 pending = _pendingRewards(user);\n        if (pending > 0) {\n            // Accumulate into rewardDebt so it's claimable\n            // We don't transfer here — just track\n        }\n    }\n\n    function _pendingRewards(address user) internal view returns (uint256) {\n        if (stakedBalance[user] == 0) return 0;\n        return (stakedBalance[user] * accRewardsPerShare) / 1e18 - rewardDebt[user];\n    }\n\n    receive() external payable {}\n}\n"
+    }
+  },
+  "version": 1
+}

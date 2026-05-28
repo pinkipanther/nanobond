@@ -15,8 +15,8 @@ export default function MarketStats({ pair }: MarketStatsProps) {
                     alignItems: "center",
                     padding: "0 16px",
                     height: 48,
-                    borderBottom: "1px solid #22332f",
-                    background: "#111916",
+                    borderBottom: "1px solid #1e2d45",
+                    background: "#0e1420",
                     gap: 24,
                 }}
             >
@@ -72,8 +72,8 @@ export default function MarketStats({ pair }: MarketStatsProps) {
                 alignItems: "center",
                 padding: "0 16px",
                 height: 48,
-                borderBottom: "1px solid #22332f",
-                background: "#111916",
+                borderBottom: "1px solid #1e2d45",
+                background: "#0e1420",
                 gap: 20,
                 overflowX: "auto",
                 scrollbarWidth: "none",
@@ -85,7 +85,7 @@ export default function MarketStats({ pair }: MarketStatsProps) {
                     alignItems: "center",
                     gap: 8,
                     paddingRight: 16,
-                    borderRight: "1px solid #22332f",
+                    borderRight: "1px solid #1e2d45",
                     flexShrink: 0,
                 }}
             >

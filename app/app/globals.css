@@ -1,47 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&family=Space+Grotesk:wght@500..700&family=JetBrains+Mono:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500..700&family=Manrope:wght@400..700&family=JetBrains+Mono:wght@400..700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --void: #0b0f0e;
-  --void-light: #111916;
-  --void-surface: #16201e;
-  --void-elevated: #1a2825;
-  --void-border: #22332f;
+  /* ── Base surfaces (deep navy-slate) ── */
+  --void: #080c14;
+  --void-light: #0e1420;
+  --void-surface: #131a28;
+  --void-elevated: #192133;
+  --void-border: #1e2d45;
 
-  /* Inverted color for things that must stay contrasting (like button text) */
-  --inverted: #0b0f0e;
+  /* Inverted (for text on accent backgrounds) */
+  --inverted: #080c14;
 
-  --cyan: #1696b8;
-  --cyan-dim: rgba(22, 150, 184, 0.15);
-  --cyan-glow: rgba(22, 150, 184, 0.25);
+  /* ── Primary accent: electric indigo ── */
+  --cyan: #6366f1;
+  --cyan-dim: rgba(99, 102, 241, 0.14);
+  --cyan-glow: rgba(99, 102, 241, 0.28);
 
-  --magenta: #e04768;
-  --magenta-dim: rgba(224, 71, 104, 0.15);
-  --magenta-glow: rgba(224, 71, 104, 0.22);
+  /* ── Success / Raising: emerald ── */
+  --acid: #10b981;
+  --acid-dim: rgba(16, 185, 129, 0.13);
+  --acid-glow: rgba(16, 185, 129, 0.26);
 
-  --acid: #0fa483;
-  --acid-dim: rgba(15, 164, 131, 0.15);
-  --acid-glow: rgba(15, 164, 131, 0.25);
+  /* ── Error / Matured: rose ── */
+  --magenta: #f43f5e;
+  --magenta-dim: rgba(244, 63, 94, 0.13);
+  --magenta-glow: rgba(244, 63, 94, 0.22);
 
-  --gold: #cd8a32;
-  --gold-dim: rgba(205, 138, 50, 0.15);
-  --gold-glow: rgba(205, 138, 50, 0.22);
+  /* ── Warning / Gold: amber ── */
+  --gold: #f59e0b;
+  --gold-dim: rgba(245, 158, 11, 0.14);
+  --gold-glow: rgba(245, 158, 11, 0.26);
 
-  /* Transparent Overlays */
-  --glass-subtle: rgba(34, 51, 47, 0.3);
-  --glass-overlay: rgba(34, 51, 47, 0.5);
+  /* ── Transparent overlays ── */
+  --glass-subtle: rgba(30, 45, 69, 0.35);
+  --glass-overlay: rgba(30, 45, 69, 0.55);
 
-  /* Text */
-  --text-primary: #e8f0ee;
-  --text-secondary: #8a9a95;
-  --text-dim: #556b65;
+  /* ── Text ── */
+  --text-primary: #e2e8f8;
+  --text-secondary: #7a8aaa;
+  --text-dim: #3d4f6e;
 
-  /* Fonts */
+  /* ── Fonts ── */
   --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Manrope', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Sizing */
+  /* ── Sizing ── */
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -64,7 +69,7 @@ html {
 }
 
 body {
-  background: #0b0f0e;
+  background: #080c14;
   color: var(--text-primary);
   font-family: var(--font-body);
   overflow-x: hidden;
@@ -99,15 +104,15 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(15, 164, 131, 0.35); }
-  70% { box-shadow: 0 0 0 8px rgba(15, 164, 131, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.35); }
+  70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
 }
 
 /* Backgrounds */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(34, 51, 47, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 51, 47, 0.3) 1px, transparent 1px);
+    linear-gradient(rgba(30, 45, 69, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 45, 69, 0.35) 1px, transparent 1px);
   background-size: 44px 44px;
 }
 
@@ -135,8 +140,8 @@ body {
 
 /* Buttons */
 .btn-primary {
-  background: linear-gradient(135deg, #1696b8, #2aa8c8 60%, #2fb9b2);
-  color: #0b0f0e;
+  background: linear-gradient(135deg, #6366f1, #818cf8 60%, #a78bfa);
+  color: #080c14;
   font-family: var(--font-body);
   font-weight: 600;
   padding: 12px 28px;
@@ -147,13 +152,13 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 14px 26px -18px rgba(22, 150, 184, 0.5);
+  box-shadow: 0 14px 26px -18px rgba(99, 102, 241, 0.5);
 }
 
 .btn-primary:hover {
-  filter: brightness(1.08);
+  filter: brightness(1.1);
   transform: translateY(-1px);
-  box-shadow: 0 18px 28px -16px rgba(22, 150, 184, 0.4);
+  box-shadow: 0 18px 28px -16px rgba(99, 102, 241, 0.4);
 }
 
 .btn-primary:active {
@@ -261,9 +266,9 @@ body {
 
 .wallet-modal-shell {
   background:
-    radial-gradient(100% 140% at 90% -20%, rgba(22, 150, 184, 0.12), transparent 56%),
-    linear-gradient(180deg, #111916 0%, #0b0f0e 100%);
-  border: 1px solid #22332f;
+    radial-gradient(100% 140% at 90% -20%, rgba(99, 102, 241, 0.12), transparent 56%),
+    linear-gradient(180deg, #0e1420 0%, #080c14 100%);
+  border: 1px solid #1e2d45;
   border-radius: 18px;
   box-shadow: 0 34px 55px -30px rgba(0, 0, 0, 0.9);
   animation: count-up 0.2s ease;
@@ -288,8 +293,8 @@ body {
 }
 
 .wallet-option.hashpack {
-  border-color: rgba(22, 150, 184, 0.35);
-  background: linear-gradient(135deg, rgba(22, 150, 184, 0.1), rgba(47, 185, 178, 0.1));
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(167, 139, 250, 0.1));
 }
 
 .wallet-icon-badge {
@@ -302,8 +307,8 @@ body {
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
-  color: #0b0f0e;
-  background: linear-gradient(135deg, #1696b8, #2fb9b2);
+  color: #080c14;
+  background: linear-gradient(135deg, #6366f1, #a78bfa);
 }
 
 .wallet-install-link {
@@ -319,17 +324,17 @@ body {
 .wallet-chip {
   border: 1px solid var(--void-border);
   border-radius: 999px;
-  background: rgba(17, 25, 22, 0.9);
+  background: rgba(13, 20, 32, 0.9);
   box-shadow: 0 12px 18px -18px rgba(0, 0, 0, 0.8);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .wallet-connect-btn {
-  border: 1px solid rgba(22, 150, 184, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.3);
   border-radius: 999px;
-  background: linear-gradient(135deg, #1696b8, #2fb9b2);
-  color: #0b0f0e;
+  background: linear-gradient(135deg, #6366f1, #a78bfa);
+  color: #080c14;
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: 700;
@@ -351,9 +356,9 @@ body {
 }
 
 .wallet-menu {
-  border: 1px solid #22332f;
+  border: 1px solid #1e2d45;
   border-radius: 14px;
-  background: rgba(17, 25, 22, 0.98);
+  background: rgba(13, 20, 32, 0.98);
   box-shadow: 0 24px 34px -24px rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(8px);
 }
@@ -378,11 +383,10 @@ body {
 .wallet-modal-shell-v2 {
   width: min(440px, calc(100vw - 28px));
   border-radius: 18px;
-  border: 1px solid #22332f;
   background:
-    radial-gradient(120% 120% at 86% -18%, rgba(15, 142, 168, 0.1), transparent 54%),
-    linear-gradient(180deg, #111916, #0b0f0e);
-  padding: 24px;
+    radial-gradient(120% 120% at 86% -18%, rgba(99, 102, 241, 0.1), transparent 54%),
+    linear-gradient(180deg, #0e1420, #080c14);
+  border: 1px solid #1e2d45;
   box-shadow: 0 36px 58px -30px rgba(0, 0, 0, 0.9);
   animation: count-up 0.2s ease;
   position: relative;
@@ -463,7 +467,7 @@ body {
   font-family: var(--font-mono);
   font-weight: 700;
   color: #f7fffd;
-  background: linear-gradient(135deg, #0f8ea8, #0fa483);
+  background: linear-gradient(135deg, #6366f1, #10b981);
 }
 
 .wallet-choice-icon.secondary {
@@ -562,7 +566,7 @@ body {
   font-size: 12px;
   font-weight: 700;
   color: var(--inverted);
-  background: linear-gradient(135deg, #1696b8, #2fb9b2);
+  background: linear-gradient(135deg, #6366f1, #a78bfa);
 }
 
 .wallet-install-link {
@@ -587,7 +591,7 @@ body {
 .wallet-connect-btn {
   border: 1px solid rgba(23, 38, 46, 0.16);
   border-radius: 999px;
-  background: linear-gradient(135deg, #1696b8, #2fb9b2);
+  background: linear-gradient(135deg, #6366f1, #a78bfa);
   color: var(--inverted);
   font-family: var(--font-display);
   font-size: 13px;
@@ -649,7 +653,7 @@ body {
   border-radius: 50%;
   top: -300px;
   left: -220px;
-  background: radial-gradient(circle at center, rgba(15, 164, 131, 0.08), transparent 62%);
+  background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1), transparent 62%);
   pointer-events: none;
 }
 
@@ -657,13 +661,13 @@ body {
   top: -320px;
   left: auto;
   right: -220px;
-  background: radial-gradient(circle at center, rgba(22, 150, 184, 0.1), transparent 62%);
+  background: radial-gradient(circle at center, rgba(16, 185, 129, 0.09), transparent 62%);
 }
 
 .hero-chip {
   border-radius: 999px;
-  border: 1px solid #22332f;
-  background: rgba(17, 25, 22, 0.8);
+  border: 1px solid #1e2d45;
+  background: rgba(14, 20, 32, 0.85);
   box-shadow: 0 14px 22px -24px rgba(0, 0, 0, 0.75);
 }
 
@@ -672,9 +676,9 @@ body {
 }
 
 .stat-card {
-  border: 1px solid #22332f;
+  border: 1px solid #1e2d45;
   border-radius: 14px;
-  background: rgba(17, 25, 22, 0.88);
+  background: rgba(13, 20, 32, 0.88);
   padding: 18px;
 }
 
@@ -683,10 +687,10 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 1px solid rgba(22, 150, 184, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.35);
   border-radius: 999px;
-  background: linear-gradient(130deg, #0f8ea8 0%, #1ea6b0 52%, #0fa483 100%);
-  color: #0b0f0e;
+  background: linear-gradient(130deg, #6366f1 0%, #818cf8 52%, #a78bfa 100%);
+  color: #080c14;
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: 700;
@@ -694,7 +698,7 @@ body {
   text-transform: uppercase;
   padding: 10px 18px;
   cursor: pointer;
-  box-shadow: 0 16px 26px -18px rgba(15, 142, 168, 0.5);
+  box-shadow: 0 16px 26px -18px rgba(99, 102, 241, 0.5);
   transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -704,9 +708,9 @@ body {
 }
 
 .wallet-connected-btn {
-  border: 1px solid #22332f;
+  border: 1px solid #1e2d45;
   border-radius: 999px;
-  background: rgba(17, 25, 22, 0.95);
+  background: rgba(13, 20, 32, 0.95);
   color: var(--text-primary);
   font-size: 13px;
   padding: 10px 14px;
@@ -720,7 +724,7 @@ body {
 
 .wallet-connected-btn:hover {
   transform: translateY(-1px);
-  border-color: rgba(15, 142, 168, 0.5);
+  border-color: rgba(99, 102, 241, 0.5);
 }
 
 .wallet-live-dot {
@@ -735,8 +739,8 @@ body {
   width: 230px;
   padding: 9px;
   border-radius: 14px;
-  border: 1px solid #22332f;
-  background: rgba(17, 25, 22, 0.98);
+  border: 1px solid #1e2d45;
+  background: rgba(13, 20, 32, 0.98);
   box-shadow: 0 24px 34px -24px rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
 }
@@ -854,7 +858,7 @@ body {
   font-family: var(--font-mono);
   font-weight: 700;
   color: #f7fffd;
-  background: linear-gradient(135deg, #0f8ea8, #0fa483);
+  background: linear-gradient(135deg, #6366f1, #10b981);
 }
 
 .wallet-choice-icon.secondary {

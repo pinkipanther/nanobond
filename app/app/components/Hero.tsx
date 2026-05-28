@@ -101,7 +101,7 @@ export default function Hero() {
                             fontSize: "clamp(44px, 8vw, 84px)",
                             color: "transparent",
                             backgroundImage:
-                                "linear-gradient(90deg, #1696b8, #2fb9b2 55%, #0fa483)",
+                                "linear-gradient(90deg, #6366f1, #818cf8 55%, #a78bfa)",
                             backgroundClip: "text",
                             WebkitBackgroundClip: "text",
                         }}

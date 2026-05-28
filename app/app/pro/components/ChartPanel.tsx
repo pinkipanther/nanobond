@@ -21,7 +21,7 @@ export default function ChartPanel({ pair }: ChartPanelProps) {
                     alignItems: "center",
                     justifyContent: "center",
                     height: "100%",
-                    background: "#111916",
+                    background: "#0e1420",
                     borderRadius: 8,
                     color: "#556b65",
                     fontSize: 13,
@@ -41,9 +41,9 @@ export default function ChartPanel({ pair }: ChartPanelProps) {
                 display: "flex",
                 flexDirection: "column",
                 height: "100%",
-                background: "#111916",
+                background: "#0e1420",
                 borderRadius: 8,
-                border: "1px solid #22332f",
+                border: "1px solid #1e2d45",
                 overflow: "hidden",
             }}
         >
@@ -53,7 +53,7 @@ export default function ChartPanel({ pair }: ChartPanelProps) {
                     alignItems: "center",
                     justifyContent: "space-between",
                     padding: "8px 12px",
-                    borderBottom: "1px solid #22332f",
+                    borderBottom: "1px solid #1e2d45",
                     background: "rgba(22,33,30,0.6)",
                 }}
             >
@@ -89,11 +89,11 @@ export default function ChartPanel({ pair }: ChartPanelProps) {
                                 border: "none",
                                 background:
                                     activeTab === tab
-                                        ? "linear-gradient(135deg, #1696b8, #45d2f5)"
+                                        ? "linear-gradient(135deg, #6366f1, #818cf8)"
                                         : "transparent",
                                 color:
                                     activeTab === tab
-                                        ? "#0b0f0e"
+                                        ? "#080c14"
                                         : "#8a9a95",
                                 fontFamily: "var(--font-body)",
                                 fontWeight: 600,

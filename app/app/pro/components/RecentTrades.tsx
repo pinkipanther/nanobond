@@ -20,16 +20,16 @@ export default function RecentTrades({ pair }: RecentTradesProps) {
                 display: "flex",
                 flexDirection: "column",
                 height: "100%",
-                background: "#111916",
+                background: "#0e1420",
                 borderRadius: 8,
-                border: "1px solid #22332f",
+                border: "1px solid #1e2d45",
                 overflow: "hidden",
             }}
         >
             <div
                 style={{
                     padding: "10px 12px",
-                    borderBottom: "1px solid #22332f",
+                    borderBottom: "1px solid #1e2d45",
                     fontFamily: "var(--font-display)",
                     fontWeight: 700,
                     fontSize: 13,

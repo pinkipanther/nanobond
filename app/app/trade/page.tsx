@@ -236,8 +236,8 @@ export default function TradePage() {
                 fontFamily: "Manrope, sans-serif",
             },
             grid: {
-                vertLines: { color: "rgba(34, 51, 47, 0.4)" },
-                horzLines: { color: "rgba(34, 51, 47, 0.5)" },
+                vertLines: { color: "rgba(30, 45, 69, 0.4)" },
+                horzLines: { color: "rgba(30, 45, 69, 0.5)" },
             },
             width: chartContainerRef.current.clientWidth,
             height: 420,
@@ -255,7 +255,7 @@ export default function TradePage() {
         });
 
         const liveSeries = chart.addLineSeries({
-            color: "#1696b8",
+            color: "#6366f1",
             lineWidth: 3,
             lastValueVisible: true,
             priceLineVisible: true,
@@ -1125,7 +1125,7 @@ export default function TradePage() {
                                     "linear-gradient(180deg, rgba(17,25,22,0.88) 0%, rgba(11,15,14,0.88) 100%)",
                                 borderRadius: 18,
                                 overflow: "hidden",
-                                border: "1px solid #22332f",
+                                border: "1px solid #1e2d45",
                             }}
                             ref={chartContainerRef}
                         />

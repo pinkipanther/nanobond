@@ -144,7 +144,7 @@ export default function ProfilePage() {
                             className="btn-primary" 
                             onClick={handleShowSettings}
                             disabled={isLoading}
-                            style={{ background: "#6851ff", color: "#0b0f0e" }}
+                            style={{ background: "#6851ff", color: "#080c14" }}
                         >
                             {isLoading ? "Loading..." : "Account Settings"}
                         </button>

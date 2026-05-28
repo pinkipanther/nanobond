@@ -12,8 +12,8 @@ interface MarketSelectorProps {
 const stateLabels = ["RAISING", "ACTIVE", "MATURED", "FAILED", "CANCELLED"];
 const stateColors = [
     "#cd8a32", // RAISING - gold
-    "#0fa483", // ACTIVE - acid
-    "#1696b8", // MATURED - cyan
+    "#10b981", // ACTIVE - acid
+    "#6366f1", // MATURED - cyan
     "#e04768", // FAILED - magenta
     "#84939f", // CANCELLED - dim
 ];
@@ -37,14 +37,14 @@ export default function MarketSelector({
                 display: "flex",
                 flexDirection: "column",
                 height: "100%",
-                background: "#111916",
-                borderRight: "1px solid #22332f",
+                background: "#0e1420",
+                borderRight: "1px solid #1e2d45",
             }}
         >
             <div
                 style={{
                     padding: "14px 12px",
-                    borderBottom: "1px solid #22332f",
+                    borderBottom: "1px solid #1e2d45",
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
@@ -67,7 +67,7 @@ export default function MarketSelector({
                     style={{
                         fontSize: 11,
                         color: "#556b65",
-                        background: "#1a2825",
+                        background: "#192133",
                         padding: "2px 6px",
                         borderRadius: 999,
                         fontFamily: "var(--font-mono)",
@@ -76,7 +76,7 @@ export default function MarketSelector({
                     {pairs.length}
                 </span>
             </div>
-            <div style={{ padding: "8px 12px", borderBottom: "1px solid #22332f" }}>
+            <div style={{ padding: "8px 12px", borderBottom: "1px solid #1e2d45" }}>
                 <input
                     type="text"
                     placeholder="Search..."
@@ -84,8 +84,8 @@ export default function MarketSelector({
                     onChange={(e) => setFilter(e.target.value)}
                     style={{
                         width: "100%",
-                        background: "#16201e",
-                        border: "1px solid #22332f",
+                        background: "#131a28",
+                        border: "1px solid #1e2d45",
                         borderRadius: 8,
                         padding: "8px 10px",
                         fontSize: 12,
@@ -127,7 +127,7 @@ export default function MarketSelector({
                             onMouseEnter={(e) => {
                                 if (!isActive) {
                                     (e.currentTarget as HTMLButtonElement).style.background =
-                                        "#16201e";
+                                        "#131a28";
                                 }
                             }}
                             onMouseLeave={(e) => {
@@ -146,7 +146,7 @@ export default function MarketSelector({
                                         bottom: 0,
                                         width: 3,
                                         background:
-                                            "linear-gradient(180deg, #1696b8, #0fa483)",
+                                            "linear-gradient(180deg, #6366f1, #10b981)",
                                     }}
                                 />
                             )}

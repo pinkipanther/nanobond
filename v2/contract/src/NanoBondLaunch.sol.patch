@@ -1,0 +1,10 @@
+--- contract/src/NanoBondLaunch.sol
++++ contract/src/NanoBondLaunch.sol
+@@ -104,7 +104,7 @@
+     address public feeRecipient;
+     address public stakingContract;
+     address public dexRouter;
++    address public precompileAddress;
+     address public lpPair;
+     uint256 public lpUnlockTime;
+     uint256 public constant LP_LOCK_DURATION = 180 days;

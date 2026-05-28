@@ -32,9 +32,9 @@ export default function Navbar() {
                 left: 0,
                 right: 0,
                 zIndex: 1000,
-                background: "rgba(11, 15, 14, 0.85)",
+                background: "rgba(8, 12, 20, 0.85)",
                 backdropFilter: "blur(18px)",
-                borderBottom: "1px solid #22332f",
+                borderBottom: "1px solid #1e2d45",
             }}
         >
             <div
@@ -80,8 +80,8 @@ export default function Navbar() {
                         gap: 8,
                         padding: 6,
                         borderRadius: 999,
-                        background: "rgba(17, 25, 22, 0.72)",
-                        border: "1px solid #22332f",
+                        background: "rgba(13, 20, 32, 0.72)",
+                        border: "1px solid #1e2d45",
                     }}
                     className="hidden md:flex"
                 >
@@ -94,10 +94,10 @@ export default function Navbar() {
                                 borderRadius: 999,
                                 border: "none",
                                 background: isActive(item.href)
-                                    ? "linear-gradient(135deg, var(--cyan), #45d2f5)"
+                                    ? "linear-gradient(135deg, #6366f1, #818cf8)"
                                     : "transparent",
                                 color: isActive(item.href)
-                                    ? "var(--inverted)"
+                                    ? "#fff"
                                     : "var(--text-secondary)",
                                 fontFamily: "var(--font-body)",
                                 fontWeight: 600,
@@ -107,7 +107,7 @@ export default function Navbar() {
                                 textTransform: "uppercase",
                                 letterSpacing: "0.07em",
                                 textDecoration: "none",
-                                boxShadow: isActive(item.href) ? "0 8px 20px rgba(22,150,184,0.25)" : "none",
+                                boxShadow: isActive(item.href) ? "0 8px 20px rgba(99,102,241,0.3)" : "none",
                             }}
                         >
                             {item.label}
@@ -148,7 +148,7 @@ export default function Navbar() {
                         flexDirection: "column",
                         gap: 6,
                         borderTop: "1px solid var(--void-border)",
-                        background: "rgba(17, 25, 22, 0.98)",
+                        background: "rgba(13, 20, 32, 0.98)",
                     }}
                 >
                     {navItems.map((item) => (
@@ -161,10 +161,10 @@ export default function Navbar() {
                                 borderRadius: 12,
                                 border: "none",
                                 background: isActive(item.href)
-                                    ? "linear-gradient(135deg, rgba(22,150,184,0.14), rgba(69,210,245,0.18))"
+                                    ? "linear-gradient(135deg, rgba(99,102,241,0.16), rgba(167,139,250,0.2))"
                                     : "transparent",
                                 color: isActive(item.href)
-                                    ? "var(--cyan)"
+                                    ? "#818cf8"
                                     : "var(--text-secondary)",
                                 fontFamily: "var(--font-body)",
                                 fontWeight: 600,

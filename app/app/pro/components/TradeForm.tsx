@@ -32,7 +32,7 @@ export default function TradeForm({ pair }: TradeFormProps) {
                     alignItems: "center",
                     justifyContent: "center",
                     height: "100%",
-                    background: "#111916",
+                    background: "#0e1420",
                     borderRadius: 8,
                     color: "#556b65",
                     fontSize: 13,
@@ -49,9 +49,9 @@ export default function TradeForm({ pair }: TradeFormProps) {
                 display: "flex",
                 flexDirection: "column",
                 height: "100%",
-                background: "#111916",
+                background: "#0e1420",
                 borderRadius: 8,
-                border: "1px solid #22332f",
+                border: "1px solid #1e2d45",
                 overflow: "hidden",
             }}
         >
@@ -59,7 +59,7 @@ export default function TradeForm({ pair }: TradeFormProps) {
             <div
                 style={{
                     display: "flex",
-                    borderBottom: "1px solid #22332f",
+                    borderBottom: "1px solid #1e2d45",
                 }}
             >
                 {(["buy", "sell"] as const).map((s) => (
@@ -78,7 +78,7 @@ export default function TradeForm({ pair }: TradeFormProps) {
                                     : "transparent",
                             color:
                                 side === s
-                                    ? "#0b0f0e"
+                                    ? "#080c14"
                                     : s === "buy"
                                         ? "#3fb950"
                                         : "#f85149",
@@ -114,7 +114,7 @@ export default function TradeForm({ pair }: TradeFormProps) {
                             border: "none",
                             background:
                                 orderType === type
-                                    ? "#1a2825"
+                                    ? "#192133"
                                     : "transparent",
                             color:
                                 orderType === type
@@ -159,8 +159,8 @@ export default function TradeForm({ pair }: TradeFormProps) {
                                 onChange={(e) => setPrice(e.target.value)}
                                 style={{
                                     width: "100%",
-                                    background: "#16201e",
-                                    border: "1px solid #22332f",
+                                    background: "#131a28",
+                                    border: "1px solid #1e2d45",
                                     borderRadius: 8,
                                     padding: "10px 12px",
                                     paddingRight: 60,
@@ -212,8 +212,8 @@ export default function TradeForm({ pair }: TradeFormProps) {
                             onChange={(e) => setAmount(e.target.value)}
                             style={{
                                 width: "100%",
-                                background: "#16201e",
-                                border: "1px solid #22332f",
+                                background: "#131a28",
+                                border: "1px solid #1e2d45",
                                 borderRadius: 8,
                                 padding: "10px 12px",
                                 paddingRight: 80,
@@ -261,8 +261,8 @@ export default function TradeForm({ pair }: TradeFormProps) {
                         display: "flex",
                         justifyContent: "space-between",
                         padding: "8px 0",
-                        borderTop: "1px solid #22332f",
-                        borderBottom: "1px solid #22332f",
+                        borderTop: "1px solid #1e2d45",
+                        borderBottom: "1px solid #1e2d45",
                     }}
                 >
                     <span
@@ -300,7 +300,7 @@ export default function TradeForm({ pair }: TradeFormProps) {
                             side === "buy"
                                 ? "linear-gradient(135deg, #3fb950, #2ea043)"
                                 : "linear-gradient(135deg, #f85149, #da3633)",
-                        color: "#0b0f0e",
+                        color: "#080c14",
                         fontFamily: "var(--font-display)",
                         fontWeight: 700,
                         fontSize: 14,

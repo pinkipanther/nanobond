@@ -76,9 +76,9 @@ export default function OrderHistory({}: OrderHistoryProps) {
                 display: "flex",
                 flexDirection: "column",
                 height: "100%",
-                background: "#111916",
+                background: "#0e1420",
                 borderRadius: 8,
-                border: "1px solid #22332f",
+                border: "1px solid #1e2d45",
                 overflow: "hidden",
             }}
         >
@@ -88,7 +88,7 @@ export default function OrderHistory({}: OrderHistoryProps) {
                     alignItems: "center",
                     justifyContent: "space-between",
                     padding: "10px 12px",
-                    borderBottom: "1px solid #22332f",
+                    borderBottom: "1px solid #1e2d45",
                 }}
             >
                 <span
@@ -114,7 +114,7 @@ export default function OrderHistory({}: OrderHistoryProps) {
                                 border: "none",
                                 background:
                                     activeTab === tab
-                                        ? "#1a2825"
+                                        ? "#192133"
                                         : "transparent",
                                 color:
                                     activeTab === tab
