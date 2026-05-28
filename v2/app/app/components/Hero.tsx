@@ -8,58 +8,69 @@ export default function Hero() {
             id="hero"
             style={{
                 position: "relative",
-                padding: "168px 0 108px",
+                padding: "180px 0 120px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "hidden",
+                background: "var(--void)",
             }}
         >
-            <div className="hero-aura" />
-            <div className="hero-aura hero-aura-secondary" />
             <div
                 style={{
                     position: "relative",
                     zIndex: 10,
                     textAlign: "center",
-                    maxWidth: 980,
+                    maxWidth: 1020,
                     padding: "0 24px",
                 }}
             >
                 <div
-                    className="hero-chip"
                     style={{
                         display: "inline-flex",
                         alignItems: "center",
-                        gap: 10,
-                        padding: "7px 16px",
-                        marginBottom: 32,
+                        gap: 12,
+                        padding: "8px 20px",
+                        marginBottom: 40,
                         fontFamily: "var(--font-mono)",
-                        fontSize: 11,
-                        fontWeight: 600,
+                        fontSize: 12,
+                        fontWeight: 700,
                         color: "var(--text-primary)",
                         letterSpacing: "0.08em",
                         textTransform: "uppercase",
+                        background: "rgba(16, 185, 129, 0.1)",
+                        border: "1px solid rgba(16, 185, 129, 0.2)",
+                        borderRadius: 999,
+                        animation: "fade-in-up 0.8s ease-out forwards",
                     }}
                 >
-                    <span className="status-dot" />
+                    <span 
+                        style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: "50%",
+                            background: "var(--acid)",
+                        }}
+                    />
                     Live on Hedera
                 </div>
 
                 <h1
                     style={{
                         fontFamily: "var(--font-display)",
-                        fontWeight: 700,
-                        lineHeight: 1.03,
-                        marginBottom: 22,
-                        letterSpacing: "-0.04em",
+                        fontWeight: 800,
+                        lineHeight: 1.05,
+                        marginBottom: 32,
+                        letterSpacing: "-0.03em",
+                        animation: "fade-in-up 1s ease-out forwards",
                     }}
                 >
                     <span
                         style={{
                             display: "block",
-                            fontSize: "clamp(44px, 8vw, 84px)",
+                            fontSize: "clamp(48px, 8vw, 92px)",
                             color: "var(--text-primary)",
+                            marginBottom: 8,
                         }}
                     >
                         Build bond markets
@@ -67,12 +78,8 @@ export default function Hero() {
                     <span
                         style={{
                             display: "block",
-                            fontSize: "clamp(44px, 8vw, 84px)",
-                            color: "transparent",
-                            backgroundImage:
-                                "linear-gradient(90deg, #6366f1, #818cf8 55%, #a78bfa)",
-                            backgroundClip: "text",
-                            WebkitBackgroundClip: "text",
+                            fontSize: "clamp(48px, 8vw, 92px)",
+                            color: "var(--cyan)",
                         }}
                     >
                         with NanoBond
@@ -82,52 +89,93 @@ export default function Hero() {
                 <p
                     style={{
                         fontFamily: "var(--font-body)",
-                        fontSize: "clamp(16px, 2vw, 19px)",
+                        fontSize: "clamp(16px, 2.5vw, 20px)",
                         color: "var(--text-secondary)",
-                        maxWidth: 670,
-                        margin: "0 auto 44px",
+                        maxWidth: 720,
+                        margin: "0 auto 52px",
                         lineHeight: 1.6,
                         fontWeight: 500,
+                        animation: "fade-in-up 1.2s ease-out forwards",
+                        opacity: 0.9,
                     }}
                 >
                     Launch, manage, and trade token bond sales on Hedera with
-                    creator-set APR, holder reward distribution, and
+                    creator-set APR, holder reward distribution, and seamless
                     HashPack wallet flows.
                 </p>
 
                 <div
                     style={{
                         display: "flex",
-                        gap: 16,
+                        gap: 20,
                         justifyContent: "center",
                         flexWrap: "wrap",
                         marginBottom: 68,
+                        animation: "fade-in-up 1.4s ease-out forwards",
                     }}
                 >
                     <Link
                         href="/create"
-                        className="btn-primary hero-cta"
                         style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                             fontSize: 15,
-                            padding: "15px 34px",
+                            fontWeight: 700,
+                            fontFamily: "var(--font-body)",
+                            padding: "16px 40px",
                             textDecoration: "none",
+                            background: "var(--cyan)",
+                            color: "var(--void)",
+                            borderRadius: 12,
+                            transition: "all 0.2s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "translateY(-2px)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "translateY(0)";
                         }}
                     >
                         Start a Bond Sale
                     </Link>
                     <Link
                         href="/pro"
-                        className="btn-secondary"
                         style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                             fontSize: 15,
-                            padding: "15px 34px",
+                            fontWeight: 700,
+                            fontFamily: "var(--font-body)",
+                            padding: "16px 40px",
                             textDecoration: "none",
+                            background: "var(--void-surface)",
+                            color: "var(--text-primary)",
+                            borderRadius: 12,
+                            border: "1px solid var(--void-border)",
+                            transition: "all 0.2s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "var(--void-elevated)";
+                            e.currentTarget.style.borderColor = "var(--cyan)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "var(--void-surface)";
+                            e.currentTarget.style.borderColor = "var(--void-border)";
                         }}
                     >
                         Open Nano Pro
                     </Link>
                 </div>
             </div>
+            
+            <style jsx>{`
+                @keyframes fade-in-up {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `}</style>
         </section>
     );
 }

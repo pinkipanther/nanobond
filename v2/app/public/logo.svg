@@ -1,0 +1,20 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background base to avoid pure black -->
+  <circle cx="128" cy="128" r="128" fill="#0b1018" />
+  
+  <!-- Outer rings -->
+  <circle cx="128" cy="128" r="100" stroke="#6366f1" stroke-width="2" opacity="0.6" />
+
+  <!-- NanoBond Intertwined N and B geometric shape -->
+  <!-- N -->
+  <path d="M 80 160 L 80 96 L 128 160 L 128 96" stroke="#6366f1" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- B - abstract representation intertwined with N -->
+  <path d="M 128 96 L 160 96 C 176 96 176 128 160 128 C 180 128 180 160 160 160 L 128 160" stroke="#10b981" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Connecting Bond Line -->
+  <line x1="80" y1="128" x2="160" y2="128" stroke="#ffffff" stroke-width="4" opacity="0.5" stroke-dasharray="8 8" />
+  
+  <!-- Solid dot indicating bond active state -->
+  <circle cx="176" cy="80" r="12" fill="#10b981" />
+</svg>

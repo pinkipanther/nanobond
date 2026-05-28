@@ -15,7 +15,6 @@ export default function Navbar() {
         { href: "/create", label: "Create" },
         { href: "/portfolio", label: "Portfolio" },
         { href: "/analytics", label: "Analytics" },
-        { href: "/profile", label: "Profile" },
     ];
 
     const isActive = (href: string) => {
@@ -58,6 +57,20 @@ export default function Navbar() {
                         textDecoration: "none",
                     }}
                 >
+                    <div style={{ width: 32, height: 32, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img 
+                            src="/logo.svg" 
+                            alt="NanoBond Logo" 
+                            width={32} 
+                            height={32} 
+                            style={{ objectFit: 'contain' }}
+                            onError={(e) => {
+                                // Fallback if logo.svg is not added yet
+                                e.currentTarget.style.display = 'none';
+                            }}
+                        />
+                    </div>
                     <span
                         style={{
                             fontFamily: "var(--font-display)",

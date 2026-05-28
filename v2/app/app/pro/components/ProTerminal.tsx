@@ -151,34 +151,33 @@ const terminalStyle: CSSProperties = {
     "stats stats stats"
     "selector workspace actions"
   `,
-  gap: 6,
-  padding: 6,
+  gap: 16,
+  padding: 16,
   minHeight: 0,
   height: "calc(100vh - 76px)",
-  background: "#0b1018",
+  background: "var(--void)",
 };
 
 const mainPanelStyle: CSSProperties = {
   gridArea: "workspace",
   minHeight: 0,
   overflow: "auto",
-  background: "#0e1420",
-  border: "1px solid #1e2d45",
-  borderRadius: 8,
+  background: "transparent",
+  borderRadius: 16,
 };
 
 const workspaceStyle: CSSProperties = {
   display: "grid",
   gridTemplateRows: "auto auto",
-  gap: 12,
-  padding: 16,
+  gap: 24,
+  padding: 8,
 };
 
 const surfaceStyle: CSSProperties = {
-  background: "#101827",
-  border: "1px solid #1e2d45",
-  borderRadius: 8,
-  padding: 18,
+  background: "var(--void-surface)",
+  border: "1px solid var(--void-border)",
+  borderRadius: 16,
+  padding: 24,
 };
 
 const sectionHeaderStyle: CSSProperties = {
@@ -186,87 +185,98 @@ const sectionHeaderStyle: CSSProperties = {
   justifyContent: "space-between",
   alignItems: "flex-start",
   gap: 16,
-  marginBottom: 18,
+  marginBottom: 24,
 };
 
 const titleStyle: CSSProperties = {
   fontFamily: "var(--font-display)",
-  fontSize: 30,
+  fontSize: 32,
+  fontWeight: 800,
   lineHeight: 1,
+  letterSpacing: "-0.02em",
   margin: 0,
-  color: "#e2e8f8",
+  color: "var(--text-primary)",
 };
 
 const smallTitleStyle: CSSProperties = {
   fontFamily: "var(--font-display)",
-  fontSize: 18,
+  fontSize: 20,
+  fontWeight: 700,
   margin: 0,
-  color: "#e2e8f8",
+  color: "var(--text-primary)",
 };
 
 const subtitleStyle: CSSProperties = {
-  fontSize: 13,
-  color: "#7a8aaa",
-  margin: "6px 0 0",
+  fontSize: 14,
+  color: "var(--text-secondary)",
+  margin: "8px 0 0",
   lineHeight: 1.5,
 };
 
 const poolBadgeStyle: CSSProperties = {
-  padding: "6px 10px",
-  borderRadius: 6,
-  background: "rgba(99,102,241,0.12)",
-  color: "#818cf8",
+  padding: "6px 12px",
+  borderRadius: 999,
+  background: "rgba(99,102,241,0.1)",
+  border: "1px solid rgba(99,102,241,0.2)",
+  color: "var(--cyan)",
+  fontFamily: "var(--font-mono)",
   fontSize: 11,
   fontWeight: 800,
   textTransform: "uppercase",
+  letterSpacing: "0.05em",
 };
 
 const metricsGridStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-  gap: 10,
+  gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+  gap: 16,
 };
 
 const metricStyle: CSSProperties = {
-  background: "#0e1420",
-  border: "1px solid #1e2d45",
-  borderRadius: 8,
-  padding: 12,
+  display: "flex",
+  flexDirection: "column",
+  background: "var(--void-light)",
+  border: "1px solid var(--void-border)",
+  borderRadius: 12,
+  padding: 16,
 };
 
 const metricLabelStyle: CSSProperties = {
-  display: "block",
-  color: "#7a8aaa",
+  color: "var(--text-dim)",
+  fontFamily: "var(--font-mono)",
   fontSize: 11,
-  fontWeight: 800,
+  fontWeight: 700,
   textTransform: "uppercase",
   letterSpacing: "0.06em",
-  marginBottom: 5,
+  marginBottom: 8,
 };
 
 const metricValueStyle: CSSProperties = {
   fontFamily: "var(--font-mono)",
-  fontSize: 16,
+  fontSize: 18,
   fontWeight: 700,
 };
 
 const addressGridStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-  gap: 10,
+  gap: 16,
 };
 
 const addressRowStyle: CSSProperties = {
-  background: "#0e1420",
-  border: "1px solid #1e2d45",
-  borderRadius: 8,
-  padding: 12,
+  display: "flex",
+  flexDirection: "column",
+  background: "var(--void-light)",
+  border: "1px solid var(--void-border)",
+  borderRadius: 12,
+  padding: 16,
 };
 
 const addressValueStyle: CSSProperties = {
   fontFamily: "var(--font-mono)",
-  color: "#e2e8f8",
-  fontSize: 13,
+  color: "var(--text-primary)",
+  fontSize: 14,
+  fontWeight: 600,
 };
 
 const stateBlockStyle: CSSProperties = {
@@ -276,5 +286,8 @@ const stateBlockStyle: CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   textAlign: "center",
-  padding: 24,
+  padding: 40,
+  background: "var(--void-surface)",
+  border: "1px dashed var(--void-border)",
+  borderRadius: 16,
 };

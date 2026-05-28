@@ -57,7 +57,6 @@ export default function BondsPage() {
                                     letterSpacing: "0.05em",
                                     cursor: "pointer",
                                     transition: "all 0.2s ease",
-                                    boxShadow: isActive && f.badge ? `0 0 12px ${f.badge}25` : "none",
                                 }}
                             >
                                 {f.badge && (
@@ -67,7 +66,6 @@ export default function BondsPage() {
                                             height: "6px",
                                             borderRadius: "50%",
                                             background: isActive ? f.badge : "var(--void-border)",
-                                            boxShadow: isActive ? `0 0 8px ${f.badge}` : "none",
                                             transition: "all 0.2s ease"
                                         }}
                                     />
