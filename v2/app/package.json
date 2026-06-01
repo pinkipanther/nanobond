@@ -23,7 +23,6 @@
     "@walletconnect/universal-provider": "^2.23.9",
     "@web3icons/react": "^4.1.17",
     "bignumber.js": "9.1.1",
-    "firebase": "^12.13.0",
     "framer-motion": "^11.18.2",
     "lightweight-charts": "^4.2.3",
     "next": "16.1.6",

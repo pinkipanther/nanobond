@@ -187,24 +187,16 @@ function RankRow({
               {symbol}
             </span>
           </div>
-          <div
-            style={{
-              height: 4,
-              borderRadius: 2,
-              background: "var(--void-elevated)",
-              marginTop: 5,
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: `${Math.max(2, Math.min(100, barPct))}%`,
+          <div style={{ height: "6px", borderRadius: "3px", background: "var(--void-elevated)", overflow: "hidden", marginTop: 5 }}>
+            <div style={{
+                width: "100%",
                 height: "100%",
-                borderRadius: 2,
+                borderRadius: "3px",
                 background: barColor,
-                transition: "width 0.6s ease",
-              }}
-            />
+                transform: `scaleX(${Math.max(0.02, Math.min(1, barPct / 100))})`,
+                transformOrigin: "left center",
+                transition: "transform 1s cubic-bezier(0.16, 1, 0.3, 1)"
+            }} />
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", flexShrink: 0, gap: 2 }}>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
-import FirebaseAnalytics from "./components/FirebaseAnalytics";
 import AppProviders from "./components/AppProviders";
 
 export const metadata: Metadata = {
@@ -82,9 +81,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className="grid-bg" style={{ background: "#0b1018" }}>
-				<FirebaseAnalytics />
 				<AppProviders>
-					{/* <EmailPopup /> */}
 					<div
 						style={{
 							display: "flex",

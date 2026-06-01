@@ -162,7 +162,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: 14, color: "var(--cyan)", fontWeight: 700 }}>{progress.toFixed(1)}%</span>
               </div>
               <div style={{ height: 6, borderRadius: 3, background: "var(--void-elevated)", overflow: "hidden" }}>
-                <div style={{ width: `${Math.min(100, progress)}%`, height: "100%", borderRadius: 3, background: "var(--cyan)", transition: "width 1s cubic-bezier(0.16, 1, 0.3, 1)" }} />
+                <div style={{ width: "100%", height: "100%", borderRadius: 3, background: "var(--cyan)", transform: `scaleX(${Math.max(0, Math.min(100, progress)) / 100})`, transformOrigin: "left center", transition: "transform 1s cubic-bezier(0.16, 1, 0.3, 1)" }} />
               </div>
             </div>
 
