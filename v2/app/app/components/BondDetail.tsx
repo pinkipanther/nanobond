@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatEther, formatUnits, createPublicClient, http } from "viem";
-import { HBAR_DECIMALS, PRO_FACTORY_ABI, isConfiguredAddress, CONTRACTS } from "../lib/contracts";
+import { HBAR_DECIMALS, PRO_FACTORY_ABI, isConfiguredAddress, CONTRACTS, HEDERA_JSON_RPC_URL } from "../lib/contracts";
 import {
   bondNoArgTransaction,
   contributeTransaction,
@@ -74,7 +74,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
 
   useEffect(() => {
     if (state !== 1 || !tokenAddr || !isConfiguredAddress(CONTRACTS.PRO_FACTORY)) return;
-    const client = createPublicClient({ transport: http() });
+    const client = createPublicClient({ transport: http(HEDERA_JSON_RPC_URL) });
     client.readContract({
       address: CONTRACTS.PRO_FACTORY as `0x${string}`,
       abi: PRO_FACTORY_ABI,

@@ -7,27 +7,32 @@ export const WEIBARS_PER_TINYBAR = 10n ** 10n;
 export const HEDERA_NETWORK =
   process.env.NEXT_PUBLIC_HEDERA_NETWORK === "mainnet" ? "mainnet" : "testnet";
 
+function publicEnv(name: string) {
+  const value = process.env[name];
+  return value && value.trim() ? value.trim() : undefined;
+}
+
 export const HEDERA_CHAIN_ID = Number(
   process.env.NEXT_PUBLIC_NANOBOND_CHAIN_ID ?? (HEDERA_NETWORK === "mainnet" ? "295" : "296"),
 );
 
 export const HEDERA_JSON_RPC_URL =
-  process.env.NEXT_PUBLIC_HEDERA_JSON_RPC_URL ??
+  publicEnv("NEXT_PUBLIC_HEDERA_JSON_RPC_URL") ??
   (HEDERA_NETWORK === "mainnet"
     ? "https://mainnet.hashio.io/api"
     : "https://testnet.hashio.io/api");
 
 export const HEDERA_MIRROR_NODE_URL =
-  process.env.NEXT_PUBLIC_HEDERA_MIRROR_NODE_URL ??
+  publicEnv("NEXT_PUBLIC_HEDERA_MIRROR_NODE_URL") ??
   (HEDERA_NETWORK === "mainnet"
     ? "https://mainnet.mirrornode.hedera.com"
     : "https://testnet.mirrornode.hedera.com");
 
 export const CONTRACTS = {
-  FACTORY: process.env.NEXT_PUBLIC_NANOBOND_FACTORY_ADDRESS ?? "",
-  PRO_FACTORY: process.env.NEXT_PUBLIC_NANOPRO_FACTORY_ADDRESS ?? "",
-  CURVE: process.env.NEXT_PUBLIC_NANOBOND_CURVE_ADDRESS ?? "",
-  CURVE_TOKEN: process.env.NEXT_PUBLIC_NANOBOND_CURVE_TOKEN_ADDRESS ?? "",
+  FACTORY: publicEnv("NEXT_PUBLIC_NANOBOND_FACTORY_ADDRESS") ?? "",
+  PRO_FACTORY: publicEnv("NEXT_PUBLIC_NANOPRO_FACTORY_ADDRESS") ?? "",
+  CURVE: publicEnv("NEXT_PUBLIC_NANOBOND_CURVE_ADDRESS") ?? "",
+  CURVE_TOKEN: publicEnv("NEXT_PUBLIC_NANOBOND_CURVE_TOKEN_ADDRESS") ?? "",
 };
 
 /** Returns true for a 40-hex EVM address (`0x…`) or a Hedera native ID (`0.0.N`). */
