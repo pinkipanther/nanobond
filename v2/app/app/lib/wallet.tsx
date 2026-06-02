@@ -136,6 +136,19 @@ async function loadAccount(accountId: string) {
   };
 }
 
+async function loadAccountByEvmAddress(evmAddress: `0x${string}`) {
+  const response = await fetch(`${HEDERA_MIRROR_NODE_URL}/api/v1/accounts/${evmAddress}`);
+  if (!response.ok) {
+    throw new Error(`Mirror node EVM account lookup failed: ${response.status}`);
+  }
+  const data = (await response.json()) as AccountMirrorResponse;
+  return {
+    accountId: data.account ?? null,
+    evmAddress: normalizeEvmAddress(data.evm_address) ?? evmAddress,
+    balanceTinybar: BigInt(data.balance?.balance ?? 0),
+  };
+}
+
 function extractNativeAccountId(provider: UniversalProvider | null) {
   const namespaces = provider?.session?.namespaces;
   const hederaAccounts = namespaces?.hedera?.accounts ?? [];
@@ -202,6 +215,15 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       const normalizedEvmAddress = normalizeEvmAddress(address);
       if (normalizedEvmAddress) {
         setEvmAddress(normalizedEvmAddress);
+        try {
+          const info = await loadAccountByEvmAddress(normalizedEvmAddress);
+          setAccountId(info.accountId);
+          setEvmAddress(info.evmAddress);
+          setBalanceTinybar(info.balanceTinybar);
+        } catch {
+          setAccountId(null);
+          setBalanceTinybar(null);
+        }
         setStatus("connected");
         setError(null);
       }
@@ -299,7 +321,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setError(null);
       if (!appKit) throw new Error("AppKit is not initialized yet.");
       setStatus("pairing");
-      await appKit.open({ namespace: "eip155" });
+      await appKit.open({ namespace: hederaNamespace });
       await syncWalletAccount(null, universalProvider);
     } catch (err) {
       setStatus("error");
@@ -324,11 +346,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }, [appKit]);
 
   const refreshBalance = useCallback(async () => {
-    if (!accountId) return;
-    const account = await loadAccount(accountId);
+    if (!accountId && !evmAddress) return;
+    const account = accountId
+      ? await loadAccount(accountId)
+      : await loadAccountByEvmAddress(evmAddress as `0x${string}`);
     setEvmAddress(account.evmAddress);
+    setAccountId(account.accountId);
     setBalanceTinybar(account.balanceTinybar);
-  }, [accountId]);
+  }, [accountId, evmAddress]);
 
   const sendTx = useCallback(
     async (transaction: Transaction, options?: SendTxOptions) => {
