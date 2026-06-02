@@ -3,7 +3,7 @@ import "./globals.css";
 import { WalletProvider } from "./lib/wallet";
 import Navbar from "./components/Navbar";
 import FirebaseAnalytics from "./components/FirebaseAnalytics";
-import EmailPopup from "./components/EmailPopup";
+import MigrationModal from "./components/MigrationModal";
 
 export const metadata: Metadata = {
 	title: "NanoBond — Token Launchpad on Hedera",
@@ -84,8 +84,8 @@ export default function RootLayout({
 		<html lang="en">
 			<body className="grid-bg" style={{ background: "#080c14" }}>
 				<FirebaseAnalytics />
+				<MigrationModal />
 				<WalletProvider>
-					{/* <EmailPopup /> */}
 					<div
 						style={{
 							display: "flex",
