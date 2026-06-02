@@ -4,5 +4,5 @@ Detected System: Foundry
 
 - NanobondExponentialCurve
   File: verify-bundles/NanobondExponentialCurve/metadata.json
-  Address: <set env NANOBONDEXPONENTIALCURVE_ADDRESS>
+  Address: 0xee1f75b0537f8a3140d78e2f4fd23500f48797a1
 

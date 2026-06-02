@@ -2,3 +2,45 @@ HashScan Verify Upload Guide
 ============================
 Detected System: Foundry
 
+- NanoBondFactory
+  File: verify-bundles/NanoBondFactory/metadata.json
+  Address: 0x7f19d7c0155b2961092a4545a7d9bd1999c3928f
+  Constructor args required:
+    _feeRecipient (address)
+
+- NanoProFactory
+  File: verify-bundles/NanoProFactory/metadata.json
+  Address: 0x0e78828d3434b5d5e1fc40e5487a7809ea2c27ef
+
+- NanoBond
+  File: verify-bundles/NanoBond/metadata.json
+  Address: 0x4e569147a03332e2e908aba258f569231cee849b
+  Constructor args required:
+    _name (string)
+    _symbol (string)
+    _description (string)
+    _totalSupply (uint256)
+    _hardCap (uint256)
+    _softCap (uint256)
+    _raiseDuration (uint256)
+    _yieldRateBps (uint256)
+    _epochDuration (uint256)
+    _platformFeeBps (uint256)
+    _feeRecipient (address)
+    _creator (address)
+
+- BondToken
+  File: verify-bundles/BondToken/metadata.json
+  Address: 0x911100398131568a58a03ec05635d3632151cdc9
+  Constructor args required:
+    _name (string)
+    _symbol (string)
+    _minter (address)
+    _initialSupply (uint256)
+
+- NanoProPool
+  File: verify-bundles/NanoProPool/metadata.json
+  Address: 0x13b0ece5abd2b0aacc202985a75bf1483b088b87
+  Constructor args required:
+    _token (address)
+

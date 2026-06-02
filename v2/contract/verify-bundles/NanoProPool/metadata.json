@@ -8,24 +8,9 @@
       {
         "inputs": [
           {
-            "internalType": "string",
-            "name": "_name",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "_symbol",
-            "type": "string"
-          },
-          {
             "internalType": "address",
-            "name": "_minter",
+            "name": "_token",
             "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "_initialSupply",
-            "type": "uint256"
           }
         ],
         "stateMutability": "nonpayable",
@@ -146,38 +131,112 @@
         "inputs": [
           {
             "internalType": "address",
-            "name": "account",
+            "name": "buyer",
             "type": "address",
             "indexed": true
           },
           {
             "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256",
-            "indexed": false
-          }
-        ],
-        "type": "event",
-        "name": "RewardsClaimed",
-        "anonymous": false
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "amount",
+            "name": "hbarIn",
             "type": "uint256",
             "indexed": false
           },
           {
             "internalType": "uint256",
-            "name": "eligibleSupply",
+            "name": "tokensOut",
             "type": "uint256",
             "indexed": false
           }
         ],
         "type": "event",
-        "name": "RewardsDistributed",
+        "name": "Bought",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "provider",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "internalType": "uint256",
+            "name": "hbarAmount",
+            "type": "uint256",
+            "indexed": false
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenAmount",
+            "type": "uint256",
+            "indexed": false
+          },
+          {
+            "internalType": "uint256",
+            "name": "lpMinted",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "LiquidityAdded",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "provider",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "internalType": "uint256",
+            "name": "hbarAmount",
+            "type": "uint256",
+            "indexed": false
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenAmount",
+            "type": "uint256",
+            "indexed": false
+          },
+          {
+            "internalType": "uint256",
+            "name": "lpBurned",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "LiquidityRemoved",
+        "anonymous": false
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "seller",
+            "type": "address",
+            "indexed": true
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokensIn",
+            "type": "uint256",
+            "indexed": false
+          },
+          {
+            "internalType": "uint256",
+            "name": "hbarOut",
+            "type": "uint256",
+            "indexed": false
+          }
+        ],
+        "type": "event",
+        "name": "Sold",
         "anonymous": false
       },
       {
@@ -209,11 +268,40 @@
         "inputs": [],
         "stateMutability": "view",
         "type": "function",
-        "name": "accRewardsPerShare",
+        "name": "FEE_BPS",
         "outputs": [
           {
             "internalType": "uint256",
             "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "maxTokenAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minLpOut",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "payable",
+        "type": "function",
+        "name": "addLiquidity",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "lpMinted",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenAmount",
             "type": "uint256"
           }
         ]
@@ -286,33 +374,20 @@
         ]
       },
       {
-        "inputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function",
-        "name": "claimRewards",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ]
-      },
-      {
         "inputs": [
           {
-            "internalType": "address",
-            "name": "account",
-            "type": "address"
+            "internalType": "uint256",
+            "name": "minTokensOut",
+            "type": "uint256"
           }
         ],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "function",
-        "name": "claimRewardsFor",
+        "name": "buy",
         "outputs": [
           {
             "internalType": "uint256",
-            "name": "",
+            "name": "tokensOut",
             "type": "uint256"
           }
         ]
@@ -331,52 +406,10 @@
         ]
       },
       {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function",
-        "name": "distributeRewards"
-      },
-      {
         "inputs": [],
         "stateMutability": "view",
         "type": "function",
-        "name": "eligibleSupply",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ]
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "to",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function",
-        "name": "mint"
-      },
-      {
-        "inputs": [],
-        "stateMutability": "view",
-        "type": "function",
-        "name": "minter",
+        "name": "factory",
         "outputs": [
           {
             "internalType": "address",
@@ -401,14 +434,14 @@
       {
         "inputs": [
           {
-            "internalType": "address",
-            "name": "account",
-            "type": "address"
+            "internalType": "uint256",
+            "name": "hbarIn",
+            "type": "uint256"
           }
         ],
         "stateMutability": "view",
         "type": "function",
-        "name": "pendingReward",
+        "name": "previewBuy",
         "outputs": [
           {
             "internalType": "uint256",
@@ -420,14 +453,14 @@
       {
         "inputs": [
           {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
+            "internalType": "uint256",
+            "name": "tokenAmount",
+            "type": "uint256"
           }
         ],
         "stateMutability": "view",
         "type": "function",
-        "name": "pendingRewards",
+        "name": "previewSell",
         "outputs": [
           {
             "internalType": "uint256",
@@ -439,14 +472,92 @@
       {
         "inputs": [
           {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
+            "internalType": "uint256",
+            "name": "lpAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minHbarOut",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minTokenOut",
+            "type": "uint256"
           }
         ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "removeLiquidity",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "hbarOut",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenOut",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
         "stateMutability": "view",
         "type": "function",
-        "name": "rewardDebt",
+        "name": "reserveHbar",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "reserveToken",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "tokenAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minHbarOut",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "sell",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "hbarOut",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "spotPrice",
         "outputs": [
           {
             "internalType": "uint256",
@@ -472,12 +583,12 @@
         "inputs": [],
         "stateMutability": "view",
         "type": "function",
-        "name": "totalRewardsDistributed",
+        "name": "token",
         "outputs": [
           {
-            "internalType": "uint256",
+            "internalType": "address",
             "name": "",
-            "type": "uint256"
+            "type": "address"
           }
         ]
       },
@@ -546,6 +657,11 @@
             "type": "bool"
           }
         ]
+      },
+      {
+        "inputs": [],
+        "stateMutability": "payable",
+        "type": "receive"
       }
     ],
     "devdoc": {
@@ -603,7 +719,7 @@
       "bytecodeHash": "ipfs"
     },
     "compilationTarget": {
-      "src/BondToken.sol": "BondToken"
+      "src/NanoProPool.sol": "NanoProPool"
     },
     "evmVersion": "cancun",
     "libraries": {},
@@ -635,10 +751,10 @@
       "license": "MIT",
       "content": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)\n\npragma solidity ^0.8.20;\n\n/**\n * @dev Provides information about the current execution context, including the\n * sender of the transaction and its data. While these are generally available\n * via msg.sender and msg.data, they should not be accessed in such a direct\n * manner, since when dealing with meta-transactions the account sending and\n * paying for execution may not be the actual sender (as far as an application\n * is concerned).\n *\n * This contract is only required for intermediate, library-like contracts.\n */\nabstract contract Context {\n    function _msgSender() internal view virtual returns (address) {\n        return msg.sender;\n    }\n\n    function _msgData() internal view virtual returns (bytes calldata) {\n        return msg.data;\n    }\n\n    function _contextSuffixLength() internal view virtual returns (uint256) {\n        return 0;\n    }\n}\n"
     },
-    "src/BondToken.sol": {
-      "keccak256": "0x513adab27a101a0d8456bddd1912c6da9d389772fbd926b07d609799bcf8f3cb",
+    "src/NanoProPool.sol": {
+      "keccak256": "0x5746a3aab78add9f5b52c69c765c44f4b8021b9eade6c7dcda676da9fd0518f7",
       "license": "MIT",
-      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\nimport \"../lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol\";\n\n/**\n * @title BondToken\n * @notice Simple ERC-20 token with controlled minting for NanoBond yield distribution.\n * @dev Only the bond contract (minter) can mint new tokens for yield.\n */\ncontract BondToken is ERC20 {\n    uint256 private constant REWARD_SCALE = 1e18;\n\n    address public immutable minter;\n    uint256 public accRewardsPerShare;\n    uint256 public totalRewardsDistributed;\n\n    mapping(address => uint256) public rewardDebt;\n    mapping(address => uint256) public pendingRewards;\n\n    event RewardsDistributed(uint256 amount, uint256 eligibleSupply);\n    event RewardsClaimed(address indexed account, uint256 amount);\n\n    constructor(string memory _name, string memory _symbol, address _minter, uint256 _initialSupply)\n        ERC20(_name, _symbol)\n    {\n        minter = _minter;\n        _mint(_minter, _initialSupply);\n    }\n\n    function mint(address to, uint256 amount) external {\n        require(msg.sender == minter, \"BondToken: not minter\");\n        _mint(to, amount);\n    }\n\n    function distributeRewards(uint256 amount) external {\n        require(msg.sender == minter, \"BondToken: not minter\");\n        require(amount > 0, \"BondToken: zero rewards\");\n\n        uint256 eligible = eligibleSupply();\n        require(eligible > 0, \"BondToken: no eligible holders\");\n\n        totalRewardsDistributed += amount;\n        accRewardsPerShare += (amount * REWARD_SCALE) / eligible;\n        _mint(address(this), amount);\n\n        emit RewardsDistributed(amount, eligible);\n    }\n\n    function claimRewards() external returns (uint256) {\n        return _claimRewards(msg.sender);\n    }\n\n    function claimRewardsFor(address account) external returns (uint256) {\n        return _claimRewards(account);\n    }\n\n    function pendingReward(address account) external view returns (uint256) {\n        if (_isExcluded(account)) return 0;\n        return pendingRewards[account] + _accrued(account);\n    }\n\n    function eligibleSupply() public view returns (uint256) {\n        return totalSupply() - balanceOf(address(this)) - balanceOf(minter);\n    }\n\n    function _claimRewards(address account) internal returns (uint256) {\n        _settle(account);\n        uint256 reward = pendingRewards[account];\n        require(reward > 0, \"BondToken: no rewards\");\n\n        pendingRewards[account] = 0;\n        _transfer(address(this), account, reward);\n\n        emit RewardsClaimed(account, reward);\n        return reward;\n    }\n\n    function _update(address from, address to, uint256 value) internal override {\n        _settle(from);\n        _settle(to);\n        super._update(from, to, value);\n        _syncDebt(from);\n        _syncDebt(to);\n    }\n\n    function _settle(address account) internal {\n        if (_isExcluded(account)) return;\n        uint256 reward = _accrued(account);\n        if (reward > 0) {\n            pendingRewards[account] += reward;\n        }\n        rewardDebt[account] = (balanceOf(account) * accRewardsPerShare) / REWARD_SCALE;\n    }\n\n    function _syncDebt(address account) internal {\n        if (_isExcluded(account)) return;\n        rewardDebt[account] = (balanceOf(account) * accRewardsPerShare) / REWARD_SCALE;\n    }\n\n    function _accrued(address account) internal view returns (uint256) {\n        uint256 accumulated = (balanceOf(account) * accRewardsPerShare) / REWARD_SCALE;\n        if (accumulated <= rewardDebt[account]) return 0;\n        return accumulated - rewardDebt[account];\n    }\n\n    function _isExcluded(address account) internal view returns (bool) {\n        return account == address(0) || account == address(this) || account == minter;\n    }\n}\n"
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\nimport \"../lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol\";\nimport \"../lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol\";\n\n/**\n * @title NanoProPool\n * @notice Constant-product HBAR/ERC-20 pool for NanoBond secondary markets.\n */\ncontract NanoProPool is ERC20 {\n    uint256 public constant FEE_BPS = 30;\n    uint256 private constant BPS = 10_000;\n\n    address public immutable token;\n    address public immutable factory;\n\n    uint256 public reserveToken;\n    uint256 public reserveHbar;\n\n    bool private _locked;\n\n    event LiquidityAdded(address indexed provider, uint256 hbarAmount, uint256 tokenAmount, uint256 lpMinted);\n    event LiquidityRemoved(address indexed provider, uint256 hbarAmount, uint256 tokenAmount, uint256 lpBurned);\n    event Bought(address indexed buyer, uint256 hbarIn, uint256 tokensOut);\n    event Sold(address indexed seller, uint256 tokensIn, uint256 hbarOut);\n\n    modifier nonReentrant() {\n        require(!_locked, \"NanoProPool: reentrant\");\n        _locked = true;\n        _;\n        _locked = false;\n    }\n\n    constructor(address _token) ERC20(\"Nano Pro LP\", \"NPLP\") {\n        require(_token != address(0), \"NanoProPool: zero token\");\n        token = _token;\n        factory = msg.sender;\n    }\n\n    function addLiquidity(uint256 maxTokenAmount, uint256 minLpOut)\n        external\n        payable\n        nonReentrant\n        returns (uint256 lpMinted, uint256 tokenAmount)\n    {\n        require(msg.value > 0, \"NanoProPool: zero hbar\");\n        require(maxTokenAmount > 0, \"NanoProPool: zero token\");\n\n        uint256 supply = totalSupply();\n        if (supply == 0) {\n            tokenAmount = maxTokenAmount;\n            lpMinted = _sqrt(msg.value * tokenAmount);\n        } else {\n            tokenAmount = (msg.value * reserveToken) / reserveHbar;\n            require(tokenAmount <= maxTokenAmount, \"NanoProPool: token max\");\n            uint256 lpFromHbar = (msg.value * supply) / reserveHbar;\n            uint256 lpFromToken = (tokenAmount * supply) / reserveToken;\n            lpMinted = lpFromHbar < lpFromToken ? lpFromHbar : lpFromToken;\n        }\n\n        require(lpMinted >= minLpOut && lpMinted > 0, \"NanoProPool: lp slippage\");\n        require(\n            IERC20(token).transferFrom(msg.sender, address(this), tokenAmount), \"NanoProPool: token transfer failed\"\n        );\n\n        reserveHbar += msg.value;\n        reserveToken += tokenAmount;\n        _mint(msg.sender, lpMinted);\n\n        emit LiquidityAdded(msg.sender, msg.value, tokenAmount, lpMinted);\n    }\n\n    function removeLiquidity(uint256 lpAmount, uint256 minHbarOut, uint256 minTokenOut)\n        external\n        nonReentrant\n        returns (uint256 hbarOut, uint256 tokenOut)\n    {\n        require(lpAmount > 0, \"NanoProPool: zero lp\");\n        uint256 supply = totalSupply();\n        hbarOut = (lpAmount * reserveHbar) / supply;\n        tokenOut = (lpAmount * reserveToken) / supply;\n        require(hbarOut >= minHbarOut, \"NanoProPool: hbar slippage\");\n        require(tokenOut >= minTokenOut, \"NanoProPool: token slippage\");\n\n        _burn(msg.sender, lpAmount);\n        reserveHbar -= hbarOut;\n        reserveToken -= tokenOut;\n\n        require(IERC20(token).transfer(msg.sender, tokenOut), \"NanoProPool: token transfer failed\");\n        (bool sent,) = payable(msg.sender).call{value: hbarOut}(\"\");\n        require(sent, \"NanoProPool: hbar transfer failed\");\n\n        emit LiquidityRemoved(msg.sender, hbarOut, tokenOut, lpAmount);\n    }\n\n    function buy(uint256 minTokensOut) external payable nonReentrant returns (uint256 tokensOut) {\n        require(msg.value > 0, \"NanoProPool: zero hbar\");\n        tokensOut = previewBuy(msg.value);\n        require(tokensOut >= minTokensOut && tokensOut > 0, \"NanoProPool: token slippage\");\n        require(tokensOut < reserveToken, \"NanoProPool: insufficient tokens\");\n\n        reserveHbar += msg.value;\n        reserveToken -= tokensOut;\n        require(IERC20(token).transfer(msg.sender, tokensOut), \"NanoProPool: token transfer failed\");\n\n        emit Bought(msg.sender, msg.value, tokensOut);\n    }\n\n    function sell(uint256 tokenAmount, uint256 minHbarOut) external nonReentrant returns (uint256 hbarOut) {\n        require(tokenAmount > 0, \"NanoProPool: zero token\");\n        hbarOut = previewSell(tokenAmount);\n        require(hbarOut >= minHbarOut && hbarOut > 0, \"NanoProPool: hbar slippage\");\n        require(hbarOut < reserveHbar, \"NanoProPool: insufficient hbar\");\n\n        require(\n            IERC20(token).transferFrom(msg.sender, address(this), tokenAmount), \"NanoProPool: token transfer failed\"\n        );\n        reserveToken += tokenAmount;\n        reserveHbar -= hbarOut;\n\n        (bool sent,) = payable(msg.sender).call{value: hbarOut}(\"\");\n        require(sent, \"NanoProPool: hbar transfer failed\");\n\n        emit Sold(msg.sender, tokenAmount, hbarOut);\n    }\n\n    function previewBuy(uint256 hbarIn) public view returns (uint256) {\n        if (hbarIn == 0 || reserveHbar == 0 || reserveToken == 0) return 0;\n        uint256 amountInWithFee = hbarIn * (BPS - FEE_BPS);\n        return (reserveToken * amountInWithFee) / (reserveHbar * BPS + amountInWithFee);\n    }\n\n    function previewSell(uint256 tokenAmount) public view returns (uint256) {\n        if (tokenAmount == 0 || reserveHbar == 0 || reserveToken == 0) return 0;\n        uint256 amountInWithFee = tokenAmount * (BPS - FEE_BPS);\n        return (reserveHbar * amountInWithFee) / (reserveToken * BPS + amountInWithFee);\n    }\n\n    function spotPrice() external view returns (uint256) {\n        if (reserveToken == 0) return 0;\n        return (reserveHbar * 1e18) / reserveToken;\n    }\n\n    function _sqrt(uint256 value) internal pure returns (uint256 result) {\n        if (value == 0) return 0;\n        uint256 x = value;\n        result = (x + 1) / 2;\n        while (result < x) {\n            x = result;\n            result = (value / result + result) / 2;\n        }\n        return x;\n    }\n\n    receive() external payable {\n        revert(\"NanoProPool: use addLiquidity\");\n    }\n}\n"
     }
   },
   "version": 1

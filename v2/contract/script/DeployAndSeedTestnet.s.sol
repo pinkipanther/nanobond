@@ -51,7 +51,7 @@ contract DeployAndSeedTestnet is Script {
         address tokenAddress = bond.token();
         IERC20 token = IERC20(tokenAddress);
 
-        bond.contribute{value: HARD_CAP}();
+        bond.contribute{value: _toWeibar(HARD_CAP)}();
         bond.claimBonds();
 
         uint256 creatorWithdrawable = bond.withdrawableHbar();
@@ -63,7 +63,7 @@ contract DeployAndSeedTestnet is Script {
         NanoProPool pool = NanoProPool(payable(poolAddress));
 
         token.approve(poolAddress, INITIAL_POOL_TOKENS);
-        pool.addLiquidity{value: INITIAL_POOL_HBAR}(INITIAL_POOL_TOKENS, 1);
+        pool.addLiquidity{value: _toWeibar(INITIAL_POOL_HBAR)}(INITIAL_POOL_TOKENS, 1);
 
         vm.stopBroadcast();
 
@@ -77,5 +77,9 @@ contract DeployAndSeedTestnet is Script {
         console.log("Initial pool HBAR:", INITIAL_POOL_HBAR);
         console.log("Initial pool tokens:", INITIAL_POOL_TOKENS);
         console.log("--------------------------------------------------");
+    }
+
+    function _toWeibar(uint256 tinybars) internal pure returns (uint256) {
+        return tinybars * WEIBARS_PER_TINYBAR;
     }
 }
