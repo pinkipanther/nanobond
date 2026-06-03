@@ -7,7 +7,6 @@ import { HBAR_DECIMALS, TOKEN_DECIMALS } from "../../lib/contracts";
 import MarketSelector from "./MarketSelector";
 import MarketStats from "./MarketStats";
 import TradeForm from "./TradeForm";
-import PriceChart from "../../components/PriceChart";
 import { useNanoProMarkets, type NanoProMarket } from "../lib/markets";
 
 interface ProTerminalProps {
@@ -92,25 +91,26 @@ function MarketWorkspace({ market }: { market: NanoProMarket }) {
       </section>
 
       {market.poolAddress && market.poolReady && (
-        <div style={{ marginBottom: 16 }}>
-          <PriceChart poolAddress={market.poolAddress} tokenSymbol={market.symbol} height={260} />
+        <div style={compactAddressBarStyle}>
+          <span style={metricLabelStyle}>Bond</span>
+          <span title={market.bondAddress} style={addressValueStyle}>{shortAddress(market.bondAddress)}</span>
+          <span style={{ ...metricLabelStyle, marginLeft: 16 }}>Token</span>
+          <span title={market.tokenAddress} style={addressValueStyle}>{shortAddress(market.tokenAddress)}</span>
+          <span style={{ ...metricLabelStyle, marginLeft: 16 }}>Pool</span>
+          <span title={market.poolAddress ?? ""} style={addressValueStyle}>{market.poolAddress ? shortAddress(market.poolAddress) : "Not created"}</span>
         </div>
       )}
 
-      <section style={surfaceStyle}>
-        <div style={sectionHeaderStyle}>
-          <div>
-            <h3 style={smallTitleStyle}>Pool Contract</h3>
-            <p style={subtitleStyle}>Nano Pro is a constant-product HBAR/token pool with a 0.30% swap fee.</p>
-          </div>
+      {!market.poolAddress && (
+        <div style={compactAddressBarStyle}>
+          <span style={metricLabelStyle}>Bond</span>
+          <span title={market.bondAddress} style={addressValueStyle}>{shortAddress(market.bondAddress)}</span>
+          <span style={{ ...metricLabelStyle, marginLeft: 16 }}>Token</span>
+          <span title={market.tokenAddress} style={addressValueStyle}>{shortAddress(market.tokenAddress)}</span>
+          <span style={{ ...metricLabelStyle, marginLeft: 16 }}>Pool</span>
+          <span style={{ ...addressValueStyle, color: "var(--text-dim)" }}>Not created</span>
         </div>
-
-        <div style={addressGridStyle}>
-          <AddressRow label="Bond" value={market.bondAddress} />
-          <AddressRow label="Token" value={market.tokenAddress} />
-          <AddressRow label="Pool" value={market.poolAddress ?? "Not created"} />
-        </div>
-      </section>
+      )}
     </div>
   );
 }
@@ -118,21 +118,13 @@ function MarketWorkspace({ market }: { market: NanoProMarket }) {
 function Metric({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
   return (
     <div style={metricStyle}>
-      <span style={metricLabelStyle}>{label}</span>
+      <span style={{ ...metricLabelStyle, marginBottom: 8 }}>{label}</span>
       <span style={{ ...metricValueStyle, color: accent ? "#10b981" : "#e2e8f8" }}>{value}</span>
     </div>
   );
 }
 
-function AddressRow({ label, value }: { label: string; value: string }) {
-  const display = value.startsWith("0x") ? shortAddress(value) : value;
-  return (
-    <div style={addressRowStyle}>
-      <span style={metricLabelStyle}>{label}</span>
-      <span title={value} style={addressValueStyle}>{display}</span>
-    </div>
-  );
-}
+
 
 function StateBlock({ title, body }: { title: string; body: string }) {
   return (
@@ -248,7 +240,6 @@ const metricLabelStyle: CSSProperties = {
   fontWeight: 700,
   textTransform: "uppercase",
   letterSpacing: "0.06em",
-  marginBottom: 8,
 };
 
 const metricValueStyle: CSSProperties = {
@@ -257,20 +248,7 @@ const metricValueStyle: CSSProperties = {
   fontWeight: 700,
 };
 
-const addressGridStyle: CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-  gap: 16,
-};
 
-const addressRowStyle: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  background: "var(--void-light)",
-  border: "1px solid var(--void-border)",
-  borderRadius: 12,
-  padding: 16,
-};
 
 const addressValueStyle: CSSProperties = {
   fontFamily: "var(--font-mono)",
@@ -290,4 +268,15 @@ const stateBlockStyle: CSSProperties = {
   background: "var(--void-surface)",
   border: "1px dashed var(--void-border)",
   borderRadius: 16,
+};
+
+const compactAddressBarStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 6,
+  padding: "10px 16px",
+  background: "var(--void-surface)",
+  border: "1px solid var(--void-border)",
+  borderRadius: 10,
+  flexWrap: "wrap",
 };

@@ -48,7 +48,7 @@ export default function BondDetailPage({ params }: { params: Promise<{ address: 
 
     return (
         <div style={{ maxWidth: 1400, margin: "0 auto", padding: "96px 24px 80px" }}>
-            <BondDetail bond={bond} onBack={() => router.push("/")} />
+            <BondDetail bond={bond} onBack={() => router.push("/bonds")} />
         </div>
     );
 }

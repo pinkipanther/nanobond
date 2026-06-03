@@ -1,18 +1,9 @@
 "use client";
 
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import { formatUnits } from "viem";
-import {
-  approveTokenTransaction,
-  addLiquidityTransaction,
-  claimTokenRewardsTransaction,
-  createPoolTransaction,
-  nanoProBuyTransaction,
-  nanoProSellTransaction,
-  parseTokenAmount,
-  removeLiquidityTransaction,
-} from "../../lib/contractActions";
-import { CONTRACTS, HBAR_DECIMALS, TOKEN_DECIMALS } from "../../lib/contracts";
+import { encodeFunctionData, formatUnits, parseUnits } from "viem";
+import { parseTokenAmount } from "../../lib/contractActions";
+import { CONTRACTS, HBAR_DECIMALS, TOKEN_DECIMALS, PRO_FACTORY_ABI, PRO_POOL_ABI, TOKEN_ABI } from "../../lib/contracts";
 import { tinybarsToHbar, useWallet } from "../../lib/wallet";
 import type { NanoProMarket } from "../lib/markets";
 
@@ -64,7 +55,7 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
     setMessage(null);
     try {
       if (!wallet.isConnected) {
-        await wallet.connect();
+        setMessage("Please connect your wallet first.");
         return;
       }
       setBusy(label);
@@ -90,7 +81,9 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
 
   const createPool = () =>
     runTx("Create pool", async () => {
-      await wallet.sendTx(createPoolTransaction(CONTRACTS.PRO_FACTORY, market.tokenAddress), {
+      await wallet.sendEvmTx({
+        to: CONTRACTS.PRO_FACTORY as `0x${string}`,
+        data: encodeFunctionData({ abi: PRO_FACTORY_ABI, functionName: "createPool", args: [market.tokenAddress] }),
         description: "Create Nano Pro pool",
       });
     });
@@ -99,10 +92,17 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
     runTx("Add liquidity", async () => {
       if (!market.poolAddress) throw new Error("Create the pool before adding liquidity.");
       if (!liquidityToken || !liquidityHbar) throw new Error("Enter token and HBAR liquidity amounts.");
-      await wallet.sendTx(approveTokenTransaction(market.tokenAddress, market.poolAddress, parseTokenAmount(liquidityToken)), {
+      // Approve tokens
+      await wallet.sendEvmTx({
+        to: market.tokenAddress,
+        data: encodeFunctionData({ abi: TOKEN_ABI, functionName: "approve", args: [market.poolAddress, parseTokenAmount(liquidityToken)] }),
         description: "Approve bond tokens",
       });
-      await wallet.sendTx(addLiquidityTransaction(market.poolAddress, liquidityToken, liquidityHbar), {
+      // Add liquidity with HBAR value
+      await wallet.sendEvmTx({
+        to: market.poolAddress,
+        data: encodeFunctionData({ abi: PRO_POOL_ABI, functionName: "addLiquidity", args: [parseTokenAmount(liquidityToken), 1n] }),
+        value: parseUnits(liquidityHbar || "0", 18),
         description: "Add Nano Pro liquidity",
       });
       setLiquidityToken("");
@@ -113,7 +113,9 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
     runTx("Remove liquidity", async () => {
       if (!market.poolAddress) throw new Error("No pool exists for this token.");
       if (!lpAmount) throw new Error("Enter LP amount.");
-      await wallet.sendTx(removeLiquidityTransaction(market.poolAddress, lpAmount), {
+      await wallet.sendEvmTx({
+        to: market.poolAddress,
+        data: encodeFunctionData({ abi: PRO_POOL_ABI, functionName: "removeLiquidity", args: [parseTokenAmount(lpAmount), 0n, 0n] }),
         description: "Remove Nano Pro liquidity",
       });
       setLpAmount("");
@@ -125,14 +127,22 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
       if (!tradeAmount) throw new Error("Enter an amount.");
 
       if (side === "buy") {
-        await wallet.sendTx(nanoProBuyTransaction(market.poolAddress, tradeAmount), {
+        await wallet.sendEvmTx({
+          to: market.poolAddress,
+          data: encodeFunctionData({ abi: PRO_POOL_ABI, functionName: "buy", args: [0n] }),
+          value: parseUnits(tradeAmount || "0", 18),
           description: `Buy ${tokenLabel}`,
         });
       } else {
-        await wallet.sendTx(approveTokenTransaction(market.tokenAddress, market.poolAddress, parseTokenAmount(tradeAmount)), {
+        // Approve tokens first
+        await wallet.sendEvmTx({
+          to: market.tokenAddress,
+          data: encodeFunctionData({ abi: TOKEN_ABI, functionName: "approve", args: [market.poolAddress, parseTokenAmount(tradeAmount)] }),
           description: "Approve bond tokens",
         });
-        await wallet.sendTx(nanoProSellTransaction(market.poolAddress, tradeAmount), {
+        await wallet.sendEvmTx({
+          to: market.poolAddress,
+          data: encodeFunctionData({ abi: PRO_POOL_ABI, functionName: "sell", args: [parseTokenAmount(tradeAmount), 0n] }),
           description: `Sell ${tokenLabel}`,
         });
       }
@@ -141,10 +151,13 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
 
   const claimRewards = () =>
     runTx("Claim rewards", async () => {
-      await wallet.sendTx(claimTokenRewardsTransaction(market.tokenAddress), {
+      await wallet.sendEvmTx({
+        to: market.tokenAddress,
+        data: encodeFunctionData({ abi: TOKEN_ABI, functionName: "claimRewards" }),
         description: "Claim bond token rewards",
       });
     });
+
 
   return (
     <div style={containerStyle}>
@@ -178,8 +191,8 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
         )}
 
         {factoryConfigured && !market.poolAddress && market.state === 1 && (
-          <button className="btn-primary" onClick={createPool} disabled={isPending} style={fullButtonStyle}>
-            {wallet.isConnected ? "Create Pool" : "Connect Wallet"}
+          <button className="btn-primary" onClick={createPool} disabled={isPending || !wallet.isConnected} style={fullButtonStyle}>
+            {isPending ? busy ?? "Pending" : wallet.isPairing ? "Connecting..." : !wallet.isConnected ? "Connect Wallet First" : "Create Pool"}
           </button>
         )}
 
@@ -216,10 +229,10 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
             <button
               className="btn-primary"
               onClick={trade}
-              disabled={isPending || market.state !== 1 || !market.poolReady || !tradeAmount}
+              disabled={isPending || market.state !== 1 || !market.poolReady || !tradeAmount || !wallet.isConnected}
               style={fullButtonStyle}
             >
-              {isPending ? busy ?? "Pending" : wallet.isConnected ? `${side === "buy" ? "Buy" : "Sell"} ${tokenLabel}` : "Connect Wallet"}
+              {isPending ? busy ?? "Pending" : wallet.isPairing ? "Connecting..." : !wallet.isConnected ? "Connect Wallet First" : `${side === "buy" ? "Buy" : "Sell"} ${tokenLabel}`}
             </button>
           </>
         )}

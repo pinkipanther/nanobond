@@ -149,21 +149,15 @@ export function ConnectWalletButton() {
           >
             <div className="wallet-dropdown-head">
               <div style={{ fontSize: 11, color: "var(--text-dim)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                WalletConnect {HEDERA_NETWORK}
+                Hedera {HEDERA_NETWORK}
               </div>
               <div style={{ fontSize: 13, marginTop: 4, fontFamily: "var(--font-mono)", color: "var(--text-primary)" }}>
-                {wallet.accountId ?? "Hedera EVM account"}
+                {wallet.accountId ?? shortValue(wallet.evmAddress ?? "")}
               </div>
-              {wallet.evmAddress && (
-                <div style={{ fontSize: 11, marginTop: 4, fontFamily: "var(--font-mono)", color: "var(--text-secondary)" }}>
-                  {shortValue(wallet.evmAddress)}
-                </div>
-              )}
               <div style={{ fontSize: 12, marginTop: 8, color: "var(--cyan)" }}>
-                {wallet.accountId ? `${tinybarsToHbar(wallet.balanceTinybar)} HBAR` : "Ready for EVM contract calls"}
+                {wallet.accountId ? `${tinybarsToHbar(wallet.balanceTinybar)} HBAR` : "EVM signing"}
               </div>
             </div>
-            <WalletRows compact />
             {wallet.error && <div className="wallet-inline-error">{wallet.error}</div>}
 
             <button
@@ -180,11 +174,7 @@ export function ConnectWalletButton() {
             <button className="wallet-dropdown-item" type="button" onClick={() => void wallet.refreshBalance()} disabled={!wallet.accountId}>
               Refresh Balance
             </button>
-            {!wallet.accountId && (
-              <button className="wallet-dropdown-item" type="button" onClick={() => void wallet.connect()}>
-                Try Native Account
-              </button>
-            )}
+
             <button
               className="wallet-dropdown-item"
               style={{ color: "var(--magenta)" }}

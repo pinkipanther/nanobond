@@ -1,17 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { formatEther, formatUnits, createPublicClient, http } from "viem";
-import { HBAR_DECIMALS, PRO_FACTORY_ABI, isConfiguredAddress, CONTRACTS, HEDERA_JSON_RPC_URL } from "../lib/contracts";
-import {
-  bondNoArgTransaction,
-  contributeTransaction,
-  parseHbar,
-  withdrawHbarTransaction,
-} from "../lib/contractActions";
+import { useState } from "react";
+import { encodeFunctionData, formatEther, formatUnits, parseUnits } from "viem";
+import { BOND_ABI, HBAR_DECIMALS } from "../lib/contracts";
+import { parseHbar } from "../lib/contractActions";
 import { useBondContributors, useBondDetail, type BondCardData } from "../lib/hooks";
 import { tinybarsToHbar, useWallet } from "../lib/wallet";
-import PriceChart from "./PriceChart";
 
 const STATE_LABELS: Record<number, string> = {
   0: "RAISING",
@@ -34,8 +28,6 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
 
   const { data } = useBondDetail(bond.bondContract);
   const { contributors: bondContributors, isLoadingContributors } = useBondContributors(bond.bondContract);
-
-  const [poolAddress, setPoolAddress] = useState<string | null>(null);
 
   const get = (idx: number): bigint => {
     if (!data || !data[idx] || data[idx].status !== "success") return 0n;
@@ -72,21 +64,6 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
   const userClaimed = getBool(21);
   const userPendingYield = get(23);
 
-  useEffect(() => {
-    if (state !== 1 || !tokenAddr || !isConfiguredAddress(CONTRACTS.PRO_FACTORY)) return;
-    const client = createPublicClient({ transport: http(HEDERA_JSON_RPC_URL) });
-    client.readContract({
-      address: CONTRACTS.PRO_FACTORY as `0x${string}`,
-      abi: PRO_FACTORY_ABI,
-      functionName: "getPool",
-      args: [tokenAddr as `0x${string}`],
-    }).then((addr: string) => {
-      if (addr && addr !== "0x0000000000000000000000000000000000000000") {
-        setPoolAddress(addr);
-      }
-    }).catch(() => {});
-  }, [state, tokenAddr]);
-
   const isCreator = !!wallet.evmAddress && wallet.evmAddress.toLowerCase() === creator.toLowerCase();
   const apr = (yieldRateBps / 100).toFixed(1);
   const progress = hardCap > 0n ? Number((totalRaisedRaw * 10000n) / hardCap) / 100 : 0;
@@ -100,14 +77,30 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
     return d > 0 ? `${d}d ${h}h` : `${h}h ${m}m`;
   };
 
-  const send = async (label: string, build: () => ReturnType<typeof bondNoArgTransaction>) => {
+  /** Send a bond contract call via EVM. Works with any wallet connection type. */
+  const sendBondCall = async (
+    label: string,
+    functionName: string,
+    args?: readonly unknown[],
+    hbarValue?: bigint,
+  ) => {
     setLocalError(null);
     try {
       if (!wallet.isConnected) {
-        await wallet.connect();
+        setLocalError("Please connect your wallet first.");
         return;
       }
-      await wallet.sendTx(build(), { description: label });
+      const callData = encodeFunctionData({
+        abi: BOND_ABI as readonly unknown[],
+        functionName,
+        args: args as never,
+      });
+      await wallet.sendEvmTx({
+        to: bond.bondContract as `0x${string}`,
+        data: callData,
+        value: hbarValue,
+        description: label,
+      });
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : `${label} failed`);
     }
@@ -187,15 +180,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
             </div>
           )}
 
-          {/* Price Chart */}
-          {state === 1 && poolAddress && (
-            <div>
-              <h2 style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 800, color: "var(--text-primary)", marginBottom: 20, letterSpacing: "-0.02em" }}>Price History</h2>
-              <div style={{ height: 320, background: "var(--void-surface)", borderRadius: "var(--radius-lg)", border: "1px solid var(--void-border)", padding: 16 }}>
-                <PriceChart poolAddress={poolAddress} tokenSymbol={symbol} height={280} />
-              </div>
-            </div>
-          )}
+
 
           {/* Contributors List */}
           <div>
@@ -251,7 +236,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                   <input type="number" placeholder="0.00" value={contributeAmt} onChange={(e) => setContributeAmt(e.target.value)} style={{ width: "100%", padding: "16px", paddingRight: 60, borderRadius: "var(--radius-md)", border: "1px solid var(--void-border)", background: "var(--void-light)", color: "var(--text-primary)", fontSize: 18, fontFamily: "var(--font-mono)", outline: "none", transition: "border-color 0.2s" }} onFocus={(e) => e.currentTarget.style.borderColor = "var(--cyan)"} onBlur={(e) => e.currentTarget.style.borderColor = "var(--void-border)"} />
                   <span style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", color: "var(--text-dim)", fontFamily: "var(--font-mono)", fontSize: 14, fontWeight: 700 }}>HBAR</span>
                 </div>
-                <button className="btn-primary" onClick={() => send("Contribute", () => contributeTransaction(bond.bondContract, contributeAmt))} disabled={isPending || !contributeAmt || isNaN(Number(contributeAmt)) || balanceTooLow} style={{ padding: 16, fontSize: 15 }}>
+                <button className="btn-primary" onClick={() => sendBondCall("Contribute", "contribute", undefined, parseUnits(contributeAmt || "0", 18))} disabled={isPending || !contributeAmt || isNaN(Number(contributeAmt)) || balanceTooLow} style={{ padding: 16, fontSize: 15 }}>
                   {isPending ? "Processing..." : balanceTooLow ? "Insufficient HBAR" : !wallet.isConnected ? "Connect Wallet" : "Invest Now"}
                 </button>
               </div>
@@ -265,7 +250,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
 
           {/* Action Module: Active State / Claim */}
           {state === 1 && userContribution > 0n && !userClaimed && (
-            <ActionCard title="Claim Your Tokens" body={`Your investment has been converted to ${symbol} tokens. Claim them now to start earning ${apr}% APR.`} label="Claim Tokens" pending={isPending} onClick={() => send("Claim bonds", () => bondNoArgTransaction(bond.bondContract, "claimBonds"))} accent="var(--cyan)" />
+            <ActionCard title="Claim Your Tokens" body={`Your investment has been converted to ${symbol} tokens. Claim them now to start earning ${apr}% APR.`} label="Claim Tokens" pending={isPending} onClick={() => sendBondCall("Claim bonds", "claimBonds")} accent="var(--cyan)" />
           )}
 
           {/* Action Module: Position & Yield */}
@@ -285,7 +270,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
                 </div>
               </div>
               
-              <button className="btn-primary" onClick={() => send("Claim yield", () => bondNoArgTransaction(bond.bondContract, "claimYield"))} disabled={isPending || userPendingYield === 0n} style={{ width: "100%", padding: 14, background: userPendingYield > 0n ? "var(--acid)" : "var(--void-elevated)", color: userPendingYield > 0n ? "var(--void)" : "var(--text-dim)", opacity: userPendingYield > 0n ? 1 : 0.5 }}>
+              <button className="btn-primary" onClick={() => sendBondCall("Claim yield", "claimYield")} disabled={isPending || userPendingYield === 0n} style={{ width: "100%", padding: 14, background: userPendingYield > 0n ? "var(--acid)" : "var(--void-elevated)", color: userPendingYield > 0n ? "var(--void)" : "var(--text-dim)", opacity: userPendingYield > 0n ? 1 : 0.5 }}>
                 {isPending ? "Claiming..." : "Claim Yield"}
               </button>
             </div>
@@ -293,7 +278,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
 
           {/* Action Module: Refund */}
           {(state === 3 || state === 4) && userContribution > 0n && (
-             <ActionCard title="Claim Refund" body={`This bond did not complete successfully. You can refund your ${parseFloat(formatUnits(userContribution, HBAR_DECIMALS)).toLocaleString()} HBAR.`} label="Process Refund" pending={isPending} onClick={() => send("Claim refund", () => bondNoArgTransaction(bond.bondContract, "claimRefund"))} accent="var(--magenta)" />
+             <ActionCard title="Claim Refund" body={`This bond did not complete successfully. You can refund your ${parseFloat(formatUnits(userContribution, HBAR_DECIMALS)).toLocaleString()} HBAR.`} label="Process Refund" pending={isPending} onClick={() => sendBondCall("Claim refund", "claimRefund")} accent="var(--magenta)" />
           )}
 
           {/* Admin Tools */}
@@ -301,7 +286,7 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
              <div className="glass-card" style={{ padding: 24, border: "1px solid rgba(99,102,241,0.2)" }}>
                <h3 style={{ fontFamily: "var(--font-display)", fontSize: 16, color: "var(--cyan)", marginBottom: 12 }}>Global Actions</h3>
                <p style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 16 }}>The yield epoch is ready. Anyone can trigger distribution.</p>
-               <button className="btn-secondary" onClick={() => send("Distribute yield", () => bondNoArgTransaction(bond.bondContract, "distributeYield"))} disabled={isPending} style={{ width: "100%" }}>Distribute Yield</button>
+               <button className="btn-secondary" onClick={() => sendBondCall("Distribute yield", "distributeYield")} disabled={isPending} style={{ width: "100%" }}>Distribute Yield</button>
              </div>
           )}
 
@@ -313,15 +298,15 @@ export default function BondDetail({ bond, onBack }: BondDetailProps) {
               </div>
               
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {state === 0 && totalRaisedRaw >= softCap && <button className="btn-primary" onClick={() => send("Activate bond", () => bondNoArgTransaction(bond.bondContract, "activate"))} disabled={isPending} style={{ padding: 10, fontSize: 13 }}>Activate Bond</button>}
-                {state === 0 && <button className="btn-secondary" onClick={() => send("Check state", () => bondNoArgTransaction(bond.bondContract, "checkState"))} disabled={isPending} style={{ padding: 10, fontSize: 13 }}>Refresh State</button>}
-                {state === 0 && <button className="btn-secondary" onClick={() => send("Cancel bond", () => bondNoArgTransaction(bond.bondContract, "cancel"))} disabled={isPending} style={{ padding: 10, fontSize: 13, color: "var(--magenta)", borderColor: "rgba(244,63,94,0.3)" }}>Cancel Raise</button>}
+                {state === 0 && totalRaisedRaw >= softCap && <button className="btn-primary" onClick={() => sendBondCall("Activate bond", "activate")} disabled={isPending} style={{ padding: 10, fontSize: 13 }}>Activate Bond</button>}
+                {state === 0 && <button className="btn-secondary" onClick={() => sendBondCall("Check state", "checkState")} disabled={isPending} style={{ padding: 10, fontSize: 13 }}>Refresh State</button>}
+                {state === 0 && <button className="btn-secondary" onClick={() => sendBondCall("Cancel bond", "cancel")} disabled={isPending} style={{ padding: 10, fontSize: 13, color: "var(--magenta)", borderColor: "rgba(244,63,94,0.3)" }}>Cancel Raise</button>}
                 {state === 1 && withdrawableHbar > 0n && (
                   <div style={{ marginTop: 8, paddingTop: 16, borderTop: "1px solid rgba(99,102,241,0.2)" }}>
                     <div style={{ fontSize: 12, color: "var(--text-dim)", marginBottom: 8, fontFamily: "var(--font-mono)" }}>Available: {parseFloat(formatUnits(withdrawableHbar, HBAR_DECIMALS)).toLocaleString()} HBAR</div>
                     <div style={{ display: "flex", gap: 8 }}>
                       <input type="number" placeholder="Amount" value={withdrawAmt} onChange={(e) => setWithdrawAmt(e.target.value)} style={{ flex: 1, padding: "8px 12px", borderRadius: 6, border: "1px solid var(--void-border)", background: "var(--void-surface)", color: "var(--text-primary)", fontSize: 13, minWidth: 0 }} />
-                      <button className="btn-primary" onClick={() => send("Withdraw HBAR", () => withdrawHbarTransaction(bond.bondContract, withdrawAmt))} disabled={isPending || !withdrawAmt || parseHbar(withdrawAmt) > withdrawableHbar} style={{ padding: "8px 16px", fontSize: 13 }}>Withdraw</button>
+                      <button className="btn-primary" onClick={() => sendBondCall("Withdraw HBAR", "withdrawHbar", [parseHbar(withdrawAmt)])} disabled={isPending || !withdrawAmt || parseHbar(withdrawAmt) > withdrawableHbar} style={{ padding: "8px 16px", fontSize: 13 }}>Withdraw</button>
                     </div>
                   </div>
                 )}

@@ -140,7 +140,7 @@ export default function Home() {
                   fontWeight: 600,
                 }}
               >
-                Loading bonds from Hedera Mainnet...
+                Loading bonds from Hedera...
               </p>
             </div>
           )}

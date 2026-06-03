@@ -16,7 +16,7 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
-import { HEDERA_MIRROR_NODE_URL, HEDERA_NETWORK } from "./contracts";
+import { HEDERA_CHAIN_ID, HEDERA_JSON_RPC_URL, HEDERA_MIRROR_NODE_URL, HEDERA_NETWORK } from "./contracts";
 import type UniversalProvider from "@walletconnect/universal-provider";
 import {
   HederaProvider,
@@ -27,6 +27,8 @@ import {
 } from "@hashgraph/hedera-wallet-connect";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { createAppKit } from "@reown/appkit";
+import { sendTransaction as wagmiSendTransaction } from "@wagmi/core";
+import type { Config as WagmiConfig } from "@wagmi/core";
 
 type WalletStatus =
   | "idle"
@@ -78,7 +80,7 @@ type AppKitInstance = {
   subscribeCaipNetworkChange: (callback: (network?: { caipNetworkId?: string }) => void) => void;
 };
 
-type EvmTxAdapter = Pick<WagmiAdapter, "sendTransaction">;
+
 
 type WalletContextValue = {
   status: WalletStatus;
@@ -162,7 +164,8 @@ function extractNativeAccountId(provider: UniversalProvider | null) {
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [appKit, setAppKit] = useState<AppKitInstance | null>(null);
   const [universalProvider, setUniversalProvider] = useState<UniversalProvider | null>(null);
-  const [evmTxAdapter, setEvmTxAdapter] = useState<EvmTxAdapter | null>(null);
+  const [wagmiConfig, setWagmiConfig] = useState<WagmiConfig | null>(null);
+
 
   const [status, setStatus] = useState<WalletStatus>("initializing");
   const [accountId, setAccountId] = useState<string | null>(null);
@@ -253,7 +256,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           networks: [evmNetwork],
           projectId,
         });
-        setEvmTxAdapter(evmAdapter);
+        setWagmiConfig(evmAdapter.wagmiConfig);
 
         const hederaNativeAdapter = new HederaAdapter({
           projectId,
@@ -290,8 +293,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
         appKitInstance.subscribeAccount((account: { address?: string; type?: string }) => {
           if (!isMounted || !account?.address || account.address.includes(":")) return;
-          const normalizedEvmAddress = normalizeEvmAddress(account.address);
-          if (normalizedEvmAddress) setEvmAddress(normalizedEvmAddress);
+          void syncWalletAccount(account.address, provider);
         }, "eip155");
 
         appKitInstance.subscribeCaipNetworkChange((network?: { caipNetworkId?: string }) => {
@@ -321,13 +323,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setError(null);
       if (!appKit) throw new Error("AppKit is not initialized yet.");
       setStatus("pairing");
-      await appKit.open({ namespace: hederaNamespace });
-      await syncWalletAccount(null, universalProvider);
+      await appKit.open();
+      // subscribeAccount callbacks handle syncing wallet state after pairing
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Wallet connection failed");
     }
-  }, [appKit, syncWalletAccount, universalProvider]);
+  }, [appKit]);
 
   const disconnect = useCallback(async () => {
     try {
@@ -404,23 +406,26 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   const sendEvmTx = useCallback(
     async (options: SendEvmTxOptions) => {
-      if (!evmAddress || !evmTxAdapter) {
-        throw new Error("Connect your EVM wallet first.");
+      if (!evmAddress) {
+        throw new Error("Connect your wallet first.");
+      }
+      if (!wagmiConfig) {
+        throw new Error("Wallet not initialized.");
       }
 
       setPendingTx(options.description ?? "Confirm transaction");
       setError(null);
 
       try {
-        const result = await evmTxAdapter.sendTransaction({
+        const txHash = await wagmiSendTransaction(wagmiConfig, {
           to: options.to,
           data: options.data,
           value: options.value ?? 0n,
         });
-        const transactionId = result.hash;
-        setLastTxId(transactionId);
+
+        setLastTxId(txHash);
         if (accountId) await refreshBalance();
-        return { response: result, transactionId };
+        return { response: { hash: txHash }, transactionId: txHash };
       } catch (err) {
         let message = err instanceof Error ? err.message : "Transaction rejected or failed";
         if (typeof err === "object" && err !== null && "message" in err) {
@@ -432,7 +437,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         setPendingTx(null);
       }
     },
-    [accountId, evmAddress, evmTxAdapter, refreshBalance],
+    [accountId, evmAddress, wagmiConfig, refreshBalance],
   );
 
   const value = useMemo<WalletContextValue>(
