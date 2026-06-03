@@ -46,12 +46,13 @@ export default function ProTerminal({ bonds }: ProTerminalProps) {
       </div>
 
       <main style={mainPanelStyle}>
-        {isLoading && <StateBlock title="Loading markets" body="Reading launched bond tokens and Nano Pro pools." />}
-        {!isLoading && error && <StateBlock title="Market load failed" body={error.message} />}
+        {isLoading && <StateBlock title="Loading markets" body="Reading launched bond tokens and Nano Pro pools." icon="⏳" />}
+        {!isLoading && error && <StateBlock title="Market load failed" body={error.message} icon="⚠️" />}
         {!isLoading && !error && !selected && (
           <StateBlock
             title="No token markets"
             body="Create a NanoBond first, then activate it before opening a live Nano Pro pool."
+            icon="📊"
           />
         )}
         {!isLoading && !error && selected && <MarketWorkspace market={selected} />}
@@ -69,15 +70,30 @@ function MarketWorkspace({ market }: { market: NanoProMarket }) {
     <div style={workspaceStyle}>
       <section style={surfaceStyle}>
         <div style={sectionHeaderStyle}>
-          <div>
+          <div style={headerContentStyle}>
             <h2 style={titleStyle}>{market.pairSymbol}</h2>
             <p style={subtitleStyle}>
               {market.state === 1 ? "Secondary market for the launched bond token." : "Bond is still raising. Activate it before trading."}
             </p>
           </div>
-          <span style={poolBadgeStyle}>
-            {market.state !== 1 ? "Raising" : market.poolReady ? "Live pool" : market.poolAddress ? "Awaiting liquidity" : "Pool not created"}
-          </span>
+          <div style={badgeContainerStyle}>
+            <span
+              style={{
+                ...poolBadgeStyle,
+                background: market.state !== 1 ? "rgba(245,158,11,0.1)" : market.poolReady ? "rgba(16,185,129,0.1)" : market.poolAddress ? "rgba(99,102,241,0.1)" : "rgba(90,106,133,0.1)",
+                borderColor: market.state !== 1 ? "rgba(245,158,11,0.25)" : market.poolReady ? "rgba(16,185,129,0.25)" : market.poolAddress ? "rgba(99,102,241,0.25)" : "rgba(90,106,133,0.25)",
+                color: market.state !== 1 ? "#f59e0b" : market.poolReady ? "#10b981" : market.poolAddress ? "#6366f1" : "#5a6a85",
+              }}
+            >
+              <div
+                style={{
+                  ...badgeDotStyle,
+                  background: market.state !== 1 ? "#f59e0b" : market.poolReady ? "#10b981" : market.poolAddress ? "#6366f1" : "#5a6a85",
+                }}
+              />
+              {market.state !== 1 ? "Raising" : market.poolReady ? "Live pool" : market.poolAddress ? "Awaiting liquidity" : "Pool not created"}
+            </span>
+          </div>
         </div>
 
         <div style={metricsGridStyle}>
@@ -91,26 +107,34 @@ function MarketWorkspace({ market }: { market: NanoProMarket }) {
       </section>
 
       {market.poolAddress && market.poolReady && (
-        <div style={compactAddressBarStyle}>
-          <span style={metricLabelStyle}>Bond</span>
-          <span title={market.bondAddress} style={addressValueStyle}>{shortAddress(market.bondAddress)}</span>
-          <span style={{ ...metricLabelStyle, marginLeft: 16 }}>Token</span>
-          <span title={market.tokenAddress} style={addressValueStyle}>{shortAddress(market.tokenAddress)}</span>
-          <span style={{ ...metricLabelStyle, marginLeft: 16 }}>Pool</span>
-          <span title={market.poolAddress ?? ""} style={addressValueStyle}>{market.poolAddress ? shortAddress(market.poolAddress) : "Not created"}</span>
+        <div style={addressBarStyle}>
+          <AddressChip label="Bond" address={market.bondAddress} />
+          <AddressChip label="Token" address={market.tokenAddress} />
+          <AddressChip label="Pool" address={market.poolAddress ?? ""} />
         </div>
       )}
 
       {!market.poolAddress && (
-        <div style={compactAddressBarStyle}>
-          <span style={metricLabelStyle}>Bond</span>
-          <span title={market.bondAddress} style={addressValueStyle}>{shortAddress(market.bondAddress)}</span>
-          <span style={{ ...metricLabelStyle, marginLeft: 16 }}>Token</span>
-          <span title={market.tokenAddress} style={addressValueStyle}>{shortAddress(market.tokenAddress)}</span>
-          <span style={{ ...metricLabelStyle, marginLeft: 16 }}>Pool</span>
-          <span style={{ ...addressValueStyle, color: "var(--text-dim)" }}>Not created</span>
+        <div style={addressBarStyle}>
+          <AddressChip label="Bond" address={market.bondAddress} />
+          <AddressChip label="Token" address={market.tokenAddress} />
+          <div style={addressChipContainerStyle}>
+            <span style={addressChipLabelStyle}>Pool</span>
+            <span style={addressChipValueDimStyle}>Not created</span>
+          </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function AddressChip({ label, address }: { label: string; address: string }) {
+  return (
+    <div style={addressChipContainerStyle}>
+      <span style={addressChipLabelStyle}>{label}</span>
+      <span title={address} style={addressChipValueStyle}>
+        {shortAddress(address)}
+      </span>
     </div>
   );
 }
@@ -118,17 +142,16 @@ function MarketWorkspace({ market }: { market: NanoProMarket }) {
 function Metric({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
   return (
     <div style={metricStyle}>
-      <span style={{ ...metricLabelStyle, marginBottom: 8 }}>{label}</span>
-      <span style={{ ...metricValueStyle, color: accent ? "#10b981" : "#e2e8f8" }}>{value}</span>
+      <span style={metricLabelStyle}>{label}</span>
+      <span style={{ ...metricValueStyle, color: accent ? "#10b981" : "#e8f0ee" }}>{value}</span>
     </div>
   );
 }
 
-
-
-function StateBlock({ title, body }: { title: string; body: string }) {
+function StateBlock({ title, body, icon }: { title: string; body: string; icon: string }) {
   return (
     <div style={stateBlockStyle}>
+      <div style={stateIconStyle}>{icon}</div>
       <h2 style={smallTitleStyle}>{title}</h2>
       <p style={subtitleStyle}>{body}</p>
     </div>
@@ -137,47 +160,52 @@ function StateBlock({ title, body }: { title: string; body: string }) {
 
 const terminalStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "270px minmax(0, 1fr) 320px",
-  gridTemplateRows: "54px minmax(0, 1fr)",
+  gridTemplateColumns: "280px minmax(0, 1fr) 340px",
+  gridTemplateRows: "64px minmax(0, 1fr)",
   gridTemplateAreas: `
     "stats stats stats"
     "selector workspace actions"
   `,
-  gap: 16,
-  padding: 16,
+  gap: 1,
+  padding: 0,
   minHeight: 0,
   height: "calc(100vh - 76px)",
-  background: "var(--void)",
+  background: "#1a2540",
 };
 
 const mainPanelStyle: CSSProperties = {
   gridArea: "workspace",
   minHeight: 0,
   overflow: "auto",
-  background: "transparent",
-  borderRadius: 16,
+  background: "#060a12",
 };
 
 const workspaceStyle: CSSProperties = {
   display: "grid",
   gridTemplateRows: "auto auto",
-  gap: 24,
-  padding: 8,
+  gap: 16,
+  padding: 20,
 };
 
 const surfaceStyle: CSSProperties = {
-  background: "var(--void-surface)",
-  border: "1px solid var(--void-border)",
+  background: "linear-gradient(180deg, #0f1520 0%, #0a0f1a 100%)",
+  border: "1px solid #1a2540",
   borderRadius: 16,
-  padding: 24,
+  padding: 28,
+  position: "relative",
+  overflow: "hidden",
 };
 
 const sectionHeaderStyle: CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "flex-start",
-  gap: 16,
-  marginBottom: 24,
+  gap: 20,
+  marginBottom: 28,
+};
+
+const headerContentStyle: CSSProperties = {
+  flex: 1,
 };
 
 const titleStyle: CSSProperties = {
@@ -185,76 +213,122 @@ const titleStyle: CSSProperties = {
   fontSize: 32,
   fontWeight: 800,
   lineHeight: 1,
-  letterSpacing: "-0.02em",
+  letterSpacing: "-0.03em",
   margin: 0,
-  color: "var(--text-primary)",
+  color: "#e8f0ee",
 };
 
 const smallTitleStyle: CSSProperties = {
   fontFamily: "var(--font-display)",
-  fontSize: 20,
+  fontSize: 22,
   fontWeight: 700,
   margin: 0,
-  color: "var(--text-primary)",
+  color: "#e8f0ee",
 };
 
 const subtitleStyle: CSSProperties = {
   fontSize: 14,
-  color: "var(--text-secondary)",
-  margin: "8px 0 0",
-  lineHeight: 1.5,
+  color: "#5a6a85",
+  margin: "10px 0 0",
+  lineHeight: 1.6,
+};
+
+const badgeContainerStyle: CSSProperties = {
+  flexShrink: 0,
 };
 
 const poolBadgeStyle: CSSProperties = {
-  padding: "6px 12px",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "8px 14px",
   borderRadius: 999,
-  background: "rgba(99,102,241,0.1)",
-  border: "1px solid rgba(99,102,241,0.2)",
-  color: "var(--cyan)",
+  border: "1px solid",
   fontFamily: "var(--font-mono)",
-  fontSize: 11,
-  fontWeight: 800,
+  fontSize: 12,
+  fontWeight: 700,
   textTransform: "uppercase",
   letterSpacing: "0.05em",
 };
 
+const badgeDotStyle: CSSProperties = {
+  width: 6,
+  height: 6,
+  borderRadius: "50%",
+  animation: "pulse 2s infinite",
+};
+
 const metricsGridStyle: CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-  gap: 16,
+  gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+  gap: 14,
 };
 
 const metricStyle: CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  background: "var(--void-light)",
-  border: "1px solid var(--void-border)",
+  gap: 8,
+  background: "#0f1520",
+  border: "1px solid #1a2540",
   borderRadius: 12,
   padding: 16,
+  transition: "all 0.2s ease",
 };
 
 const metricLabelStyle: CSSProperties = {
-  color: "var(--text-dim)",
+  color: "#5a6a85",
   fontFamily: "var(--font-mono)",
   fontSize: 11,
   fontWeight: 700,
   textTransform: "uppercase",
-  letterSpacing: "0.06em",
+  letterSpacing: "0.08em",
 };
 
 const metricValueStyle: CSSProperties = {
   fontFamily: "var(--font-mono)",
   fontSize: 18,
   fontWeight: 700,
+  letterSpacing: "-0.01em",
 };
 
+const addressBarStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 24,
+  padding: "14px 20px",
+  background: "linear-gradient(180deg, #0f1520 0%, #0a0f1a 100%)",
+  border: "1px solid #1a2540",
+  borderRadius: 12,
+  flexWrap: "wrap",
+};
 
+const addressChipContainerStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 4,
+};
 
-const addressValueStyle: CSSProperties = {
+const addressChipLabelStyle: CSSProperties = {
+  color: "#5a6a85",
   fontFamily: "var(--font-mono)",
-  color: "var(--text-primary)",
-  fontSize: 14,
-  fontWeight: 600,
+  fontSize: 10,
+  fontWeight: 700,
+  textTransform: "uppercase",
+  letterSpacing: "0.08em",
+};
+
+const addressChipValueStyle: CSSProperties = {
+  fontFamily: "var(--font-mono)",
+  color: "#e8f0ee",
+  fontSize: 13,
+  fontWeight: 700,
+};
+
+const addressChipValueDimStyle: CSSProperties = {
+  fontFamily: "var(--font-mono)",
+  color: "#5a6a85",
+  fontSize: 13,
+  fontWeight: 700,
 };
 
 const stateBlockStyle: CSSProperties = {
@@ -264,19 +338,14 @@ const stateBlockStyle: CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   textAlign: "center",
-  padding: 40,
-  background: "var(--void-surface)",
-  border: "1px dashed var(--void-border)",
+  padding: 48,
+  background: "linear-gradient(180deg, #0f1520 0%, #0a0f1a 100%)",
+  border: "1px solid #1a2540",
   borderRadius: 16,
 };
 
-const compactAddressBarStyle: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: 6,
-  padding: "10px 16px",
-  background: "var(--void-surface)",
-  border: "1px solid var(--void-border)",
-  borderRadius: 10,
-  flexWrap: "wrap",
+const stateIconStyle: CSSProperties = {
+  fontSize: 48,
+  marginBottom: 20,
+  opacity: 0.6,
 };

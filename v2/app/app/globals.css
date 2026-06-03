@@ -1294,3 +1294,49 @@ input[type="number"] {
   text-decoration: underline;
   cursor: pointer;
 }
+
+/* ── Pulse animation for Pro terminal ── */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ── Pro terminal hover effects ── */
+.market-item:hover {
+  background: rgba(99, 102, 241, 0.04) !important;
+  transform: translateX(2px);
+}
+
+.create-pool-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px -16px rgba(99, 102, 241, 0.6);
+}
+
+.create-pool-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Pro terminal scrollbar styling ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0f1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a2540;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3550;
+}

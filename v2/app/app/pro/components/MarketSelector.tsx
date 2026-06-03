@@ -37,24 +37,31 @@ export default function MarketSelector({ markets, selected, onSelect }: MarketSe
   return (
     <div style={containerStyle}>
       <div style={headerStyle}>
-        <span style={headerTextStyle}>Nano Pro</span>
-        <span style={countStyle}>{markets.length}</span>
+        <div style={headerContentStyle}>
+          <span style={headerTextStyle}>Nano Pro</span>
+          <span style={countStyle}>{markets.length}</span>
+        </div>
       </div>
 
       <div style={searchWrapStyle}>
-        <input
-          type="text"
-          placeholder="Search market or token"
-          value={filter}
-          onChange={(event) => setFilter(event.target.value)}
-          style={searchStyle}
-        />
+        <div style={searchContainerStyle}>
+          <div style={searchIconStyle}>🔍</div>
+          <input
+            type="text"
+            placeholder="Search markets..."
+            value={filter}
+            onChange={(event) => setFilter(event.target.value)}
+            style={searchStyle}
+          />
+        </div>
       </div>
 
       <div style={listStyle}>
         {filtered.map((market) => {
           const isActive = selected?.tokenAddress.toLowerCase() === market.tokenAddress.toLowerCase();
           const status = market.poolReady ? "Trading" : market.poolAddress ? "No liquidity" : "Create pool";
+          const statusColor = market.poolReady ? "#10b981" : "#f59e0b";
+          const statusBg = market.poolReady ? "rgba(16,185,129,0.1)" : "rgba(245,158,11,0.1)";
 
           return (
             <button
@@ -62,36 +69,45 @@ export default function MarketSelector({ markets, selected, onSelect }: MarketSe
               onClick={() => onSelect(market)}
               style={{
                 ...marketButtonStyle,
-                background: isActive ? "#131a28" : "transparent",
-                borderColor: isActive ? "rgba(99,102,241,0.55)" : "transparent",
+                background: isActive ? "linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(167,139,250,0.05) 100%)" : "transparent",
+                borderColor: isActive ? "rgba(99,102,241,0.3)" : "transparent",
+                borderLeftWidth: isActive ? "3px" : "0px",
               }}
+              className="market-item"
             >
               <div style={rowStyle}>
-                <span style={symbolStyle}>{market.pairSymbol}</span>
-                <span
-                  style={{
-                    ...statusStyle,
-                    color: market.poolReady ? "#10b981" : "#f59e0b",
-                    background: market.poolReady ? "rgba(16,185,129,0.12)" : "rgba(245,158,11,0.12)",
-                  }}
-                >
-                  {status}
-                </span>
+                <div style={symbolContainerStyle}>
+                  <span style={symbolStyle}>{market.pairSymbol}</span>
+                  <span
+                    style={{
+                      ...statusStyle,
+                      color: statusColor,
+                      background: statusBg,
+                    }}
+                  >
+                    {status}
+                  </span>
+                </div>
+                <span style={priceStyle}>{formatPrice(market.spotPrice)}</span>
               </div>
+
               <div style={rowStyle}>
                 <span style={metaStyle}>{(market.aprBps / 100).toFixed(2)}% APR</span>
-                <span style={priceStyle}>{formatPrice(market.spotPrice)} HBAR</span>
-              </div>
-              <div style={rowStyle}>
-                <span style={addressStyle}>{market.tokenAddress.slice(0, 6)}...{market.tokenAddress.slice(-4)}</span>
                 <span style={metaStyle}>{formatToken(market.reserveToken)} reserve</span>
+              </div>
+
+              <div style={addressRowStyle}>
+                <span style={addressStyle}>{market.tokenAddress.slice(0, 6)}...{market.tokenAddress.slice(-4)}</span>
               </div>
             </button>
           );
         })}
 
         {filtered.length === 0 && (
-          <div style={emptyStyle}>{markets.length === 0 ? "No active bond tokens are ready." : "No markets found."}</div>
+          <div style={emptyStyle}>
+            <div style={emptyIconStyle}>📋</div>
+            <div style={emptyTextStyle}>{markets.length === 0 ? "No active bond tokens" : "No markets found"}</div>
+          </div>
         )}
       </div>
     </div>
@@ -102,13 +118,17 @@ const containerStyle: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   height: "100%",
-  background: "#0e1420",
-  borderRight: "1px solid #1e2d45",
+  background: "#0a0f1a",
+  borderRight: "1px solid #1a2540",
 };
 
 const headerStyle: CSSProperties = {
-  padding: "14px 12px",
-  borderBottom: "1px solid #1e2d45",
+  padding: "16px 16px 12px",
+  borderBottom: "1px solid #1a2540",
+  background: "linear-gradient(180deg, #0f1520 0%, #0a0f1a 100%)",
+};
+
+const headerContentStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
   gap: 8,
@@ -116,37 +136,53 @@ const headerStyle: CSSProperties = {
 
 const headerTextStyle: CSSProperties = {
   fontFamily: "var(--font-display)",
-  fontWeight: 700,
-  fontSize: 13,
+  fontWeight: 800,
+  fontSize: 14,
   textTransform: "uppercase",
-  letterSpacing: "0.08em",
-  color: "#7a8aaa",
+  letterSpacing: "0.1em",
+  color: "#8896b0",
 };
 
 const countStyle: CSSProperties = {
   fontSize: 11,
-  color: "#7a8aaa",
-  background: "#192133",
-  padding: "2px 6px",
+  color: "#5a6a85",
+  background: "#151d2e",
+  padding: "3px 8px",
   borderRadius: 999,
   fontFamily: "var(--font-mono)",
+  fontWeight: 700,
 };
 
 const searchWrapStyle: CSSProperties = {
-  padding: "8px 12px",
-  borderBottom: "1px solid #1e2d45",
+  padding: "12px",
+  borderBottom: "1px solid #1a2540",
+};
+
+const searchContainerStyle: CSSProperties = {
+  position: "relative",
+  display: "flex",
+  alignItems: "center",
+};
+
+const searchIconStyle: CSSProperties = {
+  position: "absolute",
+  left: 12,
+  fontSize: 14,
+  opacity: 0.5,
+  pointerEvents: "none",
 };
 
 const searchStyle: CSSProperties = {
   width: "100%",
-  background: "#131a28",
-  border: "1px solid #1e2d45",
-  borderRadius: 6,
-  padding: "9px 10px",
-  fontSize: 12,
+  background: "#0f1520",
+  border: "1px solid #1a2540",
+  borderRadius: 8,
+  padding: "10px 12px 10px 36px",
+  fontSize: 13,
   fontFamily: "var(--font-body)",
-  color: "#e2e8f8",
+  color: "#e8f0ee",
   outline: "none",
+  transition: "all 0.2s ease",
 };
 
 const listStyle: CSSProperties = {
@@ -154,18 +190,21 @@ const listStyle: CSSProperties = {
   overflowY: "auto",
   display: "flex",
   flexDirection: "column",
+  padding: "8px 0",
 };
 
 const marketButtonStyle: CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  gap: 6,
-  padding: "12px",
+  gap: 8,
+  padding: "14px 16px",
   border: "1px solid transparent",
-  borderBottom: "1px solid rgba(30,45,69,0.7)",
-  borderRadius: 0,
+  borderLeft: "1px solid transparent",
+  margin: "2px 8px",
+  borderRadius: 10,
   cursor: "pointer",
   textAlign: "left",
+  transition: "all 0.2s ease",
 };
 
 const rowStyle: CSSProperties = {
@@ -175,44 +214,72 @@ const rowStyle: CSSProperties = {
   gap: 10,
 };
 
+const symbolContainerStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+};
+
 const symbolStyle: CSSProperties = {
   fontFamily: "var(--font-display)",
-  fontWeight: 700,
-  fontSize: 13,
-  color: "#e2e8f8",
+  fontWeight: 800,
+  fontSize: 14,
+  color: "#e8f0ee",
+  letterSpacing: "-0.01em",
 };
 
 const statusStyle: CSSProperties = {
   fontSize: 9,
   fontWeight: 800,
   textTransform: "uppercase",
-  letterSpacing: "0.06em",
-  padding: "2px 5px",
-  borderRadius: 4,
-};
-
-const metaStyle: CSSProperties = {
-  fontFamily: "var(--font-mono)",
-  fontSize: 11,
-  color: "#7a8aaa",
+  letterSpacing: "0.05em",
+  padding: "3px 7px",
+  borderRadius: 5,
 };
 
 const priceStyle: CSSProperties = {
   fontFamily: "var(--font-mono)",
   fontWeight: 700,
-  fontSize: 12,
-  color: "#e2e8f8",
+  fontSize: 14,
+  color: "#e8f0ee",
+};
+
+const metaStyle: CSSProperties = {
+  fontFamily: "var(--font-mono)",
+  fontSize: 11,
+  color: "#5a6a85",
+  fontWeight: 600,
+};
+
+const addressRowStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  marginTop: 2,
 };
 
 const addressStyle: CSSProperties = {
   fontFamily: "var(--font-mono)",
   fontSize: 10,
   color: "#3d4f6e",
+  fontWeight: 600,
 };
 
 const emptyStyle: CSSProperties = {
-  padding: 20,
+  padding: 40,
   textAlign: "center",
-  color: "#7a8aaa",
-  fontSize: 12,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: 12,
+};
+
+const emptyIconStyle: CSSProperties = {
+  fontSize: 36,
+  opacity: 0.4,
+};
+
+const emptyTextStyle: CSSProperties = {
+  color: "#5a6a85",
+  fontSize: 13,
+  fontWeight: 600,
 };

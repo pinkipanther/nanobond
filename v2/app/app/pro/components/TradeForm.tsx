@@ -73,7 +73,8 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
   if (!market) {
     return (
       <div style={emptyStyle}>
-        <div style={emptyTitleStyle}>Select a market</div>
+        <div style={emptyIconStyle}>💹</div>
+        <div style={emptyTitleStyle}>Select a Market</div>
         <div style={emptyBodyStyle}>Bond tokens appear here after creation. Trading unlocks after activation.</div>
       </div>
     );
@@ -92,13 +93,11 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
     runTx("Add liquidity", async () => {
       if (!market.poolAddress) throw new Error("Create the pool before adding liquidity.");
       if (!liquidityToken || !liquidityHbar) throw new Error("Enter token and HBAR liquidity amounts.");
-      // Approve tokens
       await wallet.sendEvmTx({
         to: market.tokenAddress,
         data: encodeFunctionData({ abi: TOKEN_ABI, functionName: "approve", args: [market.poolAddress, parseTokenAmount(liquidityToken)] }),
         description: "Approve bond tokens",
       });
-      // Add liquidity with HBAR value
       await wallet.sendEvmTx({
         to: market.poolAddress,
         data: encodeFunctionData({ abi: PRO_POOL_ABI, functionName: "addLiquidity", args: [parseTokenAmount(liquidityToken), 1n] }),
@@ -134,7 +133,6 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
           description: `Buy ${tokenLabel}`,
         });
       } else {
-        // Approve tokens first
         await wallet.sendEvmTx({
           to: market.tokenAddress,
           data: encodeFunctionData({ abi: TOKEN_ABI, functionName: "approve", args: [market.poolAddress, parseTokenAmount(tradeAmount)] }),
@@ -158,7 +156,6 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
       });
     });
 
-
   return (
     <div style={containerStyle}>
       <div style={tabsStyle}>
@@ -168,8 +165,9 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
             onClick={() => setPanel(nextPanel)}
             style={{
               ...tabStyle,
-              background: panel === nextPanel ? "#192133" : "transparent",
-              color: panel === nextPanel ? "#e2e8f8" : "#7a8aaa",
+              background: panel === nextPanel ? "linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(167,139,250,0.08) 100%)" : "transparent",
+              color: panel === nextPanel ? "#e8f0ee" : "#5a6a85",
+              borderColor: panel === nextPanel ? "rgba(99,102,241,0.3)" : "transparent",
             }}
           >
             {nextPanel}
@@ -178,9 +176,11 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
       </div>
 
       <div style={bodyStyle}>
-        <InfoRow label="Wallet HBAR" value={`${tinybarsToHbar(wallet.balanceTinybar)} HBAR`} />
-        <InfoRow label={`${tokenLabel} balance`} value={formatToken(market.tokenBalance)} />
-        <InfoRow label="Pool price" value={formatPrice(market.spotPrice)} />
+        <div style={walletInfoStyle}>
+          <InfoRow label="Wallet HBAR" value={`${tinybarsToHbar(wallet.balanceTinybar)} HBAR`} />
+          <InfoRow label={`${tokenLabel} balance`} value={formatToken(market.tokenBalance)} />
+          <InfoRow label="Pool price" value={formatPrice(market.spotPrice)} />
+        </div>
 
         {!factoryConfigured && (
           <Notice tone="warn">Configure NEXT_PUBLIC_NANOPRO_FACTORY_ADDRESS to enable pool creation.</Notice>
@@ -191,8 +191,13 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
         )}
 
         {factoryConfigured && !market.poolAddress && market.state === 1 && (
-          <button className="btn-primary" onClick={createPool} disabled={isPending || !wallet.isConnected} style={fullButtonStyle}>
-            {isPending ? busy ?? "Pending" : wallet.isPairing ? "Connecting..." : !wallet.isConnected ? "Connect Wallet First" : "Create Pool"}
+          <button
+            onClick={createPool}
+            disabled={isPending || !wallet.isConnected}
+            style={createPoolButtonStyle}
+            className="create-pool-btn"
+          >
+            {isPending ? busy ?? "Pending" : wallet.isPairing ? "Connecting..." : !wallet.isConnected ? "Connect Wallet First" : "✨ Create Pool"}
           </button>
         )}
 
@@ -205,8 +210,10 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
                   onClick={() => setSide(nextSide)}
                   style={{
                     ...sideButtonStyle,
-                    background: side === nextSide ? (nextSide === "buy" ? "#10b981" : "#f43f5e") : "transparent",
-                    color: side === nextSide ? "var(--inverted)" : nextSide === "buy" ? "#10b981" : "#f43f5e",
+                    background: side === nextSide ? (nextSide === "buy" ? "linear-gradient(135deg, #10b981 0%, #059669 100%)" : "linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)") : "transparent",
+                    color: side === nextSide ? "#fff" : nextSide === "buy" ? "#10b981" : "#f43f5e",
+                    borderColor: side === nextSide ? "transparent" : nextSide === "buy" ? "rgba(16,185,129,0.3)" : "rgba(244,63,94,0.3)",
+                    boxShadow: side === nextSide ? (nextSide === "buy" ? "0 8px 20px -12px rgba(16,185,129,0.5)" : "0 8px 20px -12px rgba(244,63,94,0.5)") : "none",
                   }}
                 >
                   {nextSide}
@@ -214,23 +221,28 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
               ))}
             </div>
 
-            <label style={fieldLabelStyle}>{side === "buy" ? "HBAR amount" : `${tokenLabel} amount`}</label>
-            <input
-              type="number"
-              min="0"
-              step="any"
-              value={tradeAmount}
-              onChange={(event) => setTradeAmount(event.target.value)}
-              placeholder="0.00"
-              style={inputStyle}
-            />
+            <div style={fieldContainerStyle}>
+              <label style={fieldLabelStyle}>{side === "buy" ? "HBAR Amount" : `${tokenLabel} Amount`}</label>
+              <input
+                type="number"
+                min="0"
+                step="any"
+                value={tradeAmount}
+                onChange={(event) => setTradeAmount(event.target.value)}
+                placeholder="0.00"
+                style={inputStyle}
+              />
+            </div>
+
             {estimated && <div style={hintStyle}>{estimated}</div>}
 
             <button
-              className="btn-primary"
               onClick={trade}
               disabled={isPending || market.state !== 1 || !market.poolReady || !tradeAmount || !wallet.isConnected}
-              style={fullButtonStyle}
+              style={{
+                ...tradeButtonStyle,
+                background: side === "buy" ? "linear-gradient(135deg, #10b981 0%, #059669 100%)" : "linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)",
+              }}
             >
               {isPending ? busy ?? "Pending" : wallet.isPairing ? "Connecting..." : !wallet.isConnected ? "Connect Wallet First" : `${side === "buy" ? "Buy" : "Sell"} ${tokenLabel}`}
             </button>
@@ -239,70 +251,81 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
 
         {panel === "liquidity" && (
           <>
-            <label style={fieldLabelStyle}>Token amount</label>
-            <input
-              type="number"
-              min="0"
-              step="any"
-              value={liquidityToken}
-              onChange={(event) => setLiquidityToken(event.target.value)}
-              placeholder="0.00"
-              style={inputStyle}
-            />
+            <div style={fieldContainerStyle}>
+              <label style={fieldLabelStyle}>Token Amount</label>
+              <input
+                type="number"
+                min="0"
+                step="any"
+                value={liquidityToken}
+                onChange={(event) => setLiquidityToken(event.target.value)}
+                placeholder="0.00"
+                style={inputStyle}
+              />
+            </div>
 
-            <label style={fieldLabelStyle}>HBAR amount</label>
-            <input
-              type="number"
-              min="0"
-              step="any"
-              value={liquidityHbar}
-              onChange={(event) => setLiquidityHbar(event.target.value)}
-              placeholder="0.00"
-              style={inputStyle}
-            />
+            <div style={fieldContainerStyle}>
+              <label style={fieldLabelStyle}>HBAR Amount</label>
+              <input
+                type="number"
+                min="0"
+                step="any"
+                value={liquidityHbar}
+                onChange={(event) => setLiquidityHbar(event.target.value)}
+                placeholder="0.00"
+                style={inputStyle}
+              />
+            </div>
 
             <button
-              className="btn-primary"
               onClick={addLiquidity}
               disabled={isPending || market.state !== 1 || !market.poolAddress || !liquidityToken || !liquidityHbar}
-              style={fullButtonStyle}
+              style={liquidityButtonStyle}
             >
-              {isPending ? busy ?? "Pending" : "Add Liquidity"}
+              {isPending ? busy ?? "Pending" : "💧 Add Liquidity"}
             </button>
 
             <div style={dividerStyle} />
-            <InfoRow label="Your LP" value={formatToken(market.lpBalance)} />
-            <label style={fieldLabelStyle}>LP amount</label>
-            <input
-              type="number"
-              min="0"
-              step="any"
-              value={lpAmount}
-              onChange={(event) => setLpAmount(event.target.value)}
-              placeholder="0.00"
-              style={inputStyle}
-            />
-            <button
-              className="btn-secondary"
-              onClick={removeLiquidity}
-              disabled={isPending || market.state !== 1 || market.lpBalance === 0n || !lpAmount}
-              style={fullButtonStyle}
-            >
-              Remove Liquidity
-            </button>
+
+            <div style={lpSectionStyle}>
+              <InfoRow label="Your LP Balance" value={formatToken(market.lpBalance)} />
+
+              <div style={fieldContainerStyle}>
+                <label style={fieldLabelStyle}>LP Amount</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value={lpAmount}
+                  onChange={(event) => setLpAmount(event.target.value)}
+                  placeholder="0.00"
+                  style={inputStyle}
+                />
+              </div>
+
+              <button
+                onClick={removeLiquidity}
+                disabled={isPending || market.state !== 1 || market.lpBalance === 0n || !lpAmount}
+                style={removeLiquidityButtonStyle}
+              >
+                Remove Liquidity
+              </button>
+            </div>
           </>
         )}
 
         <div style={dividerStyle} />
-        <InfoRow label="Claimable rewards" value={formatToken(market.pendingReward)} />
-        <button
-          className="btn-secondary"
-          onClick={claimRewards}
-          disabled={isPending || market.state !== 1 || market.pendingReward === 0n}
-          style={fullButtonStyle}
-        >
-          Claim Rewards
-        </button>
+
+        <div style={rewardsSectionStyle}>
+          <InfoRow label="Claimable Rewards" value={formatToken(market.pendingReward)} accent={market.pendingReward > 0n} />
+          <button
+            onClick={claimRewards}
+            disabled={isPending || market.state !== 1 || market.pendingReward === 0n}
+            style={rewardsButtonStyle}
+          >
+            🎁 Claim Rewards
+          </button>
+        </div>
 
         {message && <div style={messageStyle}>{message}</div>}
       </div>
@@ -310,11 +333,11 @@ export default function TradeForm({ market, factoryConfigured, onRefresh }: Trad
   );
 }
 
-function InfoRow({ label, value }: { label: string; value: string }) {
+function InfoRow({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
   return (
     <div style={infoRowStyle}>
-      <span>{label}</span>
-      <span style={{ fontFamily: "var(--font-mono)", color: "#e2e8f8" }}>{value}</span>
+      <span style={infoLabelStyle}>{label}</span>
+      <span style={{ ...infoValueStyle, color: accent ? "#10b981" : "#e8f0ee" }}>{value}</span>
     </div>
   );
 }
@@ -325,8 +348,8 @@ function Notice({ children, tone }: { children: ReactNode; tone: "warn" | "info"
       style={{
         ...noticeStyle,
         color: tone === "warn" ? "#f59e0b" : "#818cf8",
-        borderColor: tone === "warn" ? "rgba(245,158,11,0.35)" : "rgba(129,140,248,0.35)",
-        background: tone === "warn" ? "rgba(245,158,11,0.08)" : "rgba(129,140,248,0.08)",
+        borderColor: tone === "warn" ? "rgba(245,158,11,0.25)" : "rgba(129,140,248,0.25)",
+        background: tone === "warn" ? "rgba(245,158,11,0.06)" : "rgba(129,140,248,0.06)",
       }}
     >
       {children}
@@ -338,115 +361,236 @@ const containerStyle: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   height: "100%",
-  background: "#0e1420",
-  border: "1px solid #1e2d45",
-  borderRadius: 8,
+  background: "#0a0f1a",
+  border: "1px solid #1a2540",
+  borderRadius: 12,
   overflow: "hidden",
 };
 
 const tabsStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "1fr 1fr",
-  borderBottom: "1px solid #1e2d45",
-  padding: 6,
+  borderBottom: "1px solid #1a2540",
+  padding: 8,
   gap: 6,
+  background: "linear-gradient(180deg, #0f1520 0%, #0a0f1a 100%)",
 };
 
 const tabStyle: CSSProperties = {
-  border: "none",
-  borderRadius: 6,
-  padding: "9px 8px",
+  border: "1px solid transparent",
+  borderRadius: 8,
+  padding: "11px 8px",
   fontFamily: "var(--font-body)",
-  fontSize: 12,
-  fontWeight: 800,
+  fontSize: 13,
+  fontWeight: 700,
   textTransform: "uppercase",
   cursor: "pointer",
+  letterSpacing: "0.05em",
+  transition: "all 0.2s ease",
 };
 
 const bodyStyle: CSSProperties = {
-  padding: 12,
+  padding: 16,
   display: "flex",
   flexDirection: "column",
-  gap: 10,
+  gap: 14,
   overflowY: "auto",
+};
+
+const walletInfoStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 8,
+  padding: 12,
+  background: "#0f1520",
+  border: "1px solid #1a2540",
+  borderRadius: 10,
 };
 
 const segmentedStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "1fr 1fr",
-  gap: 6,
+  gap: 8,
 };
 
 const sideButtonStyle: CSSProperties = {
-  border: "1px solid #1e2d45",
-  borderRadius: 6,
-  padding: "10px 8px",
+  border: "1px solid",
+  borderRadius: 8,
+  padding: "12px 8px",
   fontFamily: "var(--font-body)",
   fontWeight: 800,
   textTransform: "uppercase",
   cursor: "pointer",
+  letterSpacing: "0.05em",
+  fontSize: 13,
+  transition: "all 0.2s ease",
+};
+
+const fieldContainerStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 6,
 };
 
 const fieldLabelStyle: CSSProperties = {
-  fontSize: 10,
-  color: "#7a8aaa",
+  fontSize: 11,
+  color: "#5a6a85",
   textTransform: "uppercase",
   letterSpacing: "0.08em",
-  fontWeight: 800,
+  fontWeight: 700,
+  fontFamily: "var(--font-mono)",
 };
 
 const inputStyle: CSSProperties = {
   width: "100%",
-  background: "#131a28",
-  border: "1px solid #1e2d45",
-  borderRadius: 6,
-  padding: "11px 12px",
+  background: "#0f1520",
+  border: "1px solid #1a2540",
+  borderRadius: 8,
+  padding: "12px 14px",
   fontFamily: "var(--font-mono)",
-  fontSize: 13,
+  fontSize: 14,
   fontWeight: 700,
-  color: "#e2e8f8",
+  color: "#e8f0ee",
   outline: "none",
+  transition: "all 0.2s ease",
 };
 
-const fullButtonStyle: CSSProperties = {
+const tradeButtonStyle: CSSProperties = {
+  width: "100%",
+  minHeight: 44,
+  borderRadius: 8,
+  border: "none",
+  color: "#fff",
+  fontFamily: "var(--font-body)",
+  fontSize: 14,
+  fontWeight: 700,
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+  textTransform: "uppercase",
+  letterSpacing: "0.05em",
+};
+
+const liquidityButtonStyle: CSSProperties = {
+  width: "100%",
+  minHeight: 44,
+  borderRadius: 8,
+  border: "none",
+  background: "linear-gradient(135deg, #6366f1 0%, #818cf8 100%)",
+  color: "#fff",
+  fontFamily: "var(--font-body)",
+  fontSize: 14,
+  fontWeight: 700,
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+  boxShadow: "0 8px 20px -12px rgba(99,102,241,0.5)",
+};
+
+const removeLiquidityButtonStyle: CSSProperties = {
   width: "100%",
   minHeight: 40,
-  borderRadius: 6,
+  borderRadius: 8,
+  border: "1px solid rgba(244,63,94,0.3)",
+  background: "transparent",
+  color: "#f43f5e",
+  fontFamily: "var(--font-body)",
+  fontSize: 13,
+  fontWeight: 700,
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+};
+
+const createPoolButtonStyle: CSSProperties = {
+  width: "100%",
+  minHeight: 44,
+  borderRadius: 8,
+  border: "none",
+  background: "linear-gradient(135deg, #6366f1 0%, #a78bfa 100%)",
+  color: "#fff",
+  fontFamily: "var(--font-body)",
+  fontSize: 14,
+  fontWeight: 700,
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+  boxShadow: "0 8px 20px -12px rgba(99,102,241,0.5)",
+};
+
+const lpSectionStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 12,
+};
+
+const rewardsSectionStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 12,
+  padding: 12,
+  background: "rgba(16,185,129,0.04)",
+  border: "1px solid rgba(16,185,129,0.15)",
+  borderRadius: 10,
+};
+
+const rewardsButtonStyle: CSSProperties = {
+  width: "100%",
+  minHeight: 40,
+  borderRadius: 8,
+  border: "1px solid rgba(16,185,129,0.3)",
+  background: "rgba(16,185,129,0.08)",
+  color: "#10b981",
+  fontFamily: "var(--font-body)",
+  fontSize: 13,
+  fontWeight: 700,
+  cursor: "pointer",
+  transition: "all 0.2s ease",
 };
 
 const infoRowStyle: CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
+  alignItems: "center",
   gap: 12,
-  fontSize: 11,
-  color: "#7a8aaa",
+};
+
+const infoLabelStyle: CSSProperties = {
+  fontSize: 12,
+  color: "#5a6a85",
+  fontWeight: 600,
+};
+
+const infoValueStyle: CSSProperties = {
+  fontFamily: "var(--font-mono)",
+  fontSize: 13,
+  fontWeight: 700,
 };
 
 const hintStyle: CSSProperties = {
-  fontSize: 11,
-  color: "#7a8aaa",
+  fontSize: 12,
+  color: "#5a6a85",
+  padding: "8px 0",
 };
 
 const dividerStyle: CSSProperties = {
-  borderTop: "1px solid #1e2d45",
-  margin: "2px 0",
+  borderTop: "1px solid #1a2540",
+  margin: "4px 0",
 };
 
 const noticeStyle: CSSProperties = {
   border: "1px solid",
-  borderRadius: 6,
-  padding: 10,
+  borderRadius: 8,
+  padding: 12,
   fontSize: 12,
-  lineHeight: 1.4,
+  lineHeight: 1.5,
 };
 
 const messageStyle: CSSProperties = {
-  padding: 10,
-  borderRadius: 6,
-  background: "rgba(30,45,69,0.5)",
-  color: "#e2e8f8",
+  padding: 12,
+  borderRadius: 8,
+  background: "#0f1520",
+  border: "1px solid #1a2540",
+  color: "#e8f0ee",
   fontSize: 12,
   wordBreak: "break-word",
+  fontFamily: "var(--font-mono)",
 };
 
 const emptyStyle: CSSProperties = {
@@ -455,21 +599,27 @@ const emptyStyle: CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   height: "100%",
-  background: "#0e1420",
-  borderRadius: 8,
-  color: "#7a8aaa",
-  gap: 6,
-  padding: 20,
+  background: "#0a0f1a",
+  borderRadius: 12,
+  color: "#5a6a85",
+  gap: 10,
+  padding: 24,
   textAlign: "center",
+};
+
+const emptyIconStyle: CSSProperties = {
+  fontSize: 42,
+  opacity: 0.4,
 };
 
 const emptyTitleStyle: CSSProperties = {
   fontFamily: "var(--font-display)",
-  fontSize: 15,
+  fontSize: 16,
   fontWeight: 700,
-  color: "#e2e8f8",
+  color: "#e8f0ee",
 };
 
 const emptyBodyStyle: CSSProperties = {
-  fontSize: 12,
+  fontSize: 13,
+  lineHeight: 1.5,
 };
